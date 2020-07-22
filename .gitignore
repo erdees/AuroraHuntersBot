@@ -1,0 +1,10 @@
+*.db
+*.png
+.idea/**
+target/**
+*.iml
+*.yml
+*.list
+*.json
+*.txt
+*.DS_Store
