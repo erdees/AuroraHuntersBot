@@ -1,0 +1,13 @@
+[Unit]
+Description=Manage Java service for AuroraGunters Telegram Bot
+
+[Service]
+WorkingDirectory=/opt/bots/AuroraTelegramBot
+ExecStart=/bin/java -Xms128m -Xmx128m -jar AuroraTelegramBot.jar
+User=tomcat
+Type=simple
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
