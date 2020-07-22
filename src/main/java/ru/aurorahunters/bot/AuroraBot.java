@@ -11,12 +11,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-
 class AuroraBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        //log(update);
         String answer = null;
 
         try {

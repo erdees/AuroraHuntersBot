@@ -41,7 +41,6 @@ public class GetDataFromDB {
                 temp = sb.toString();
             }
         }
-        //System.out.println(temp);
         return temp;
     }
 
