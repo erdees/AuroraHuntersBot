@@ -1,2 +1,5 @@
 # AuroraHuntersBot
-Java written Telegram Bot, which helps Aurora photographers catch auroras
+Java written Telegram Bot, which helps photographers catch northern lights.
+## What this bot do?
+
+## Installation

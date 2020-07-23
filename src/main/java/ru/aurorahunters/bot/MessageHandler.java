@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.ParseException;
 
 public class MessageHandler {
@@ -28,7 +29,6 @@ public class MessageHandler {
     }
 
     public String run(String input) throws SQLException, ParseException, IOException, TelegramApiException {
-
         if (counter > 0 && input.contains("/start") || counter > 0 && input.equals("/start@aurorahunters_bot")) {
             return "Bot is already started. Press /info to get list bot commands.";
         }
@@ -60,6 +60,20 @@ public class MessageHandler {
         }
         else if (input.contains("/links") || input.equals("/links@aurorahunters_bot")) {
             return getLinks();
+        }
+        else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
+            sendImage(TimeGraph.getBzGraph(zone));
+            sendImage(TimeGraph.getSpeedGraph(zone));
+            sendImage(TimeGraph.getDensityGraph(zone));
+        }
+        else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
+            sendImage(TimeGraph.getBzGraph(zone));
+        }
+        else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
+            sendImage(TimeGraph.getSpeedGraph(zone));
+        }
+        else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
+            sendImage(TimeGraph.getDensityGraph(zone));
         }
         else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
             if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
