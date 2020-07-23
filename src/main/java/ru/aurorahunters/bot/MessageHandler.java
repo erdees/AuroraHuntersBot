@@ -7,14 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.text.ParseException;
 
 public class MessageHandler {
     private boolean isStarted = false;
     private int counter;
     private boolean isTimezoneConfigured;
-    private String zone = "+00:00"; // default timezone if not configured
+    private String timezone = "+00:00"; // default timezone if not configured
     private String history;
     private boolean isHistoryConfigured;
     private Long chatID;
@@ -47,7 +46,7 @@ public class MessageHandler {
             return getAuroraMap();
         }
         else if (input.contains("/last") || input.equals("/last@aurorahunters_bot")) {
-            return GetDataFromDB.getLastValues(zone);
+            return GetDataFromDB.getLastValues(timezone);
         }
         else if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
             return setTimezone(input);
@@ -62,18 +61,18 @@ public class MessageHandler {
             return getLinks();
         }
         else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
-            sendImage(TimeGraph.getBzGraph(zone));
-            sendImage(TimeGraph.getSpeedGraph(zone));
-            sendImage(TimeGraph.getDensityGraph(zone));
+            sendImage(TimeGraph.getBzGraph(timezone));
+            sendImage(TimeGraph.getSpeedGraph(timezone));
+            sendImage(TimeGraph.getDensityGraph(timezone));
         }
         else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
-            sendImage(TimeGraph.getBzGraph(zone));
+            sendImage(TimeGraph.getBzGraph(timezone));
         }
         else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
-            sendImage(TimeGraph.getSpeedGraph(zone));
+            sendImage(TimeGraph.getSpeedGraph(timezone));
         }
         else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
-            sendImage(TimeGraph.getDensityGraph(zone));
+            sendImage(TimeGraph.getDensityGraph(timezone));
         }
         else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
             if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
@@ -122,7 +121,7 @@ public class MessageHandler {
                 String argument = temp[1];
                 if (argument.matches(regex)) {
                     isTimezoneConfigured = true;
-                    zone = argument;
+                    timezone = argument;
                     return "Your timezone now is <b>UTC" + argument + "</b>";
                 } else {
                     return "Please type correct timezone, e.g. /time_settings +03:00";
@@ -132,7 +131,7 @@ public class MessageHandler {
                     return "<b>Timezone is not configured.</b> Please enter required timezone in UTC format: \n" +
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
                 } else if (isTimezoneConfigured) {
-                    return "Configured timezone is <b>UTC" + zone + ".</b> If you need to change it, please enter required timezone in UTC format: \n" +
+                    return "Configured timezone is <b>UTC" + timezone + ".</b> If you need to change it, please enter required timezone in UTC format: \n" +
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
                 }
             }
@@ -224,10 +223,6 @@ public class MessageHandler {
         return "Aurora map in north Europe: \n" +
                 "http://auroralights.ru/%d0%ba%d0%b0%d1%80%d1%82%d0%b0-%d0%b3%d0%b4%d0%b5-%d1%81%d0%bc%d0%be%d1%82%d1%" +
                 "80%d0%b5%d1%82%d1%8c-%d1%81%d0%b5%d0%b2%d0%b5%d1%80%d0%bd%d1%8b%d0%b5-%d1%81%d0%b8%d1%8f%d0%bd%d0%b8%d1%8f/";
-    }
-
-    public String getTimeZone() {
-        return zone;
     }
 
     public void sendImage(File image) throws FileNotFoundException, TelegramApiException {
