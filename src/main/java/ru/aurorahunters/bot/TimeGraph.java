@@ -1,13 +1,14 @@
 package ru.aurorahunters.bot;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.ui.RectangleAnchor;
+import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.time.*;
-import org.jfree.ui.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +96,7 @@ public class TimeGraph {
         plot.getRangeAxis().setLabelPaint(Color.white);
 
         //Save chart as PNG
-        ChartUtilities.saveChartAsPNG(file, chart, 600, 400);
+        ChartUtils.saveChartAsPNG(file, chart, 600, 400);
         return file;
     }
 
@@ -166,7 +167,7 @@ public class TimeGraph {
         plot.getRangeAxis().setLabelPaint(Color.white);
 
         //Save chart as PNG
-        ChartUtilities.saveChartAsPNG(file, chart, 600, 400);
+        ChartUtils.saveChartAsPNG(file, chart, 600, 400);
         return file;
     }
 
@@ -237,7 +238,7 @@ public class TimeGraph {
         plot.getRangeAxis().setLabelPaint(Color.white);
 
         //Save chart as PNG
-        ChartUtilities.saveChartAsPNG(file, chart, 600, 400);
+        ChartUtils.saveChartAsPNG(file, chart, 600, 400);
         return file;
     }
 }
