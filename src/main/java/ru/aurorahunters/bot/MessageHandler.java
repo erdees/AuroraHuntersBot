@@ -11,10 +11,9 @@ import java.text.ParseException;
 
 public class MessageHandler {
     private boolean isStarted = false;
-    private int counter;
     private boolean isTimezoneConfigured;
     private String timezone = "+00:00"; // default timezone if not configured
-    private String history;
+    private String archiveDate;
     private boolean isHistoryConfigured;
     private Long chatID;
 
@@ -22,81 +21,81 @@ public class MessageHandler {
         this.chatID = chatID;
     }
 
-    public void setBotStarted() {
+    public String setBotStarted() {
         isStarted = true;
-        counter = 0;
+        return getInfo();
     }
 
-    public String run(String input) throws SQLException, ParseException, IOException, TelegramApiException {
-        if (counter > 0 && input.contains("/start") || counter > 0 && input.equals("/start@aurorahunters_bot")) {
-            return "Bot is already started. Press /info to get list bot commands.";
-        }
-        else if (input.contains("/info") || input.equals("/info@aurorahunters_bot")) {
-            return getInfo();
-        }
-
-        if (counter == 0) {
-            counter++;
-            return getInfo();
-        }
-        else if (input.contains("/chat") || input.equals("/chat@aurorahunters_bot")) {
-            return "Please join our community: \nhttps://t.me/aurora_ru";
-        }
-        else if (input.equals("/map") || input.equals("/map@aurorahunters_bot")) {
-            return getAuroraMap();
-        }
-        else if (input.contains("/last") || input.equals("/last@aurorahunters_bot")) {
-            return GetDataFromDB.getLastValues(timezone);
-        }
-        else if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
-            return setTimezone(input);
-        }
-        else if (input.contains("/weather") || input.equals("/weather@aurorahunters_bot")) {
-            return getWeatherLinks();
-        }
-        else if (input.contains("/skycams") || input.equals("/skycams@aurorahunters_bot")) {
-            return getCams();
-        }
-        else if (input.contains("/links") || input.equals("/links@aurorahunters_bot")) {
-            return getLinks();
-        }
-        else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
-            sendImage(TimeGraph.getBzGraph(timezone));
-            sendImage(TimeGraph.getSpeedGraph(timezone));
-            sendImage(TimeGraph.getDensityGraph(timezone));
-        }
-        else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
-            sendImage(TimeGraph.getBzGraph(timezone));
-        }
-        else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
-            sendImage(TimeGraph.getSpeedGraph(timezone));
-        }
-        else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
-            sendImage(TimeGraph.getDensityGraph(timezone));
-        }
-        else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
-            if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
-                return getHistoryData();
+    public String respondMessage(String input) throws SQLException, ParseException, IOException, TelegramApiException {
+        if (isStarted) {
+                if (input.contains("/info") || input.equals("/info@aurorahunters_bot")) {
+                    return getInfo();
+                }
+                else if (input.contains("/start") || input.equals("/start@aurorahunters_bot")) {
+                    return "Bot is already started. Type /info to see available commands.";
+                }
+                else if (input.contains("/chat") || input.equals("/chat@aurorahunters_bot")) {
+                    return "Please join our community: \nhttps://t.me/aurora_ru";
+                }
+                else if (input.equals("/map") || input.equals("/map@aurorahunters_bot")) {
+                    return getAuroraMap();
+                }
+                else if (input.contains("/last") || input.equals("/last@aurorahunters_bot")) {
+                    return GetDataFromDB.getLastValues(timezone);
+                }
+                else if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
+                    return setTimezone(input);
+                }
+                else if (input.contains("/weather") || input.equals("/weather@aurorahunters_bot")) {
+                    return getWeatherLinks();
+                }
+                else if (input.contains("/skycams") || input.equals("/skycams@aurorahunters_bot")) {
+                    return getCams();
+                }
+                else if (input.contains("/links") || input.equals("/links@aurorahunters_bot")) {
+                    return getLinks();
+                }
+                else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
+                    sendImage(TimeGraph.getBzGraph(timezone));
+                    sendImage(TimeGraph.getSpeedGraph(timezone));
+                    sendImage(TimeGraph.getDensityGraph(timezone));
+                }
+                else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
+                    sendImage(TimeGraph.getBzGraph(timezone));
+                }
+                else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
+                    sendImage(TimeGraph.getSpeedGraph(timezone));
+                }
+                else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
+                    sendImage(TimeGraph.getDensityGraph(timezone));
+                }
+                else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
+                    if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
+                        return getHistoryData();
+                    }
+                    else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz@aurorahunters_bot")) {
+                        sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
+                    }
+                    else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed@aurorahunters_bot")) {
+                        sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
+                    }
+                    else if (input.equals("/history_graph_density") || input.equals("/history_graph_density@aurorahunters_bot")) {
+                        sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
+                    }
+                    else if (input.equals("/history_graph_all") || input.equals("/history_graph_all@aurorahunters_bot")) {
+                        sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
+                        sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
+                        sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
+                    }
+                }
+            else if (input.contains("/history") || input.contains("/contains@aurorahunters_bot")) {
+                return setHistoryDate(input);
             }
-            else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz@aurorahunters_bot")) {
-                sendImage(ArchiveTimeGraph.getBzGraph(history));
-            }
-            else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed@aurorahunters_bot")) {
-                sendImage(ArchiveTimeGraph.getSpeedGraph(history));
-            }
-            else if (input.equals("/history_graph_density") || input.equals("/history_graph_density@aurorahunters_bot")) {
-                sendImage(ArchiveTimeGraph.getDensityGraph(history));
-            }
-            else if (input.equals("/history_graph_all") || input.equals("/history_graph_all@aurorahunters_bot")) {
-                sendImage(ArchiveTimeGraph.getBzGraph(history));
-                sendImage(ArchiveTimeGraph.getSpeedGraph(history));
-                sendImage(ArchiveTimeGraph.getDensityGraph(history));
-            }
+            return "";
         }
-        else if (input.contains("/history") || input.contains("/contains@aurorahunters_bot")) {
-            return setHistoryDate(input);
+        else {
+            return "Bot is is not started. Press /start to initialize it.";
         }
-        return "";
     }
 
     private String getInfo() {
@@ -150,15 +149,15 @@ public class MessageHandler {
                 String argument = temp[1];
                 if (argument.matches(regex)) {
                     isHistoryConfigured = true;
-                    history = argument;
-                    return "All archive data will be shown for <b>" + history + ".</b>\n" +
+                    archiveDate = argument;
+                    return "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
                             "Please use following commands: \n" +
                             "/history_text - to get text table; \n" +
-                            "/history_graph_bz - to get bz_gsm graph for " + history + "\n" +
-                            "/history_graph_speed - to get speed graph for " + history + "\n" +
-                            "/history_graph_density - to get density graph for " + history + "\n" +
-                            "/history_graph_all - to get all three graphs for " + history + "\n";
+                            "/history_graph_bz - to get bz_gsm graph for " + archiveDate + "\n" +
+                            "/history_graph_speed - to get speed graph for " + archiveDate + "\n" +
+                            "/history_graph_density - to get density graph for " + archiveDate + "\n" +
+                            "/history_graph_all - to get all three graphs for " + archiveDate + "\n";
                 } else {
                     return "Please type correct date, e.g. /history yyyy-MM-dd format";
                 }
@@ -168,25 +167,25 @@ public class MessageHandler {
                             "e.g. command for <b>July 01 of 2020</b> will be \n" +
                             "/history 2020-07-01";
                 } else if (isHistoryConfigured) {
-                    return "Archive is configured for<b> " + history + ".</b>\n If you need to change it, please type it in required format: \n" +
+                    return "Archive is configured for<b> " + archiveDate + ".</b>\n If you need to change it, please type it in required format: \n" +
                             "e.g. command for <b>July 01 of 2020</b> will be \n/history 2020-07-01\n" +
-                            "All archive data will be shown for <b>" + history + ".</b>\n" +
+                            "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
                             "Please use following commands: \n" +
                             "/history_text - to get text table; \n" +
-                            "/history_graph_bz - to get bz_gsm graph for " + history + "\n" +
-                            "/history_graph_speed - to get speed graph for " + history + "\n" +
-                            "/history_graph_density - to get density graph for " + history + "\n" +
-                            "/history_graph_all - to get all three graphs for " + history + "\n";
+                            "/history_graph_bz - to get bz_gsm graph for " + archiveDate + "\n" +
+                            "/history_graph_speed - to get speed graph for " + archiveDate + "\n" +
+                            "/history_graph_density - to get density graph for " + archiveDate + "\n" +
+                            "/history_graph_all - to get all three graphs for " + archiveDate + "\n";
                 }
             }
         }
         return "";
     }
 
-    public String getHistoryData() throws SQLException, ParseException {
+    private String getHistoryData() throws SQLException, ParseException {
         if (isHistoryConfigured) {
-            return GetDataFromDB.getHistoryValues(history);
+            return GetDataFromDB.getHistoryValues(archiveDate);
         }
         else return "Archive is not configured. Please enter required date in <b>yyyy-MM-dd</b> format: \n" +
                 "e.g. command for <b>July 01 of 2020</b> will be \n" +
