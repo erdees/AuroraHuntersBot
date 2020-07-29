@@ -32,7 +32,7 @@ public class ArchiveTimeGraph {
     public static File getDensityGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, DENSITY).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | archive for " + date);
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | archive for " + date);
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double density = pair.getValue();
@@ -98,7 +98,7 @@ public class ArchiveTimeGraph {
     public static File getSpeedGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, SPEED).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | archive for " + date);
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | archive for " + date);
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double speed = pair.getValue();
@@ -164,7 +164,7 @@ public class ArchiveTimeGraph {
     public static File getBzGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, BZ_GSM).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | archive for " + date);
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | archive for " + date);
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double bz = pair.getValue();

@@ -27,7 +27,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | " + new Date().toString());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + new Date().toString());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -46,7 +46,7 @@ public class TimeGraph {
 
         XYPlot plot = chart.getXYPlot();
 
-       /* chart.addSubtitle(new TextTitle("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | " + new Date().toString(),
+       /* chart.addSubtitle(new TextTitle("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + new Date().toString(),
                 new Font("Dialog", Font.ITALIC, 14), Color.white,
                 RectangleEdge.BOTTOM, HorizontalAlignment.CENTER,
                 VerticalAlignment.BOTTOM, RectangleInsets.ZERO_INSETS));
@@ -105,7 +105,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | " + new Date().toString());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + new Date().toString());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -176,7 +176,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@bot_name) | " + new Date().toString());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + new Date().toString());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
