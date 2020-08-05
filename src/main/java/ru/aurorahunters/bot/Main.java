@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws IOException, SQLException {
         Locale.setDefault(new Locale("en", "RU"));
+        System.out.println("Bot started.");
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();

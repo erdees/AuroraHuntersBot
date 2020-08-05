@@ -45,7 +45,7 @@ class AuroraBot extends TelegramLongPollingBot {
         String msg = update.getMessage().getText();
         String name = update.getMessage().getFrom().getFirstName();
         Long chatID = update.getMessage().getChatId();
-        messageToSend = SessionHandler.handleSession(msg, chatID);
+        messageToSend = SessionHandler.sessionHandler(msg, chatID);
         if (!messageToSend.isEmpty()) {
             System.out.println("Name: " + name + "; chat ID: " + chatID + "; message to send: " + messageToSend);
         }
@@ -54,13 +54,13 @@ class AuroraBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "@usercabronbot"; //Test
-        //return "@aurorahunters_bot"; //Prod
+        //return "@usercabronbot"; //Test
+        return "@aurorahunters_bot"; //Prod
     }
 
     @Override
     public String getBotToken() {
-        return "1166398193:AAFlkO9ie2gM-fx-M1erKZVY2Q7gh3T0SVI"; //Test
-        //return "1377530534:AAE-z4KAIQBZn64TcQ--qQmT8yk_JdMcDd8"; //Prod
+        //return "1166398193:AAFlkO9ie2gM-fx-M1erKZVY2Q7gh3T0SVI"; //Test
+        return "1377530534:AAE-z4KAIQBZn64TcQ--qQmT8yk_JdMcDd8"; //Prod
     }
 }

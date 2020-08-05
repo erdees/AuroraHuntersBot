@@ -12,7 +12,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Notification implements Runnable  {
@@ -39,9 +38,13 @@ public class Notification implements Runnable  {
         }
     }
 
-    public void sendNotif(String message) throws TelegramApiException {
-        for(Map.Entry<Long, MessageHandler> entry : SessionHandler.getMap().entrySet()) {
-            Long chatId = entry.getKey();
+    public void sendNotif(String message) throws TelegramApiException, SQLException {
+        Long chatId;
+        final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true';";
+        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            chatId  = resultSet.getLong(1);
             AuroraBot notificationEvent = new AuroraBot();
             SendMessage notificationMessage = new SendMessage(chatId,message).setParseMode(ParseMode.HTML);
             notificationEvent.execute(notificationMessage);
@@ -53,7 +56,8 @@ public class Notification implements Runnable  {
         String formattedString = "";
         String firstLine = String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s%n", "BZ ", "|", "S ", "|", "PD");
-        String lastLine = "</pre>\nclick to see latest data: /last";
+        String lastLine = "</pre>\nclick to see latest data: /last\n" +
+                "to disable notifications, click /notif_off";
         StringBuilder sb = new StringBuilder();
         sb.append(firstLine);
         sb.append(secondLine);

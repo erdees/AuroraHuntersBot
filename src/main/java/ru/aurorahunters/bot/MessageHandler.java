@@ -6,19 +6,31 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 
 public class MessageHandler {
+    private Long chatID;
     private boolean isStarted = false;
     private boolean isTimezoneConfigured;
     private String timezone = "+00:00"; // default timezone if not configured
-    private String archiveDate;
     private boolean isHistoryConfigured;
-    private Long chatID;
+    private String archiveDate;
+    private boolean isNotifConfigured;
 
     public MessageHandler(Long chatID) {
         this.chatID = chatID;
+    }
+
+    public MessageHandler(Long chatID, boolean isStarted, boolean isTimezoneConfigured, String timezone, boolean isHistoryConfigured, String archiveDate, boolean isNotifConfigured) {
+        this.chatID = chatID;
+        this.isStarted = isStarted;
+        this.isTimezoneConfigured = isTimezoneConfigured;
+        this.timezone = timezone;
+        this.isHistoryConfigured = isHistoryConfigured;
+        this.archiveDate = archiveDate;
+        this.isNotifConfigured = isNotifConfigured;
     }
 
     public String setBotStarted() {
@@ -27,67 +39,74 @@ public class MessageHandler {
     }
 
     public String respondMessage(String input) throws SQLException, ParseException, IOException, TelegramApiException {
+        System.out.println(this.isNotifConfigured);
         if (isStarted) {
-                if (input.contains("/info") || input.equals("/info@aurorahunters_bot")) {
-                    return getInfo();
+            if (input.contains("/info") || input.equals("/info@aurorahunters_bot")) {
+                return getInfo();
+            }
+            else if (input.contains("/start") || input.equals("/start@aurorahunters_bot")) {
+                return "Bot is already started. Type /info to see available commands.";
+            }
+            else if (input.contains("/chat") || input.equals("/chat@aurorahunters_bot")) {
+                return "Please join our community: \nhttps://t.me/aurora_ru";
+            }
+            else if (input.equals("/map") || input.equals("/map@aurorahunters_bot")) {
+                return getAuroraMap();
+            }
+            else if (input.contains("/last") || input.equals("/last@aurorahunters_bot")) {
+                return GetDataFromDB.getLastValues(timezone);
+            }
+            else if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
+                return setTimezone(input);
+            }
+            else if (input.equals("/notif_on") || input.equals("/notif_on@aurorahunters_bot")) {
+                return setNotif(true);
+            }
+            else if (input.equals("/notif_off") || input.equals("/notif_off@aurorahunters_bot")) {
+                return setNotif(false);
+            }
+            else if (input.contains("/weather") || input.equals("/weather@aurorahunters_bot")) {
+                return getWeatherLinks();
+            }
+            else if (input.contains("/skycams") || input.equals("/skycams@aurorahunters_bot")) {
+                return getCams();
+            }
+            else if (input.contains("/links") || input.equals("/links@aurorahunters_bot")) {
+                return getLinks();
+            }
+            else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
+                sendImage(TimeGraph.getBzGraph(timezone));
+                sendImage(TimeGraph.getSpeedGraph(timezone));
+                sendImage(TimeGraph.getDensityGraph(timezone));
+            }
+            else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
+                sendImage(TimeGraph.getBzGraph(timezone));
+            }
+            else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
+                sendImage(TimeGraph.getSpeedGraph(timezone));
+            }
+            else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
+                sendImage(TimeGraph.getDensityGraph(timezone));
+            }
+            else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
+                if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
+                    return getHistoryData();
                 }
-                else if (input.contains("/start") || input.equals("/start@aurorahunters_bot")) {
-                    return "Bot is already started. Type /info to see available commands.";
+                else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz@aurorahunters_bot")) {
+                    sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                 }
-                else if (input.contains("/chat") || input.equals("/chat@aurorahunters_bot")) {
-                    return "Please join our community: \nhttps://t.me/aurora_ru";
+                else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed@aurorahunters_bot")) {
+                    sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                 }
-                else if (input.equals("/map") || input.equals("/map@aurorahunters_bot")) {
-                    return getAuroraMap();
+                else if (input.equals("/history_graph_density") || input.equals("/history_graph_density@aurorahunters_bot")) {
+                    sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
-                else if (input.contains("/last") || input.equals("/last@aurorahunters_bot")) {
-                    return GetDataFromDB.getLastValues(timezone);
+                else if (input.equals("/history_graph_all") || input.equals("/history_graph_all@aurorahunters_bot")) {
+                    sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
+                    sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
+                    sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
-                else if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
-                    return setTimezone(input);
-                }
-                else if (input.contains("/weather") || input.equals("/weather@aurorahunters_bot")) {
-                    return getWeatherLinks();
-                }
-                else if (input.contains("/skycams") || input.equals("/skycams@aurorahunters_bot")) {
-                    return getCams();
-                }
-                else if (input.contains("/links") || input.equals("/links@aurorahunters_bot")) {
-                    return getLinks();
-                }
-                else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
-                    sendImage(TimeGraph.getBzGraph(timezone));
-                    sendImage(TimeGraph.getSpeedGraph(timezone));
-                    sendImage(TimeGraph.getDensityGraph(timezone));
-                }
-                else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
-                    sendImage(TimeGraph.getBzGraph(timezone));
-                }
-                else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
-                    sendImage(TimeGraph.getSpeedGraph(timezone));
-                }
-                else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
-                    sendImage(TimeGraph.getDensityGraph(timezone));
-                }
-                else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
-                    if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
-                        return getHistoryData();
-                    }
-                    else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz@aurorahunters_bot")) {
-                        sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
-                    }
-                    else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed@aurorahunters_bot")) {
-                        sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
-                    }
-                    else if (input.equals("/history_graph_density") || input.equals("/history_graph_density@aurorahunters_bot")) {
-                        sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
-                    }
-                    else if (input.equals("/history_graph_all") || input.equals("/history_graph_all@aurorahunters_bot")) {
-                        sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
-                        sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
-                        sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
-                    }
-                }
+            }
             else if (input.contains("/history") || input.contains("/contains@aurorahunters_bot")) {
                 return setHistoryDate(input);
             }
@@ -106,6 +125,8 @@ public class MessageHandler {
                 "/last to see last values from DSCOVR satellite;\n" +
                 "/history to get old DSCOVR values;\n" +
                 "/time_settings to change your timezone;\n" +
+                "/notif_on to enable notifications;\n" +
+                "/notif_off to disable notifications;\n" +
                 "/links to get useful links\n";
     }
 
@@ -121,6 +142,7 @@ public class MessageHandler {
                 if (argument.matches(regex)) {
                     isTimezoneConfigured = true;
                     timezone = argument;
+                    setDbTimezone();
                     return "Your timezone now is <b>UTC" + argument + "</b>";
                 } else {
                     return "Please type correct timezone, e.g. /time_settings +03:00";
@@ -138,6 +160,22 @@ public class MessageHandler {
         return "";
     }
 
+    private void setDbTimezone() throws SQLException {
+        DBconnection.getConnection().setAutoCommit(false);
+        final String SQL = "UPDATE sessions SET is_timezone=?, timezone=? where chat_id=?;";
+        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL);
+        try {
+            ps.setBoolean(1, true);
+            ps.setString(2,timezone);
+            ps.setLong(3, chatID);
+            ps.executeUpdate();
+            DBconnection.getConnection().commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private String setHistoryDate(String input) {
         if (input.contains("/history") || input.equals("/history@aurorahunters_bot")) {
             String regex = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
@@ -150,6 +188,7 @@ public class MessageHandler {
                 if (argument.matches(regex)) {
                     isHistoryConfigured = true;
                     archiveDate = argument;
+                    setDbHistoryDate();
                     return "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
                             "Please use following commands: \n" +
@@ -183,6 +222,22 @@ public class MessageHandler {
         return "";
     }
 
+    public void setDbHistoryDate() throws SQLException {
+        DBconnection.getConnection().setAutoCommit(false);
+        final String SQL = "UPDATE sessions SET is_archive=?, archive=? where chat_id=?;";
+        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL);
+        try {
+            ps.setBoolean(1, true);
+            ps.setString(2,archiveDate);
+            ps.setLong(3, chatID);
+            ps.executeUpdate();
+            DBconnection.getConnection().commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private String getHistoryData() throws SQLException, ParseException {
         if (isHistoryConfigured) {
             return GetDataFromDB.getHistoryValues(archiveDate);
@@ -190,6 +245,39 @@ public class MessageHandler {
         else return "Archive is not configured. Please enter required date in <b>yyyy-MM-dd</b> format: \n" +
                 "e.g. command for <b>July 01 of 2020</b> will be \n" +
                 "/history 2020-07-01";
+    }
+
+    private String setNotif (boolean set) throws SQLException {
+        if (isNotifConfigured && set) {
+            return "Notifications already enabled.";
+        }
+        else if (!isNotifConfigured && set) {
+            setDbNotif(true);
+            return "Notifications has been enabled.";
+        }
+        else if (isNotifConfigured && !set) {
+            setDbNotif(false);
+            return "Notifications has been disabled.";
+        }
+        else if (!isNotifConfigured && !set) {
+            return "Notifications already disabled.";
+        }
+        return "";
+    }
+
+    private void setDbNotif(boolean param) throws SQLException {
+        DBconnection.getConnection().setAutoCommit(false);
+        final String SQL = "UPDATE sessions SET is_notif=? where chat_id=?;";
+        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL);
+        try {
+            ps.setBoolean(1, param);
+            ps.setLong(2, chatID);
+            ps.executeUpdate();
+            DBconnection.getConnection().commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private String getLinks() {
