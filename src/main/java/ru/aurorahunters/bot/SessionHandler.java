@@ -1,5 +1,6 @@
 package ru.aurorahunters.bot;
 
+import org.telegram.telegrambots.meta.api.objects.Location;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.text.ParseException;
 
 public class SessionHandler {
 
-    public static String sessionHandler(String input, Long chatId) throws ParseException, SQLException, IOException,
+    public static String sessionHandler(String input, Long chatId, Location gps) throws ParseException, SQLException, IOException,
             TelegramApiException {
         if (!checkId(chatId)) {
             if (input.contains("/start") || input.equals("/start@aurorahunters_bot")) {
@@ -23,6 +24,9 @@ public class SessionHandler {
             if (input.contains("/stop") || input.equals("/stop@aurorahunters_bot")) {
                 removeId(chatId);
                 return "Bot stopped.";
+            }
+            else if (gps != null) {
+                return getCurrentChat(chatId).setGpsTimezone(GpsToTimezone.getGpsTimezone(gps));
             }
         }
         return getCurrentChat(chatId).respondMessage(input);

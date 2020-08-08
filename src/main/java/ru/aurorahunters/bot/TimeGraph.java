@@ -42,7 +42,7 @@ public class TimeGraph {
 
         // Create the chart
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Proton Density [p/cc] - last 3 hours", "Time (UTC)", "Proton Density [p/cc]", dataset,
+                "Proton Density [p/cc] - last 3 hours", "Time (UTC" + timezone+")", "Proton Density [p/cc]", dataset,
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
@@ -120,7 +120,7 @@ public class TimeGraph {
 
         // Create the chart
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Bulk Speed [km/s] - last 3 hours", "Time (UTC)", "Bulk Speed [km/s]", dataset,
+                "Bulk Speed [km/s] - last 3 hours", "Time (UTC" + timezone+")", "Bulk Speed [km/s]", dataset,
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
@@ -191,7 +191,7 @@ public class TimeGraph {
 
         // Create the chart
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Bz [nT] - last 3 hours", "Time (UTC)", "Bz [nT]", dataset,
+                "Bz [nT] - last 3 hours", "Time (UTC" + timezone+")", "Bz [nT]", dataset,
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();

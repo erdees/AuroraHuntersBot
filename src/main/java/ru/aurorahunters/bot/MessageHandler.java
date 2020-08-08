@@ -23,7 +23,8 @@ public class MessageHandler {
         this.chatID = chatID;
     }
 
-    public MessageHandler(Long chatID, boolean isStarted, boolean isTimezoneConfigured, String timezone, boolean isHistoryConfigured, String archiveDate, boolean isNotifConfigured) {
+    public MessageHandler(Long chatID, boolean isStarted, boolean isTimezoneConfigured, String timezone, boolean
+            isHistoryConfigured, String archiveDate, boolean isNotifConfigured) {
         this.chatID = chatID;
         this.isStarted = isStarted;
         this.isTimezoneConfigured = isTimezoneConfigured;
@@ -39,7 +40,6 @@ public class MessageHandler {
     }
 
     public String respondMessage(String input) throws SQLException, ParseException, IOException, TelegramApiException {
-        System.out.println(this.isNotifConfigured);
         if (isStarted) {
             if (input.contains("/info") || input.equals("/info@aurorahunters_bot")) {
                 return getInfo();
@@ -130,7 +130,7 @@ public class MessageHandler {
                 "/links to get useful links\n";
     }
 
-    private String setTimezone(String input) {
+    public String setTimezone(String input) {
         if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][00]))$";
             String[] temp;
@@ -149,15 +149,26 @@ public class MessageHandler {
                 }
             } catch (Exception e) {
                 if (!isTimezoneConfigured) {
-                    return "<b>Timezone is not configured.</b> Please enter required timezone in UTC format: \n" +
+                    return "<b>Timezone is not configured.</b> To configure it, just <b>share with me your GPS " +
+                            "location.</b>\n" +
+                            "If GPS is not suitable way, you can configure it manually by entering required timezone " +
+                            "in UTC format: \n" +
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
                 } else if (isTimezoneConfigured) {
-                    return "Configured timezone is <b>UTC" + timezone + ".</b> If you need to change it, please enter required timezone in UTC format: \n" +
+                    return "Configured timezone is <b>UTC" + timezone + ".</b> If you need to change it, " +
+                            "just <b>share with me your GPS location</b> or enter it manually in UTC format: \n" +
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
                 }
             }
         }
         return "";
+    }
+
+    public String setGpsTimezone(String input) throws SQLException {
+        isTimezoneConfigured = true;
+        timezone = input;
+        setDbTimezone();
+        return "Your timezone now is <b>UTC" + timezone + "</b>";
     }
 
     private void setDbTimezone() throws SQLException {
@@ -206,7 +217,8 @@ public class MessageHandler {
                             "e.g. command for <b>July 01 of 2020</b> will be \n" +
                             "/history 2020-07-01";
                 } else if (isHistoryConfigured) {
-                    return "Archive is configured for<b> " + archiveDate + ".</b>\n If you need to change it, please type it in required format: \n" +
+                    return "Archive is configured for<b> " + archiveDate + ".</b>\n If you need to change it, please " +
+                            "type it in required format: \n" +
                             "e.g. command for <b>July 01 of 2020</b> will be \n/history 2020-07-01\n" +
                             "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
@@ -312,7 +324,7 @@ public class MessageHandler {
                 "80%d0%b5%d1%82%d1%8c-%d1%81%d0%b5%d0%b2%d0%b5%d1%80%d0%bd%d1%8b%d0%b5-%d1%81%d0%b8%d1%8f%d0%bd%d0%b8%d1%8f/";
     }
 
-    public void sendImage(File image) throws FileNotFoundException, TelegramApiException {
+    private void sendImage(File image) throws FileNotFoundException, TelegramApiException {
         AuroraBot sendGraph = new AuroraBot();
         SendPhoto graph = new SendPhoto()
                 .setPhoto("AuroraHuntersBot_Graph", new FileInputStream(image))
