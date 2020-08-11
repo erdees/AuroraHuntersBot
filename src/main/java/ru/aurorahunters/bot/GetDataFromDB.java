@@ -8,7 +8,6 @@ import java.util.*;
 import java.util.Date;
 
 public class GetDataFromDB {
-
     public static String getLastValues(String timezone) throws SQLException, ParseException {
         final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 10) SELECT * FROM t ORDER BY timezone ASC;\n";
         PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT);

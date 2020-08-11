@@ -2,7 +2,6 @@ package ru.aurorahunters.bot;
 
 import org.telegram.telegrambots.meta.api.objects.Location;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +9,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 public class SessionHandler {
-
     public static String sessionHandler(String input, Long chatId, Location gps) throws ParseException, SQLException, IOException,
             TelegramApiException {
         if (!checkId(chatId)) {
@@ -26,7 +24,7 @@ public class SessionHandler {
                 return "Bot stopped.";
             }
             else if (gps != null) {
-                return getCurrentChat(chatId).setGpsTimezone(GpsToTimezone.getGpsTimezone(gps));
+                return getCurrentChat(chatId).setGpsTimezone(TimeClass.getGpsTimezone(gps));
             }
         }
         return getCurrentChat(chatId).respondMessage(input);

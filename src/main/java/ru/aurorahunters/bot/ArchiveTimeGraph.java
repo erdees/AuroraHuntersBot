@@ -3,11 +3,8 @@ package ru.aurorahunters.bot;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.Marker;
-import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.ui.RectangleAnchor;
-import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.time.Hour;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -32,7 +29,7 @@ public class ArchiveTimeGraph {
     public static File getDensityGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, DENSITY).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | archive for " + date);
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double density = pair.getValue();
@@ -44,38 +41,10 @@ public class ArchiveTimeGraph {
 
         // Create the chart
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Proton Density [p/cc] - archive for " + date, "Time (UTC)", "Proton Density [p/cc]", dataset,
+                "Proton Density [p/cc] | Archive for " + date, "Time (UTC+00:00)", "Proton Density [p/cc]", dataset,
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
-
-        final Marker one = new ValueMarker(4);
-        one.setPaint(Color.yellow);
-        one.setLabel("increased");
-        one.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        one.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(one);
-
-        final Marker two = new ValueMarker(9);
-        two.setPaint(Color.orange);
-        two.setLabel("moderate");
-        two.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        two.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(two);
-
-        final Marker three = new ValueMarker(13);
-        three.setPaint(Color.red.brighter());
-        three.setLabel("high");
-        three.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        three.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(three);
-
-        final Marker four = new ValueMarker(18);
-        four.setPaint(Color.red);
-        four.setLabel("very high");
-        four.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        four.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(four);
 
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
@@ -86,9 +55,18 @@ public class ArchiveTimeGraph {
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setTickLabelPaint(Color.white);
-        plot.getRangeAxis().setRange(1, 99);
+        //plot.getRangeAxis().setRange(-5, 99);
         plot.getDomainAxis().setLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
+        plot.setDomainGridlinePaint(Color.gray);
+        plot.setRangeGridlinePaint(Color.gray);
+
+        plot.addRangeMarker(new IntervalMarker(-10,4, new Color(29, 255,0, 20)));
+        plot.addRangeMarker(new IntervalMarker(4,9, new Color(255,216,0,50)));
+        plot.addRangeMarker(new IntervalMarker(9,13, new Color(255,102,0,100)));
+        plot.addRangeMarker(new IntervalMarker(13,18, new Color(255,0,0,100)));
+        plot.addRangeMarker(new IntervalMarker(18,150, new Color(255,0,222,80)));
+
 
         //Save chart as PNG
         ChartUtils.saveChartAsPNG(file, chart, 600, 400);
@@ -98,7 +76,7 @@ public class ArchiveTimeGraph {
     public static File getSpeedGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, SPEED).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | archive for " + date);
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double speed = pair.getValue();
@@ -110,38 +88,10 @@ public class ArchiveTimeGraph {
 
         // Create the chart
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Bulk Speed [km/s] - archive for " + date, "Time (UTC)", "Bulk Speed [km/s]", dataset,
+                "Bulk Speed [km/s] | Archive for " + date, "Time (UTC+00:00)", "Bulk Speed [km/s]", dataset,
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
-
-        final Marker one = new ValueMarker(400);
-        one.setPaint(Color.yellow);
-        one.setLabel("increased");
-        one.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        one.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(one);
-
-        final Marker two = new ValueMarker(550);
-        two.setPaint(Color.orange);
-        two.setLabel("moderate");
-        two.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        two.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(two);
-
-        final Marker three = new ValueMarker(600);
-        three.setPaint(Color.red.brighter());
-        three.setLabel("high");
-        three.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        three.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(three);
-
-        final Marker four = new ValueMarker(650);
-        four.setPaint(Color.red);
-        four.setLabel("very high");
-        four.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        four.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(four);
 
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
@@ -152,9 +102,17 @@ public class ArchiveTimeGraph {
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setTickLabelPaint(Color.white);
-        plot.getRangeAxis().setRange(100, 999);
+        //plot.getRangeAxis().setRange(100, 999);
         plot.getDomainAxis().setLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
+        plot.setDomainGridlinePaint(Color.gray);
+        plot.setRangeGridlinePaint(Color.gray);
+
+        plot.addRangeMarker(new IntervalMarker(0,400, new Color(29, 255,0, 20)));
+        plot.addRangeMarker(new IntervalMarker(400,550, new Color(255,216,0,50)));
+        plot.addRangeMarker(new IntervalMarker(550,600, new Color(255, 102,0,100)));
+        plot.addRangeMarker(new IntervalMarker(600,650, new Color(255,0,0,100)));
+        plot.addRangeMarker(new IntervalMarker(650,1000, new Color(255,0,222,80)));
 
         //Save chart as PNG
         ChartUtils.saveChartAsPNG(file, chart, 600, 400);
@@ -164,7 +122,7 @@ public class ArchiveTimeGraph {
     public static File getBzGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, BZ_GSM).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | archive for " + date);
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double bz = pair.getValue();
@@ -176,38 +134,10 @@ public class ArchiveTimeGraph {
 
         // Create the chart
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Bz [nT] - archive for " + date, "Time (UTC)", "Bz [nT]", dataset,
+                "Bz [nT] | Archive for " + date, "Time (UTC+00:00)", "Bz [nT]", dataset,
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
-
-        final Marker one = new ValueMarker(-1.1);
-        one.setPaint(Color.yellow);
-        one.setLabel("increased");
-        one.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        one.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(one);
-
-        final Marker two = new ValueMarker(-3.2);
-        two.setPaint(Color.orange);
-        two.setLabel("moderate");
-        two.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        two.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(two);
-
-        final Marker three = new ValueMarker(-4.8);
-        three.setPaint(Color.red.brighter());
-        three.setLabel("high");
-        three.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        three.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(three);
-
-        final Marker four = new ValueMarker(-8.4);
-        four.setPaint(Color.red);
-        four.setLabel("very high");
-        four.setLabelAnchor(RectangleAnchor.BOTTOM_RIGHT);
-        four.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
-        plot.addRangeMarker(four);
 
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
@@ -218,9 +148,17 @@ public class ArchiveTimeGraph {
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setTickLabelPaint(Color.white);
-        plot.getRangeAxis().setRange(-10, 6);
+        //plot.getRangeAxis().setRange(-10, 8);
         plot.getDomainAxis().setLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
+        plot.setDomainGridlinePaint(Color.gray);
+        plot.setRangeGridlinePaint(Color.gray);
+
+        plot.addRangeMarker(new IntervalMarker(-1.1,50, new Color(29, 255,0, 20)));
+        plot.addRangeMarker(new IntervalMarker(-3.2,-1.1, new Color(255,216,0,50)));
+        plot.addRangeMarker(new IntervalMarker(-4.8,-3.2, new Color(255,102,0,100)));
+        plot.addRangeMarker(new IntervalMarker(-8.4,-4.8, new Color(255,0,0,100)));
+        plot.addRangeMarker(new IntervalMarker(-50,-8.4, new Color(255,0,222,80)));
 
         //Save chart as PNG
         ChartUtils.saveChartAsPNG(file, chart, 600, 400);
@@ -280,7 +218,6 @@ public class ArchiveTimeGraph {
         } else {
             System.out.println("Wrong format. The date should be yyyy-MM-dd, e.g. 2020-07-01 ");
         }
-
         return null;
     }
 }
