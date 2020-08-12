@@ -117,9 +117,9 @@ public class JsonToDB implements Runnable {
     }
 
     private void dbConnect() throws SQLException {
-        DBconnection.getConnection().setAutoCommit(false);
+        Config.getDbConnection().setAutoCommit(false);
         String sql = "INSERT INTO data VALUES (?::TIMESTAMP, ?::NUMERIC, ?::NUMERIC, ?::NUMERIC) ON CONFLICT (time_tag) DO NOTHING;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(sql);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
         try {
             for(Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
                 String key = entry.getKey();
@@ -131,7 +131,7 @@ public class JsonToDB implements Runnable {
                 ps.setObject(4, arr[2]);
                 ps.executeUpdate();
             }
-            DBconnection.getConnection().commit();
+            Config.getDbConnection().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

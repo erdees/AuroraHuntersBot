@@ -172,15 +172,15 @@ public class MessageHandler {
     }
 
     private void setDbTimezone() throws SQLException {
-        DBconnection.getConnection().setAutoCommit(false);
+        Config.getDbConnection().setAutoCommit(false);
         final String SQL = "UPDATE sessions SET is_timezone=?, timezone=? where chat_id=?;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
         try {
             ps.setBoolean(1, true);
             ps.setString(2,timezone);
             ps.setLong(3, chatID);
             ps.executeUpdate();
-            DBconnection.getConnection().commit();
+            Config.getDbConnection().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -235,15 +235,15 @@ public class MessageHandler {
     }
 
     public void setDbHistoryDate() throws SQLException {
-        DBconnection.getConnection().setAutoCommit(false);
+        Config.getDbConnection().setAutoCommit(false);
         final String SQL = "UPDATE sessions SET is_archive=?, archive=? where chat_id=?;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
         try {
             ps.setBoolean(1, true);
             ps.setString(2,archiveDate);
             ps.setLong(3, chatID);
             ps.executeUpdate();
-            DBconnection.getConnection().commit();
+            Config.getDbConnection().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -278,14 +278,14 @@ public class MessageHandler {
     }
 
     private void setDbNotif(boolean param) throws SQLException {
-        DBconnection.getConnection().setAutoCommit(false);
+        Config.getDbConnection().setAutoCommit(false);
         final String SQL = "UPDATE sessions SET is_notif=? where chat_id=?;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
         try {
             ps.setBoolean(1, param);
             ps.setLong(2, chatID);
             ps.executeUpdate();
-            DBconnection.getConnection().commit();
+            Config.getDbConnection().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

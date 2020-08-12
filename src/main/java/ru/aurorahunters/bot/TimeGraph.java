@@ -22,7 +22,7 @@ public class TimeGraph {
         File file = new File(".png");
         String SQL_SELECT_BZ = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', density from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC;\n";
 
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT_BZ);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
         TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
 
@@ -72,7 +72,7 @@ public class TimeGraph {
         File file = new File(".png");
         String SQL_SELECT_BZ = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', speed from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC;\n";
 
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT_BZ);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
         TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
 
@@ -122,7 +122,7 @@ public class TimeGraph {
         File file = new File(".png");
         String SQL_SELECT_BZ = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', bz_gsm from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC;\n";
 
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT_BZ);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
         TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
 

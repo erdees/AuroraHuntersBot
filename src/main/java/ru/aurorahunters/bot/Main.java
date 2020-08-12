@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws IOException, SQLException {
         Locale.setDefault(new Locale("en", "RU"));
+        Config.loadConfig();
         TimeClass.initializeZoneEngine();
         System.out.println("Bot started.");
 

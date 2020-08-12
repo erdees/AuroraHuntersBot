@@ -179,7 +179,7 @@ public class ArchiveTimeGraph {
             finalDay = new SimpleDateFormat("yyyy-MM-dd").format(nextDay);
             final String SQL_TEST = "SELECT time_tag, " + valueType + " FROM data WHERE time_tag >= \'" + initialDay +
                     "\' AND time_tag < \'" + finalDay + "\';";
-            PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_TEST);
+            PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_TEST);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (valueType.equals("bz_gsm")) {
                 while (resultSet.next()) {

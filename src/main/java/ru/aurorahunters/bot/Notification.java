@@ -41,7 +41,7 @@ public class Notification implements Runnable  {
     public void sendNotif(String message) throws TelegramApiException, SQLException {
         Long chatId;
         final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true';";
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(sql);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             chatId  = resultSet.getLong(1);
@@ -111,7 +111,7 @@ public class Notification implements Runnable  {
         final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/+00:00' " +
                 "at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 5) SELECT * " +
                 "FROM t ORDER BY timezone ASC;\n";
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);

@@ -10,7 +10,7 @@ import java.util.Date;
 public class GetDataFromDB {
     public static String getLastValues(String timezone) throws SQLException, ParseException {
         final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 10) SELECT * FROM t ORDER BY timezone ASC;\n";
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SELECT);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT);
         ResultSet resultSet = preparedStatement.executeQuery();
         String shortTimeZone[] = timezone.split(":");
         String timeZoneToMessage = shortTimeZone[0];
@@ -46,7 +46,7 @@ public class GetDataFromDB {
     public static String getWaitingTime() throws SQLException {
         double speed = 0;
         final String SQL_SPEED_LAST = "SELECT speed from data ORDER BY time_tag desc limit 1;";
-        PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_SPEED_LAST);
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SPEED_LAST);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             speed = resultSet.getDouble(1);
@@ -75,7 +75,7 @@ public class GetDataFromDB {
             String initialDay = new SimpleDateFormat("yyyy-MM-dd").format(day);
             String finalDay = new SimpleDateFormat("yyyy-MM-dd").format(nextDay);
             final String SQL_TEST = "SELECT time_tag, density, speed, bz_gsm FROM data WHERE time_tag >= \'" + initialDay + "\' AND time_tag < \'" + finalDay + "\';";
-            PreparedStatement preparedStatement = DBconnection.getConnection().prepareStatement(SQL_TEST);
+            PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_TEST);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Timestamp time_tag = resultSet.getTimestamp(1);

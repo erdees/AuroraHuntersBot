@@ -53,13 +53,11 @@ class AuroraBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "@usercabronbot"; //Test
-        //return "@aurorahunters_bot"; //Prod
+        return Config.getBot_username();
     }
 
     @Override
     public String getBotToken() {
-        return "1166398193:AAFlkO9ie2gM-fx-M1erKZVY2Q7gh3T0SVI"; //Test
-        //return "1377530534:AAE-z4KAIQBZn64TcQ--qQmT8yk_JdMcDd8"; //Prod
+        return Config.getBot_token();
     }
 }

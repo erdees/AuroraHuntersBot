@@ -32,16 +32,16 @@ public class SessionHandler {
     // REWORK!!!!!
     public static boolean checkId(Long chatID) throws IOException, SQLException, ParseException{
         final String SQL_SELECT = "select chat_id from sessions where chat_id=?;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(SQL_SELECT);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL_SELECT);
         ps.setLong(1, chatID);
         ResultSet resultSet = ps.executeQuery();
         return resultSet.next();
     }
 
     public static void setDefaults(Long chatId) throws SQLException {
-        DBconnection.getConnection().setAutoCommit(false);
+        Config.getDbConnection().setAutoCommit(false);
         final String sql = "INSERT INTO sessions VALUES (?::NUMERIC, ?::BOOLEAN, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN) ON CONFLICT (chat_id) DO NOTHING;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(sql);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
         try {
             ps.setLong(1, chatId);
             ps.setBoolean(2, true);
@@ -51,7 +51,7 @@ public class SessionHandler {
             ps.setString(6, null);
             ps.setBoolean(7, true);
             ps.executeUpdate();
-            DBconnection.getConnection().commit();
+            Config.getDbConnection().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -59,13 +59,13 @@ public class SessionHandler {
     }
 
     public static void removeId(Long chatId) throws SQLException {
-        DBconnection.getConnection().setAutoCommit(false);
+        Config.getDbConnection().setAutoCommit(false);
         final String sql = "DELETE FROM sessions WHERE chat_id = ?;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(sql);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
         try {
             ps.setLong(1, chatId);
             ps.executeUpdate();
-            DBconnection.getConnection().commit();
+            Config.getDbConnection().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class SessionHandler {
     public static MessageHandler getCurrentChat(Long chatId) throws SQLException {
         MessageHandler bot = null;
         final String sql = "SELECT * FROM sessions WHERE chat_id= ?;";
-        PreparedStatement ps = DBconnection.getConnection().prepareStatement(sql);
+        PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
         ps.setLong(1, chatId);
         ResultSet resultSet = ps.executeQuery();
         while (resultSet.next()) {
