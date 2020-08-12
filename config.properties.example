@@ -1,0 +1,13 @@
+# AuroraHunters Telegram Bot configuration file.
+# Here you can configure your bot by filling required parameters.
+# Please complete all fields to start your bot.
+#################################################################
+#
+# PostgreSQL credentials
+db.host = jdbc:postgresql://127.0.0.1:5432/yourdbname
+db.login = yourdbuser
+db.password = yourdbpassword
+#
+# Telegram Bot api required fields
+bot.username = @botusername
+bot.token = YOUR-TELEGRAM-APIKEY

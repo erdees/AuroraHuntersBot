@@ -8,3 +8,4 @@ target/**
 *.json
 *.txt
 *.DS_Store
+config.properties
