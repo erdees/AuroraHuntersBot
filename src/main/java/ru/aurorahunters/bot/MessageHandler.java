@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
 import ru.aurorahunters.bot.graphbuilder.ArchiveTimeGraph;
 import ru.aurorahunters.bot.graphbuilder.TimeGraph;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,73 +45,73 @@ public class MessageHandler {
 
     public String respondMessage(String input) throws SQLException, ParseException, IOException, TelegramApiException {
         if (isStarted) {
-            if (input.contains("/info") || input.equals("/info@aurorahunters_bot")) {
+            if (input.contains("/info") || input.equals("/info" + Config.getBot_username())) {
                 return getInfo();
             }
-            else if (input.contains("/start") || input.equals("/start@aurorahunters_bot")) {
+            else if (input.contains("/start") || input.equals("/start" + Config.getBot_username())) {
                 return "Bot is already started. Type /info to see available commands.";
             }
-            else if (input.contains("/chat") || input.equals("/chat@aurorahunters_bot")) {
+            else if (input.contains("/chat") || input.equals("/chat" + Config.getBot_username())) {
                 return "Please join our community: \nhttps://t.me/aurora_ru";
             }
-            else if (input.equals("/map") || input.equals("/map@aurorahunters_bot")) {
+            else if (input.equals("/map") || input.equals("/map" + Config.getBot_username())) {
                 return getAuroraMap();
             }
-            else if (input.contains("/last") || input.equals("/last@aurorahunters_bot")) {
+            else if (input.contains("/last") || input.equals("/last" + Config.getBot_username())) {
                 return GetDataFromDB.getLastValues(timezone);
             }
-            else if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
+            else if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBot_username())) {
                 return setTimezone(input);
             }
-            else if (input.equals("/notif_on") || input.equals("/notif_on@aurorahunters_bot")) {
+            else if (input.equals("/notif_on") || input.equals("/notif_on" + Config.getBot_username())) {
                 return setNotif(true);
             }
-            else if (input.equals("/notif_off") || input.equals("/notif_off@aurorahunters_bot")) {
+            else if (input.equals("/notif_off") || input.equals("/notif_off" + Config.getBot_username())) {
                 return setNotif(false);
             }
-            else if (input.contains("/weather") || input.equals("/weather@aurorahunters_bot")) {
+            else if (input.contains("/weather") || input.equals("/weather" + Config.getBot_username())) {
                 return getWeatherLinks();
             }
-            else if (input.contains("/skycams") || input.equals("/skycams@aurorahunters_bot")) {
+            else if (input.contains("/skycams") || input.equals("/skycams" + Config.getBot_username())) {
                 return getCams();
             }
-            else if (input.contains("/links") || input.equals("/links@aurorahunters_bot")) {
+            else if (input.contains("/links") || input.equals("/links" + Config.getBot_username())) {
                 return getLinks();
             }
-            else if (input.equals("/graph_all") || input.equals("/graph_all@aurorahunters_bot")) {
+            else if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBot_username())) {
                 sendImage(TimeGraph.getBzGraph(timezone));
                 sendImage(TimeGraph.getSpeedGraph(timezone));
                 sendImage(TimeGraph.getDensityGraph(timezone));
             }
-            else if (input.equals("/graph_bz") || input.equals("/graph_bz@aurorahunters_bot")) {
+            else if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBot_username())) {
                 sendImage(TimeGraph.getBzGraph(timezone));
             }
-            else if (input.equals("/graph_speed") || input.equals("/graph_speed@aurorahunters_bot")) {
+            else if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBot_username())) {
                 sendImage(TimeGraph.getSpeedGraph(timezone));
             }
-            else if (input.equals("/graph_density") || input.equals("/graph_density@aurorahunters_bot")) {
+            else if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBot_username())) {
                 sendImage(TimeGraph.getDensityGraph(timezone));
             }
             else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
-                if (input.equals("/history_text") || input.equals("/history_text@aurorahunters_bot")) {
+                if (input.equals("/history_text") || input.equals("/history_text" + Config.getBot_username())) {
                     return getHistoryData();
                 }
-                else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz@aurorahunters_bot")) {
+                else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" + Config.getBot_username())) {
                     sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed@aurorahunters_bot")) {
+                else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" + Config.getBot_username())) {
                     sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_density") || input.equals("/history_graph_density@aurorahunters_bot")) {
+                else if (input.equals("/history_graph_density") || input.equals("/history_graph_density" + Config.getBot_username())) {
                     sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_all") || input.equals("/history_graph_all@aurorahunters_bot")) {
+                else if (input.equals("/history_graph_all") || input.equals("/history_graph_all" + Config.getBot_username())) {
                     sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                     sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                     sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
             }
-            else if (input.contains("/history") || input.contains("/contains@aurorahunters_bot")) {
+            else if (input.contains("/history") || input.contains("/contains" + Config.getBot_username())) {
                 return setHistoryDate(input);
             }
             return "";
@@ -134,7 +135,7 @@ public class MessageHandler {
     }
 
     public String setTimezone(String input) {
-        if (input.contains("/time_settings") || input.equals("/time_settings@aurorahunters_bot")) {
+        if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBot_username())) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][00]))$";
             String[] temp;
             String delimiter = " ";
@@ -191,7 +192,7 @@ public class MessageHandler {
     }
 
     private String setHistoryDate(String input) {
-        if (input.contains("/history") || input.equals("/history@aurorahunters_bot")) {
+        if (input.contains("/history") || input.equals("/history" + Config.getBot_username())) {
             String regex = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
             String[] temp;
             String delimiter = " ";

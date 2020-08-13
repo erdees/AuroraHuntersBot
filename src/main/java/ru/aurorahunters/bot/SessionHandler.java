@@ -12,14 +12,14 @@ public class SessionHandler {
     public static String sessionHandler(String input, Long chatId, Location gps) throws ParseException, SQLException, IOException,
             TelegramApiException {
         if (!checkId(chatId)) {
-            if (input.contains("/start") || input.equals("/start@aurorahunters_bot")) {
+            if (input.contains("/start") || input.equals("/start" + Config.getBot_username())) {
                 setDefaults(chatId);
                 return getCurrentChat(chatId).setBotStarted();
             }
             else return new MessageHandler(chatId).respondMessage(input);
         }
         else {
-            if (input.contains("/stop") || input.equals("/stop@aurorahunters_bot")) {
+            if (input.contains("/stop") || input.equals("/stop" + Config.getBot_username())) {
                 removeId(chatId);
                 return "Bot stopped.";
             }

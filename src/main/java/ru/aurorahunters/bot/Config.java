@@ -15,6 +15,7 @@ public class Config {
     private static Connection connection;
     private static String bot_username;
     private static String bot_token;
+    private static String project_site;
 
     public static void loadConfig() {
         FileInputStream config;
@@ -27,6 +28,7 @@ public class Config {
             PASS = properties.getProperty("db.password");
             bot_username = properties.getProperty("bot.username");
             bot_token = properties.getProperty("bot.token");
+            project_site = properties.getProperty("bot.site");
             setDbConnection();
         } catch (IOException e) {
             System.err.println("Error: config.properties is not exist in program folder.");
@@ -51,5 +53,9 @@ public class Config {
 
     public static String getBot_token() {
         return bot_token;
+    }
+
+    public static String getProject_site() {
+        return project_site;
     }
 }

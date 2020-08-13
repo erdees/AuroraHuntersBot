@@ -27,7 +27,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -77,7 +77,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -127,7 +127,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | auroralights.ru Telegram Bot (@aurorahunters_bot) | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);

@@ -11,3 +11,5 @@ db.password = yourdbpassword
 # Telegram Bot api required fields
 bot.username = @botusername
 bot.token = YOUR-TELEGRAM-APIKEY
+# Project website
+bot.site = yoursite.com
