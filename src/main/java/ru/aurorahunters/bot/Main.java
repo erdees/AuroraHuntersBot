@@ -3,6 +3,7 @@ package ru.aurorahunters.bot;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.aurorahunters.bot.controller.JsonToDB;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Locale;

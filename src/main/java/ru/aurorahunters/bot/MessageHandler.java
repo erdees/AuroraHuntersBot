@@ -2,6 +2,9 @@ package ru.aurorahunters.bot;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.aurorahunters.bot.controller.GetDataFromDB;
+import ru.aurorahunters.bot.graphbuilder.ArchiveTimeGraph;
+import ru.aurorahunters.bot.graphbuilder.TimeGraph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

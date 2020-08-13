@@ -1,4 +1,6 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.controller;
+
+import ru.aurorahunters.bot.Config;
 
 import java.sql.*;
 import java.text.DecimalFormat;

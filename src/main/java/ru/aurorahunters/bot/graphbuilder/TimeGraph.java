@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.graphbuilder;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -6,6 +6,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.*;
+import ru.aurorahunters.bot.Config;
+import ru.aurorahunters.bot.TimeClass;
+import ru.aurorahunters.bot.controller.GetDataFromDB;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
