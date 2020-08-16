@@ -14,11 +14,13 @@ The bot fetches JSON from NOAA servers (DSCOVR satellite), stores and subsequent
 - Has custom notification, time zone and archive settings for each user
 - The time zone is adjusted by sending GPS tag to the bot
 
+<img src="../master/images/Screenshot_2020-08-17-00-11-31-283_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-11-39-572_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-14-00-133_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-15-10-109_org.telegram.messenger.jpg" width="200px"/>
+
 ## Buld and run
 
 ### Prerequisites:
 
-- Linux machine with 1+ Gb RAM (CentOS 7,8 tested. Any other distributive with required software versions may used);
+- Linux machine with 1+ Gb RAM (tested on RHEL/OEL/CentOS 7,8);
 - PostgreSQL 10+ installed;
 - java-1.8.0-openjdk or oracle Java 8 installed (both tested);
 - maven installed; (yum install maven on CentOS 7-8)
