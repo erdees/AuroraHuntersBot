@@ -92,7 +92,7 @@ Change the bot working directory where .jar file located, for example:
 
 `WorkingDirectory=/opt/bots/AuroraTelegramBot`
 
-Once done, check java parameters with required quantity of RAM for working application. I recommend to configure it with 128GB, but I have tested it with 32Gb and it worked without any problems. 128Gb is preferable to receive generated graphs faster. An example of this parameter:
+Once done, check java parameters with required quantity of RAM for working application. I recommend to configure it with 128Mb, but I have tested it with 32Mb and it worked without any problems. 128Mb is preferable to receive generated graphs faster. An example of this parameter:
 
 `ExecStart=/bin/java -Xms128m -Xmx128m -jar AuroraTelegramBot-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
