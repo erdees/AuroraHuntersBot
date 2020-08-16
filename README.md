@@ -3,6 +3,15 @@ Java written Telegram Bot, which helps photographers catch northern lights.
 ## About the project
 ## What this bot do?
 
+The bot fetches JSON from NOAA servers (DSCOVR satellite), stores and subsequently processes the required data. This significantly simplifies the northern lights prediction. Bot fetches and process the following values: the north-south direction of the interplanetary magnetic field (Bz), solar wind speed and density. The bot can build charts, send notifications to users, has archive where user can request historical data, etc:
+- Builds charts 
+- Notifies subscribers in real time of a high probability of northern lights 
+- Calculates the waiting time for the arrival of the parameters to the Earth (waiting time)
+- It has an archive that can be used to request historical data from the database
+- Allows displaying data in the time zone required by the user
+- Has custom notification, time zone and archive settings for each user
+- The time zone is adjusted by sending GPS tag to the bot
+
 ## Buld and run
 
 ### Prerequisites:
