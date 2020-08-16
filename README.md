@@ -56,7 +56,7 @@ Edit configuration file with your parameters.
 
 `vim config.properties`
 
-And replace example variables by yours
+And replace example variables by yours:
 
 db.host = jdbc:postgresql://127.0.0.1:5432/yourdbname //postgresql host, port and database name\
 db.login = yourdbuser //database user\
