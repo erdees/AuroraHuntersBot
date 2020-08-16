@@ -65,7 +65,7 @@ After save and exit. Once it done, make sure, that PostgreSQL up and running and
 
 Almost forget! Make sere that you have created required database structure:
 
-`psql dbuser -d database_name -1 -f schema.sql`
+`psql -U username -d dbname < schema.sql`
 
 Last thing we should do, is to make the bot automatically up and running when operating system starts. To do it, we need to create systemd .service file which you can copy and configure from root repository folder:
 
