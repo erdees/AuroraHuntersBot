@@ -63,6 +63,10 @@ bot.site = yoursite.com //project website. this parameters will put watermarks o
 ```
 After save and exit. Once it done, make sure, that PostgreSQL up and running and the database, its user and password created correctly. In case, if database is unavailable or its credentials is wrong, bot will not start and return an error. 
 
+Almost forget! Make sere that you have created required database structure:
+
+`psql dbuser -d database_name -1 -f schema.sql`
+
 Last thing we should do, is to make the bot automatically up and running when operating system starts. To do it, we need to create systemd .service file which you can copy and configure from root repository folder:
 
 `cp Aurora.service /etc/systemd/system/`
