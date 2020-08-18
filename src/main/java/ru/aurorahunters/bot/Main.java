@@ -12,9 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
         Config.loadConfig();
-        if (!Config.isIsConfigCreated()) {
-            System.exit(0);
-        }
         Locale.setDefault(new Locale("en", "RU"));
         TimeClass.initializeZoneEngine();
         ApiContextInitializer.init();
@@ -28,9 +25,9 @@ public class Main {
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.schedule(new JsonToDB(3), 0, TimeUnit.SECONDS);
+        scheduler.schedule(new JsonToDB(Config.getBotDbRecovery()), 0, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new JsonToDB(1), 0, 40, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new JsonToDB(2), 59, 60, TimeUnit.MINUTES);
-        notifScheduler.scheduleAtFixedRate(new Notification(), 10, 60, TimeUnit.SECONDS);
+        notifScheduler.scheduleAtFixedRate(new Notification(), 30, 60, TimeUnit.SECONDS);
     }
 }

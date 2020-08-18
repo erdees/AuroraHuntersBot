@@ -13,3 +13,9 @@ bot.username = @botusername
 bot.token = YOUR-TELEGRAM-APIKEY
 # Project website
 bot.site = yoursite.com
+# Notification interval in minutes
+bot.interval = 15
+# Database filling from JSON (id) where id=1 is 5 minutes; 
+# id=2 is 2 hours; id=3 is 1 day (recommended for each start);
+# id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
+bot.recovery = 3 

@@ -5,7 +5,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
 import ru.aurorahunters.bot.graphbuilder.ArchiveTimeGraph;
 import ru.aurorahunters.bot.graphbuilder.TimeGraph;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -264,21 +263,14 @@ public class MessageHandler {
     }
 
     private String setNotif (boolean set) throws SQLException {
-        if (isNotifConfigured && set) {
-            return "Notifications already enabled.";
-        }
-        else if (!isNotifConfigured && set) {
+        if (set) {
             setDbNotif(true);
-            return "Notifications has been enabled.";
+            return "Notifications enabled.";
         }
-        else if (isNotifConfigured && !set) {
+        else  {
             setDbNotif(false);
-            return "Notifications has been disabled.";
+            return "Notifications disabled.";
         }
-        else if (!isNotifConfigured && !set) {
-            return "Notifications already disabled.";
-        }
-        return "";
     }
 
     private void setDbNotif(boolean param) throws SQLException {

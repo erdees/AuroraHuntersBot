@@ -28,7 +28,7 @@ public class Notification implements Runnable  {
             try {
                 if (checkNotification()) {
                     sendNotif(getAlarmString());
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(300));
+                    Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifInterval()));
                 }
             } catch (SQLException | ParseException | TelegramApiException e) {
                 e.printStackTrace();
@@ -57,7 +57,7 @@ public class Notification implements Runnable  {
         String firstLine = String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s%n", "BZ ", "|", "S ", "|", "PD");
         String lastLine = "</pre>\nclick to see latest data: /last\n" +
-                "to disable notifications, click /notif_off";
+                "click /notif_off to disable notifications";
         StringBuilder sb = new StringBuilder();
         sb.append(firstLine);
         sb.append(secondLine);
