@@ -30,7 +30,7 @@ public class TimeClass {
     public static String getCurrentTime() throws ParseException {
         String fromDateString = new Date().toString();
         DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        Date fromDate = (Date)formatter.parse(fromDateString);
+        Date fromDate = formatter.parse(fromDateString);
         TimeZone central = TimeZone.getTimeZone("UTC+03:00");
         formatter.setTimeZone(central);
         return formatter.format(fromDate);

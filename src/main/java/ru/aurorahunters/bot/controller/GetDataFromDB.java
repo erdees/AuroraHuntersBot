@@ -1,7 +1,6 @@
 package ru.aurorahunters.bot.controller;
 
 import ru.aurorahunters.bot.Config;
-
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -34,7 +33,6 @@ public class GetDataFromDB {
             double bz_gsm = resultSet.getDouble(4);
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time_tag.toString());
             String newString = new SimpleDateFormat("HH:mm").format(date); // 9:00
-
             sb.append(String.format("%4s\t%s\t%3s\t%s\t%4s\t%s\t%3s%n", chatOutput.format(bz_gsm), "|",
                     Math.round(speed), "|", chatOutput.format(density), "|", newString));
             if (resultSet.isLast()) {
