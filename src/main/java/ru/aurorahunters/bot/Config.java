@@ -1,7 +1,6 @@
 package ru.aurorahunters.bot;
 
 import ru.aurorahunters.bot.controller.JsonToDB;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -30,7 +29,6 @@ public class Config {
     private static String PLASM_24H;
     private static String MAG_7DAY;
     private static String PLASM_7DAY;
-
     private static String GRAPH_COLOR_LOW;
     private static String GRAPH_COLOR_NORMAL;
     private static String GRAPH_COLOR_MODERATE;

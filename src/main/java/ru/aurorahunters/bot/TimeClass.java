@@ -20,7 +20,7 @@ public class TimeClass {
 
     /**
      * Method which convert received Location to location's timezone.
-     * @param location
+     * @param location is a Telegram object which contains latitude and longitude.
      * @return timezone in String format
      */
     public static String getGpsTimezone(Location location) {

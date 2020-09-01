@@ -6,11 +6,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Notification implements Runnable  {
     static ArrayList<Double> densityValues = new ArrayList<>();
@@ -20,6 +17,9 @@ public class Notification implements Runnable  {
     private static final double topSpeed = 501.0;
     private static final double topBz = -5.1;
 
+    /**
+     * Run method which is necessary to run it as a daemon using ScheduledExecutorService.
+     */
     @Override
     public void run() {
         try {
@@ -28,7 +28,7 @@ public class Notification implements Runnable  {
                     sendNotif(getAlarmString());
                     //Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifyInterval()));
                 }
-            } catch (SQLException | ParseException | TelegramApiException e) {
+            } catch (SQLException | TelegramApiException e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {
@@ -36,8 +36,12 @@ public class Notification implements Runnable  {
         }
     }
 
+    /**
+     * Send a notification message to all bot users who subscribed to notifications.
+     * @param message message which should be sent.
+     */
     public void sendNotif(String message) throws TelegramApiException, SQLException {
-        Long chatId;
+        long chatId;
         final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true'";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -49,6 +53,10 @@ public class Notification implements Runnable  {
         }
     }
 
+    /**
+     * Generates a String message in Telegram format with notification.
+     * @return a String with result.
+     */
     public String getAlarmString() {
         DecimalFormat chatOutput = new DecimalFormat("###.#");
         String firstLine = String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
@@ -67,11 +75,16 @@ public class Notification implements Runnable  {
         return sb.toString();
     }
 
-    public boolean checkNotification() throws SQLException, ParseException {
+    /** Check if one, two, three or none of parameters is true. */
+    public boolean checkNotification() throws SQLException {
         getDbValues();
         return isDensityHigh() || isSpeedHigh() || isBzHigh();
     }
 
+    /**
+     * Method which compares values from ArrayList, and if 5 of them is more or equals topDensity, true will returned.
+     * @return boolean with a result of check.
+     */
     private boolean isDensityHigh() {
         int count = 0;
         for (Double d : densityValues) {
@@ -82,6 +95,10 @@ public class Notification implements Runnable  {
         return count >= 5;
     }
 
+    /**
+     * Method which compares values from ArrayList, and if 5 of them is more or equals topSpeed, true will returned.
+     * @return boolean with a result of check.
+     */
     private boolean isSpeedHigh() {
         int count = 0;
         for (Double d : speedValues) {
@@ -92,6 +109,10 @@ public class Notification implements Runnable  {
         return count >= 5;
     }
 
+    /**
+     * Method which compares values from ArrayList, and if 5 of them is more or equals topBz, true will returned.
+     * @return boolean with a result of check.
+     */
     private boolean isBzHigh() {
         int count = 0;
         for (Double d : bz_gsmValues) {
@@ -102,15 +123,15 @@ public class Notification implements Runnable  {
         return count >= 5;
     }
 
-    private void getDbValues() throws SQLException, ParseException {
+    /** Retrieves form a Database values which is necessary to check if notifications should be sent. */
+    private void getDbValues() throws SQLException {
         resetCollection();
         final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/+00:00' " +
                 "at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 5) SELECT * " +
-                "FROM t ORDER BY timezone ASC;\n";
+                "FROM t ORDER BY timezone ASC";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Timestamp time_tag = resultSet.getTimestamp(1);
             double density = resultSet.getDouble(2);
             double speed = resultSet.getDouble(3);
             double bz_gsm = resultSet.getDouble(4);
@@ -120,6 +141,7 @@ public class Notification implements Runnable  {
         }
     }
 
+    /** Deletes a temporary ArrayList content for a next iteration. */
     private void resetCollection() {
         densityValues.clear();
         speedValues.clear();

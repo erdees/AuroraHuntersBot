@@ -5,7 +5,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
 import ru.aurorahunters.bot.graphbuilder.ArchiveTimeGraph;
 import ru.aurorahunters.bot.graphbuilder.NewTimeGraph;
-import ru.aurorahunters.bot.graphbuilder.TimeGraph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,79 +42,85 @@ public class MessageHandler {
         return getInfo();
     }
 
+    /**
+     * Main method which threats reaction on user's messages.
+     * @param input a String parameter which should be parsed and processed if necessary.
+     * @return a String which is basically should be a message which will be sent to a user.
+     */
     public String respondMessage(String input) throws SQLException, ParseException, IOException, TelegramApiException {
         if (isStarted) {
-            if (input.contains("/info") || input.equals("/info" + Config.getBotUsername())) {
+            if (input.equals("/info") || input.equals("/info" + Config.getBotUsername())) {
                 return getInfo();
             }
-            else if (input.contains("/start") || input.equals("/start" + Config.getBotUsername())) {
+            if (input.equals("/start") || input.equals("/start" + Config.getBotUsername())) {
                 return "Bot is already started. Type /info to see available commands.";
             }
-            else if (input.contains("/chat") || input.equals("/chat" + Config.getBotUsername())) {
+            if (input.equals("/chat") || input.equals("/chat" + Config.getBotUsername())) {
                 return "Please join our community: \nhttps://t.me/aurora_ru";
             }
-            else if (input.equals("/map") || input.equals("/map" + Config.getBotUsername())) {
+            if (input.equals("/map") || input.equals("/map" + Config.getBotUsername())) {
                 return getAuroraMap();
             }
-            else if (input.contains("/last") || input.equals("/last" + Config.getBotUsername())) {
+            if (input.equals("/last") || input.equals("/last" + Config.getBotUsername())) {
                 return GetDataFromDB.getLastValues(timezone);
             }
-            else if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
+            if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
                 return setTimezone(input);
             }
-            else if (input.equals("/notif_on") || input.equals("/notif_on" + Config.getBotUsername())) {
+            if (input.equals("/notif_on") || input.equals("/notif_on" + Config.getBotUsername())) {
                 return setNotif(true);
             }
-            else if (input.equals("/notif_off") || input.equals("/notif_off" + Config.getBotUsername())) {
+            if (input.equals("/notif_off") || input.equals("/notif_off" + Config.getBotUsername())) {
                 return setNotif(false);
             }
-            else if (input.contains("/weather") || input.equals("/weather" + Config.getBotUsername())) {
+            if (input.equals("/weather") || input.equals("/weather" + Config.getBotUsername())) {
                 return getWeatherLinks();
             }
-            else if (input.contains("/skycams") || input.equals("/skycams" + Config.getBotUsername())) {
+            if (input.equals("/skycams") || input.equals("/skycams" + Config.getBotUsername())) {
                 return getCams();
             }
-            else if (input.contains("/links") || input.equals("/links" + Config.getBotUsername())) {
+            if (input.equals("/links") || input.equals("/links" + Config.getBotUsername())) {
                 return getLinks();
             }
-            else if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBotUsername())) {
+            if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBotUsername())) {
                 sendImage(NewTimeGraph.getBzGraph(timezone));
                 sendImage(NewTimeGraph.getSpeedGraph(timezone));
                 sendImage(NewTimeGraph.getDensityGraph(timezone));
             }
-            else if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBotUsername())) {
+            if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBotUsername())) {
                 sendImage(NewTimeGraph.getBzGraph(timezone));
             }
-            else if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBotUsername())) {
+            if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBotUsername())) {
                 sendImage(NewTimeGraph.getSpeedGraph(timezone));
             }
-            else if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
+            if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
                 sendImage(NewTimeGraph.getDensityGraph(timezone));
             }
-            else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
+            if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history") ||
+                    !input.equals("/history" + Config.getBotUsername())) {
                 if (input.equals("/history_text") || input.equals("/history_text" + Config.getBotUsername())) {
                     return getHistoryData();
                 }
-                else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" +
+                if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" +
                         Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" +
+                if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" +
                         Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_density") || input.equals("/history_graph_density" +
+                if (input.equals("/history_graph_density") || input.equals("/history_graph_density" +
                         Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_all") || input.equals("/history_graph_all" +
+                if (input.equals("/history_graph_all") || input.equals("/history_graph_all" +
                         Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                     sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                     sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
             }
-            else if (input.contains("/history") || input.contains("/contains" + Config.getBotUsername())) {
+            else if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
             }
             return "";
@@ -138,13 +143,17 @@ public class MessageHandler {
                 "/links to get useful links\n";
     }
 
+    /**
+     * 1st way to configure timezone by using /time_settings command. Checks a timezone format, and if it is correct,
+     * adjust user timezone configuration. If not, a String with instruction will be returned.
+     * @param input with timezone in yyy-MM-dd format.
+     * @return command execution result.
+     */
     public String setTimezone(String input) {
         if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][00]))$";
             String[] temp;
-            String delimiter = " ";
-            temp = input.split(delimiter);
-            String command = temp[0];
+            temp = input.split(" ");
             try {
                 String argument = temp[1];
                 if (argument.matches(regex)) {
@@ -162,7 +171,7 @@ public class MessageHandler {
                             "If GPS is not suitable way, you can configure it manually by entering required timezone " +
                             "in UTC format: \n" +
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
-                } else if (isTimezoneConfigured) {
+                } else {
                     return "Configured timezone is <b>UTC" + timezone + ".</b> If you need to change it, " +
                             "just <b>share with me your GPS location</b> or enter it manually in UTC format: \n" +
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
@@ -172,6 +181,12 @@ public class MessageHandler {
         return "";
     }
 
+    /**
+     * 2nd way to configure a timezone in the bot. Configures a timezone according to gps mark which user can send
+     * using his phone. This method comes from SessionHandler where it calls using TimeClass.getGpsTimezone.
+     * @param input timezone, e.g. UTC+00:00.
+     * @return string with execution result.
+     */
     public String setGpsTimezone(String input) throws SQLException {
         isTimezoneConfigured = true;
         timezone = input;
@@ -179,6 +194,7 @@ public class MessageHandler {
         return "Your timezone now is <b>UTC" + timezone + "</b>";
     }
 
+    /** Method which adjust a timezone in a Database. */
     private void setDbTimezone() throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
         final String SQL = "UPDATE sessions SET is_timezone=?, timezone=? where chat_id=?;";
@@ -195,13 +211,17 @@ public class MessageHandler {
         }
     }
 
+    /**
+     * Method which checks entered by user date and translates it to setDbHistoryDate() if check was successful.
+     * If it not, a String with instructions will be returned.
+     * @param input date in yyy-MM-dd format.
+     * @return a String with result.
+     */
     private String setHistoryDate(String input) {
         if (input.contains("/history") || input.equals("/history" + Config.getBotUsername())) {
             String regex = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
             String[] temp;
-            String delimiter = " ";
-            temp = input.split(delimiter);
-            String command = temp[0];
+            temp = input.split(" ");
             try {
                 String argument = temp[1];
                 if (argument.matches(regex)) {
@@ -224,7 +244,7 @@ public class MessageHandler {
                     return "Archive is not configured. Please enter required date in <b>yyyy-MM-dd</b> format: \n" +
                             "e.g. command for <b>July 01 of 2020</b> will be \n" +
                             "/history 2020-07-01";
-                } else if (isHistoryConfigured) {
+                } else {
                     return "Archive is configured for<b> " + archiveDate + ".</b>\n If you need to change it, please " +
                             "type it in required format: \n" +
                             "e.g. command for <b>July 01 of 2020</b> will be \n/history 2020-07-01\n" +
@@ -242,7 +262,8 @@ public class MessageHandler {
         return "";
     }
 
-    public void setDbHistoryDate() throws SQLException {
+    /** Configure archive date in a Database as a user parameter which can be used later. */
+    private void setDbHistoryDate() throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
         final String SQL = "UPDATE sessions SET is_archive=?, archive=? where chat_id=?;";
         PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
@@ -258,6 +279,10 @@ public class MessageHandler {
         }
     }
 
+    /**
+     * Retrieves a String from GetDataFromDB.getHistoryValues.
+     * @return String with a text message.
+     */
     private String getHistoryData() throws SQLException, ParseException {
         if (isHistoryConfigured) {
             return GetDataFromDB.getHistoryValues(archiveDate);
@@ -267,6 +292,11 @@ public class MessageHandler {
                 "/history 2020-07-01";
     }
 
+    /**
+     * Method which turns on/off notifications on high solar wind parameters.
+     * @param set boolean where true is on and false is off.
+     * @return an operation result String message
+     */
     private String setNotif (boolean set) throws SQLException {
         if (set) {
             setDbNotif(true);
@@ -278,6 +308,10 @@ public class MessageHandler {
         }
     }
 
+    /**
+     * Method which turns on/off notifications on high solar wind parameters by UPDATE query in a Database.
+     * @param param boolean where true is on and false is off.
+     */
     private void setDbNotif(boolean param) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
         final String SQL = "UPDATE sessions SET is_notif=? where chat_id=?;";
@@ -294,7 +328,7 @@ public class MessageHandler {
     }
 
     private String getLinks() {
-        return "Here is a lisot of some useful links which can help you:\n" +
+        return "Here is a list of some useful links which can help you:\n" +
                 "/weather to get relevant weather links\n" +
                 "/skycams to get sky webcam links\n" +
                 "/map - to get aurora lights map\n" +
@@ -325,6 +359,10 @@ public class MessageHandler {
                 "80%d0%b5%d1%82%d1%8c-%d1%81%d0%b5%d0%b2%d0%b5%d1%80%d0%bd%d1%8b%d0%b5-%d1%81%d0%b8%d1%8f%d0%bd%d0%b8%d1%8f/";
     }
 
+    /**
+     * Method which sends generated graph to user.
+     * @param image is a generated and retrieved as a .png file TimeGraph image chart.
+     */
     private void sendImage(File image) throws FileNotFoundException, TelegramApiException {
         AuroraBot sendGraph = new AuroraBot();
         SendPhoto graph = new SendPhoto()

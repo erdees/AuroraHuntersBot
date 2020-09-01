@@ -9,3 +9,4 @@ target/**
 *.txt
 *.DS_Store
 config.properties
+src/test/**

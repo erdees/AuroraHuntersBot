@@ -10,13 +10,18 @@ import java.util.Date;
 
 public class GetDataFromDB {
 
+    /**
+     * Retreive last 10 density, speed and bz values from Database and format them for Telegram message as a String.
+     * @param timezone which goes from MessageHandler.
+     * @return a String with formatted for the Telegram top 10 values message.
+     */
     public static String getLastValues(String timezone) throws SQLException, ParseException {
         final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +
                 "' at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 10) SELECT * " +
-                "FROM t ORDER BY timezone ASC;\n";
+                "FROM t ORDER BY timezone ASC";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT);
         ResultSet resultSet = preparedStatement.executeQuery();
-        String shortTimeZone[] = timezone.split(":");
+        String[] shortTimeZone = timezone.split(":");
         String timeZoneToMessage = shortTimeZone[0];
         String firstLine = String.format("%s%s%n", "<pre>","Waiting time: " + getWaitingTime() + "\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s\t%s\t%3s%n", "BZ ", "|", "S ", "|", "PD", "|", "UTC"
@@ -48,19 +53,25 @@ public class GetDataFromDB {
     /** Calculation of solar wind arrival time to the Earth. */
     public static String getWaitingTime() throws SQLException {
         double speed = 0;
-        final String SQL_SPEED_LAST = "SELECT speed from data ORDER BY time_tag desc limit 1;";
+        final String SQL_SPEED_LAST = "SELECT speed from data ORDER BY time_tag desc limit 1";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SPEED_LAST);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             speed = resultSet.getDouble(1);
         }
         double calc = 1500000.0 / 60.0 / 60.0 / speed;
-        int result = (int) (calc = Math.floor(calc * 10000) / 100);
+        int result = (int) (Math.floor(calc * 10000) / 100);
         int hours = result / 60; //since both are ints, you get an int
         int minutes = result % 60;
         return hours + "h " + minutes + "m";
     }
 
+    /**
+     * Method retrieves history values of solar wind speed, density and bz according to arg date and forms a Telegram
+     * format message which can be called by the user from MessageHandler
+     * @param date in yyy-MM-dd format which will be a part of SQL statement for history query
+     * @return a Telegram formatted message which will be called from MessageHandler
+     */
     public static String getHistoryValues(String date) throws SQLException, ParseException {
         LinkedHashMap<Integer, ArrayList<Double>> map = new LinkedHashMap<>();
         ArrayList<Double> densitylist = new ArrayList<>();
@@ -77,8 +88,8 @@ public class GetDataFromDB {
             nextDay = c.getTime();
             String initialDay = formattedDate.format(day);
             String finalDay = formattedDate.format(nextDay);
-            final String SQL_TEST = "SELECT time_tag, density, speed, bz_gsm FROM data WHERE time_tag >= \'"
-                    + initialDay + "\' AND time_tag < \'" + finalDay + "\';";
+            final String SQL_TEST = "SELECT time_tag, density, speed, bz_gsm FROM data WHERE time_tag >= '"
+                    + initialDay + "' AND time_tag < '" + finalDay + "'";
             PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_TEST);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
