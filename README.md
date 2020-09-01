@@ -1,5 +1,5 @@
 # AuroraHuntersBot
-Java written Telegram Bot, which helps photographers catch northern lights.\
+Java written Telegram Bot, which helps photographers catch northern lights. You may use a working instance of it using the following username: @aurorahunters_bot \
 The bot significantly simplifies the northern lights prediction and serve photographers as a tool which helps to take good shots giving a better work conditions. As we all know, Telegram protocol can work even with 2G/gprs/EDGE internet, and almost all northern lights photospots are remote locations where good internet is more of an exception than a rule. So our bot can give to a photographer required for a prediction information, which other apps can't provide without good connection. 
 ## About the project
 This is one of my first projects written on pure Java. I made it totally for free and its purpose to learn the Java and have a good real project in my portfolio. The idea was to bring someone's idea to life using my new java coder skills. 
