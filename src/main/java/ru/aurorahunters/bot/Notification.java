@@ -9,15 +9,13 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Notification implements Runnable  {
-    static ArrayList<Double> densityValues = new ArrayList<Double>();
-    static ArrayList<Double> speedValues = new ArrayList<Double>();
-    static ArrayList<Double> bz_gsmValues = new ArrayList<Double>();
+    static ArrayList<Double> densityValues = new ArrayList<>();
+    static ArrayList<Double> speedValues = new ArrayList<>();
+    static ArrayList<Double> bz_gsmValues = new ArrayList<>();
     private static final double topDensity = 15.1;
     private static final double topSpeed = 501.0;
     private static final double topBz = -5.1;
@@ -28,7 +26,7 @@ public class Notification implements Runnable  {
             try {
                 if (checkNotification()) {
                     sendNotif(getAlarmString());
-                    Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifInterval()));
+                    //Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifyInterval()));
                 }
             } catch (SQLException | ParseException | TelegramApiException e) {
                 e.printStackTrace();
@@ -40,7 +38,7 @@ public class Notification implements Runnable  {
 
     public void sendNotif(String message) throws TelegramApiException, SQLException {
         Long chatId;
-        final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true';";
+        final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true'";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -53,7 +51,6 @@ public class Notification implements Runnable  {
 
     public String getAlarmString() {
         DecimalFormat chatOutput = new DecimalFormat("###.#");
-        String formattedString = "";
         String firstLine = String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s%n", "BZ ", "|", "S ", "|", "PD");
         String lastLine = "</pre>\nclick to see latest data: /last\n" +
@@ -67,8 +64,7 @@ public class Notification implements Runnable  {
         sb.append(String.format("%4s\t%s\t%3s\t%s\t%4s%n", chatOutput.format(tempBz), "|",
                 Math.round(tempSpeed), "|", chatOutput.format(tempDensity)));
         sb.append(lastLine);
-        formattedString = sb.toString();
-        return formattedString;
+        return sb.toString();
     }
 
     public boolean checkNotification() throws SQLException, ParseException {
@@ -118,8 +114,6 @@ public class Notification implements Runnable  {
             double density = resultSet.getDouble(2);
             double speed = resultSet.getDouble(3);
             double bz_gsm = resultSet.getDouble(4);
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time_tag.toString());
-            String formattedDate = new SimpleDateFormat("HH:mm").format(date); // 9:00
             densityValues.add(density);
             speedValues.add(speed);
             bz_gsmValues.add(bz_gsm);

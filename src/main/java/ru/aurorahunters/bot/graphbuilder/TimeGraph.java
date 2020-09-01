@@ -21,13 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeGraph {
+
     public static File getDensityGraph(String timezone) throws IOException, SQLException, ParseException {
         File file = new File(".png");
-        String SQL_SELECT_BZ = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', density from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC;\n";
-
+        String SQL_SELECT_BZ = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', density from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE() + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -44,22 +44,18 @@ public class TimeGraph {
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
-
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
         chart.getLegend().setBackgroundPaint(Color.BLACK);
         chart.getLegend().setItemPaint(Color.white);
-
         plot.setBackgroundPaint(Color.BLACK);
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setTickLabelPaint(Color.white);
-        //plot.getRangeAxis().setRange(-5, 99);
         plot.getDomainAxis().setLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
         plot.setDomainGridlinePaint(Color.gray);
         plot.setRangeGridlinePaint(Color.gray);
-
         plot.addRangeMarker(new IntervalMarker(-10,4, new Color(29, 255,0, 20)));
         plot.addRangeMarker(new IntervalMarker(4,9, new Color(255,216,0,50)));
         plot.addRangeMarker(new IntervalMarker(9,13, new Color(255,102,0,100)));
@@ -77,7 +73,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE() + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -94,22 +90,18 @@ public class TimeGraph {
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
-
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
         chart.getLegend().setBackgroundPaint(Color.BLACK);
         chart.getLegend().setItemPaint(Color.white);
-
         plot.setBackgroundPaint(Color.BLACK);
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setTickLabelPaint(Color.white);
-        //plot.getRangeAxis().setRange(100, 999);
         plot.getDomainAxis().setLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
         plot.setDomainGridlinePaint(Color.gray);
         plot.setRangeGridlinePaint(Color.gray);
-
         plot.addRangeMarker(new IntervalMarker(0,400, new Color(29, 255,0, 20)));
         plot.addRangeMarker(new IntervalMarker(400,550, new Color(255,216,0,50)));
         plot.addRangeMarker(new IntervalMarker(550,600, new Color(255, 102,0,100)));
@@ -127,7 +119,7 @@ public class TimeGraph {
 
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT_BZ);
         ResultSet resultSet = preparedStatement.executeQuery();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE() + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
 
         while (resultSet.next()) {
             Timestamp time_tag = resultSet.getTimestamp(1);
@@ -144,22 +136,18 @@ public class TimeGraph {
                 true, true, false);
 
         XYPlot plot = chart.getXYPlot();
-
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
         chart.getLegend().setBackgroundPaint(Color.BLACK);
         chart.getLegend().setItemPaint(Color.white);
-
         plot.setBackgroundPaint(Color.BLACK);
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setTickLabelPaint(Color.white);
-        //plot.getRangeAxis().setRange(-10, 8);
         plot.getDomainAxis().setLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
         plot.setDomainGridlinePaint(Color.gray);
         plot.setRangeGridlinePaint(Color.gray);
-
         plot.addRangeMarker(new IntervalMarker(-1.1,50, new Color(29, 255,0, 20)));
         plot.addRangeMarker(new IntervalMarker(-3.2,-1.1, new Color(255,216,0,50)));
         plot.addRangeMarker(new IntervalMarker(-4.8,-3.2, new Color(255,102,0,100)));
@@ -170,4 +158,5 @@ public class TimeGraph {
         ChartUtils.saveChartAsPNG(file, chart, 600, 400);
         return file;
     }
+
 }

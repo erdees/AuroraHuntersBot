@@ -10,10 +10,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 class AuroraBot extends TelegramLongPollingBot {
+
     @Override
     public void onUpdateReceived(Update update) {
+        SendMessage message = null;
         if (update.hasMessage() && update.getMessage().hasText()) {
-            SendMessage message = null;
             try {
                 if (!SessionHandler.sessionHandler(update.getMessage().getText(),
                         update.getMessage().getChatId(), update.getMessage().getLocation()).isEmpty()) {
@@ -33,7 +34,6 @@ class AuroraBot extends TelegramLongPollingBot {
             }
         }
         else if (update.getMessage().hasLocation()) {
-            SendMessage message = null;
             try {
                 message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(update.getMessage().getChatId())
@@ -53,11 +53,11 @@ class AuroraBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return Config.getBot_username();
+        return Config.getBotUsername();
     }
 
     @Override
     public String getBotToken() {
-        return Config.getBot_token();
+        return Config.getBotToken();
     }
 }

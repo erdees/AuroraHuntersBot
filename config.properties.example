@@ -19,3 +19,21 @@ bot.interval = 15
 # id=2 is 2 hours; id=3 is 1 day (recommended for each start);
 # id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
 bot.recovery = 3 
+# NOAA DSCOVR - 5 minutes json
+json.mag.5min = https://services.swpc.noaa.gov/products/solar-wind/mag-5-minute.json
+json.plasma.5min = https://services.swpc.noaa.gov/products/solar-wind/plasma-5-minute.json
+# NOAA DSCOVR - 2 hours json
+json.mag.2h = https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json
+json.plasma.2h = https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json
+# NOAA DSCOVR - 24 hours json
+json.mag.24h = https://services.swpc.noaa.gov/products/solar-wind/mag-1-day.json
+json.plasma.24h = https://services.swpc.noaa.gov/products/solar-wind/plasma-1-day.json
+# NOAA DSCOVR - 7 days json
+json.mag.7day = https://services.swpc.noaa.gov/products/solar-wind/mag-7-day.json
+json.plasma.7day = https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json
+# Graph color settings
+graph.color.low = 29, 255, 0, 20
+graph.color.normal = 255, 216, 0, 50
+graph.color.moderate = 255, 102, 0, 100
+graph.color.high = 255, 0, 0, 100
+graph.color.veryhigh = 255, 0, 222, 80

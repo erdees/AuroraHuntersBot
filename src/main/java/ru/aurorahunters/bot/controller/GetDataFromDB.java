@@ -9,15 +9,18 @@ import java.util.*;
 import java.util.Date;
 
 public class GetDataFromDB {
+
     public static String getLastValues(String timezone) throws SQLException, ParseException {
-        final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +"' at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 10) SELECT * FROM t ORDER BY timezone ASC;\n";
+        final String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +
+                "' at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 10) SELECT * " +
+                "FROM t ORDER BY timezone ASC;\n";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT);
         ResultSet resultSet = preparedStatement.executeQuery();
         String shortTimeZone[] = timezone.split(":");
         String timeZoneToMessage = shortTimeZone[0];
-        String temp = "";
         String firstLine = String.format("%s%s%n", "<pre>","Waiting time: " + getWaitingTime() + "\n");
-        String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s\t%s\t%3s%n", "BZ ", "|", "S ", "|", "PD", "|", "UTC" +timeZoneToMessage);
+        String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s\t%s\t%3s%n", "BZ ", "|", "S ", "|", "PD", "|", "UTC"
+                +timeZoneToMessage);
         String lastLine = "</pre>\nlatest density graph /graph_bz" +
                 "\nlatest speed graph /graph_speed" +
                 "\nlatest bz graph /graph_density" +
@@ -37,12 +40,12 @@ public class GetDataFromDB {
                     Math.round(speed), "|", chatOutput.format(density), "|", newString));
             if (resultSet.isLast()) {
                 sb.append(lastLine);
-                temp = sb.toString();
             }
         }
-        return temp;
+        return sb.toString();
     }
 
+    /** Calculation of solar wind arrival time to the Earth. */
     public static String getWaitingTime() throws SQLException {
         double speed = 0;
         final String SQL_SPEED_LAST = "SELECT speed from data ORDER BY time_tag desc limit 1;";
@@ -59,22 +62,23 @@ public class GetDataFromDB {
     }
 
     public static String getHistoryValues(String date) throws SQLException, ParseException {
-        LinkedHashMap<Integer, ArrayList<Double>> map = new LinkedHashMap<Integer, ArrayList<Double>>();
+        LinkedHashMap<Integer, ArrayList<Double>> map = new LinkedHashMap<>();
         ArrayList<Double> densitylist = new ArrayList<>();
         ArrayList<Double> speedList = new ArrayList<>();
         ArrayList<Double> bzList = new ArrayList<>();
-        String temp = "";
+        SimpleDateFormat formattedDate = new SimpleDateFormat("yyyy-MM-dd");
         DecimalFormat chatOutput = new DecimalFormat("###.#");
         if (date.matches("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))")) {
-            Date day = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            Date day = formattedDate.parse(date);
             Date nextDay;
             Calendar c = Calendar.getInstance();
             c.setTime(day);
             c.add(Calendar.DATE, 1);
             nextDay = c.getTime();
-            String initialDay = new SimpleDateFormat("yyyy-MM-dd").format(day);
-            String finalDay = new SimpleDateFormat("yyyy-MM-dd").format(nextDay);
-            final String SQL_TEST = "SELECT time_tag, density, speed, bz_gsm FROM data WHERE time_tag >= \'" + initialDay + "\' AND time_tag < \'" + finalDay + "\';";
+            String initialDay = formattedDate.format(day);
+            String finalDay = formattedDate.format(nextDay);
+            final String SQL_TEST = "SELECT time_tag, density, speed, bz_gsm FROM data WHERE time_tag >= \'"
+                    + initialDay + "\' AND time_tag < \'" + finalDay + "\';";
             PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_TEST);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -113,8 +117,7 @@ public class GetDataFromDB {
                 }
                 String lastLine = "</pre>";
                 sb.append(lastLine);
-                temp = sb.toString();
-                return temp;
+                return sb.toString();
             }
         } else {
             return "Wrong format. Please type correct command.";

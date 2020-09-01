@@ -31,7 +31,7 @@ public class ArchiveTimeGraph {
     public static File getDensityGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, DENSITY).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE() + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double density = pair.getValue();
@@ -78,7 +78,7 @@ public class ArchiveTimeGraph {
     public static File getSpeedGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, SPEED).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE() + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double speed = pair.getValue();
@@ -124,7 +124,7 @@ public class ArchiveTimeGraph {
     public static File getBzGraph(String date) throws IOException, SQLException, ParseException {
         File file = new File(".png");
         Iterator it = getHistoryValues(date, BZ_GSM).entrySet().iterator();
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getProject_site() + " Telegram Bot (" + Config.getBot_username() + ") | " + TimeClass.getCurrentTime());
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE() + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
         while (it.hasNext()) {
             HashMap.Entry<Integer, Double> pair = (HashMap.Entry)it.next();
             double bz = pair.getValue();

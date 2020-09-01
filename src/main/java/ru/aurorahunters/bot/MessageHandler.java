@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
 import ru.aurorahunters.bot.graphbuilder.ArchiveTimeGraph;
+import ru.aurorahunters.bot.graphbuilder.NewTimeGraph;
 import ru.aurorahunters.bot.graphbuilder.TimeGraph;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,73 +45,77 @@ public class MessageHandler {
 
     public String respondMessage(String input) throws SQLException, ParseException, IOException, TelegramApiException {
         if (isStarted) {
-            if (input.contains("/info") || input.equals("/info" + Config.getBot_username())) {
+            if (input.contains("/info") || input.equals("/info" + Config.getBotUsername())) {
                 return getInfo();
             }
-            else if (input.contains("/start") || input.equals("/start" + Config.getBot_username())) {
+            else if (input.contains("/start") || input.equals("/start" + Config.getBotUsername())) {
                 return "Bot is already started. Type /info to see available commands.";
             }
-            else if (input.contains("/chat") || input.equals("/chat" + Config.getBot_username())) {
+            else if (input.contains("/chat") || input.equals("/chat" + Config.getBotUsername())) {
                 return "Please join our community: \nhttps://t.me/aurora_ru";
             }
-            else if (input.equals("/map") || input.equals("/map" + Config.getBot_username())) {
+            else if (input.equals("/map") || input.equals("/map" + Config.getBotUsername())) {
                 return getAuroraMap();
             }
-            else if (input.contains("/last") || input.equals("/last" + Config.getBot_username())) {
+            else if (input.contains("/last") || input.equals("/last" + Config.getBotUsername())) {
                 return GetDataFromDB.getLastValues(timezone);
             }
-            else if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBot_username())) {
+            else if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
                 return setTimezone(input);
             }
-            else if (input.equals("/notif_on") || input.equals("/notif_on" + Config.getBot_username())) {
+            else if (input.equals("/notif_on") || input.equals("/notif_on" + Config.getBotUsername())) {
                 return setNotif(true);
             }
-            else if (input.equals("/notif_off") || input.equals("/notif_off" + Config.getBot_username())) {
+            else if (input.equals("/notif_off") || input.equals("/notif_off" + Config.getBotUsername())) {
                 return setNotif(false);
             }
-            else if (input.contains("/weather") || input.equals("/weather" + Config.getBot_username())) {
+            else if (input.contains("/weather") || input.equals("/weather" + Config.getBotUsername())) {
                 return getWeatherLinks();
             }
-            else if (input.contains("/skycams") || input.equals("/skycams" + Config.getBot_username())) {
+            else if (input.contains("/skycams") || input.equals("/skycams" + Config.getBotUsername())) {
                 return getCams();
             }
-            else if (input.contains("/links") || input.equals("/links" + Config.getBot_username())) {
+            else if (input.contains("/links") || input.equals("/links" + Config.getBotUsername())) {
                 return getLinks();
             }
-            else if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBot_username())) {
-                sendImage(TimeGraph.getBzGraph(timezone));
-                sendImage(TimeGraph.getSpeedGraph(timezone));
-                sendImage(TimeGraph.getDensityGraph(timezone));
+            else if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBotUsername())) {
+                sendImage(NewTimeGraph.getBzGraph(timezone));
+                sendImage(NewTimeGraph.getSpeedGraph(timezone));
+                sendImage(NewTimeGraph.getDensityGraph(timezone));
             }
-            else if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBot_username())) {
-                sendImage(TimeGraph.getBzGraph(timezone));
+            else if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBotUsername())) {
+                sendImage(NewTimeGraph.getBzGraph(timezone));
             }
-            else if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBot_username())) {
-                sendImage(TimeGraph.getSpeedGraph(timezone));
+            else if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBotUsername())) {
+                sendImage(NewTimeGraph.getSpeedGraph(timezone));
             }
-            else if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBot_username())) {
-                sendImage(TimeGraph.getDensityGraph(timezone));
+            else if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
+                sendImage(NewTimeGraph.getDensityGraph(timezone));
             }
             else if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history")) {
-                if (input.equals("/history_text") || input.equals("/history_text" + Config.getBot_username())) {
+                if (input.equals("/history_text") || input.equals("/history_text" + Config.getBotUsername())) {
                     return getHistoryData();
                 }
-                else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" + Config.getBot_username())) {
+                else if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" +
+                        Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" + Config.getBot_username())) {
+                else if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" +
+                        Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_density") || input.equals("/history_graph_density" + Config.getBot_username())) {
+                else if (input.equals("/history_graph_density") || input.equals("/history_graph_density" +
+                        Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
-                else if (input.equals("/history_graph_all") || input.equals("/history_graph_all" + Config.getBot_username())) {
+                else if (input.equals("/history_graph_all") || input.equals("/history_graph_all" +
+                        Config.getBotUsername())) {
                     sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
                     sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
                     sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
                 }
             }
-            else if (input.contains("/history") || input.contains("/contains" + Config.getBot_username())) {
+            else if (input.contains("/history") || input.contains("/contains" + Config.getBotUsername())) {
                 return setHistoryDate(input);
             }
             return "";
@@ -134,7 +139,7 @@ public class MessageHandler {
     }
 
     public String setTimezone(String input) {
-        if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBot_username())) {
+        if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][00]))$";
             String[] temp;
             String delimiter = " ";
@@ -191,7 +196,7 @@ public class MessageHandler {
     }
 
     private String setHistoryDate(String input) {
-        if (input.contains("/history") || input.equals("/history" + Config.getBot_username())) {
+        if (input.contains("/history") || input.equals("/history" + Config.getBotUsername())) {
             String regex = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
             String[] temp;
             String delimiter = " ";
