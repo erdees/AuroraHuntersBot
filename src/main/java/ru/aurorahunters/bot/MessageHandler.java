@@ -149,7 +149,7 @@ public class MessageHandler {
      * @param input with timezone in yyy-MM-dd format.
      * @return command execution result.
      */
-    public String setTimezone(String input) {
+    private String setTimezone(String input) {
         if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][00]))$";
             String[] temp;
