@@ -1,6 +1,9 @@
 # AuroraHuntersBot
 Java written Telegram Bot, which helps photographers catch northern lights. You may use a working instance of it using the following username: @aurorahunters_bot \
 The bot significantly simplifies the northern lights prediction and serve photographers as a tool which helps to take good shots giving a better work conditions. As we all know, Telegram protocol can work even with 2G/gprs/EDGE internet, and almost all northern lights photospots are remote locations where good internet is more of an exception than a rule. So our bot can give to a photographer required for a prediction information, which other apps can't provide without good connection. 
+
+<img src="../master/images/Screenshot_2020-08-17-00-11-31-283_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-11-39-572_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-14-00-133_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-15-10-109_org.telegram.messenger.jpg" width="200px"/>
+
 ## About the project
 This is one of my first projects written on pure Java. I made it totally for free and its purpose to learn the Java and have a good real project in my portfolio. The idea was to bring someone's idea to life using my new java coder skills. 
 You can copy, paste, change it and whatever. 
@@ -13,8 +16,6 @@ The bot fetches JSON from NOAA servers (DSCOVR satellite), stores and subsequent
 - Allows displaying data in the time zone required by the user
 - Has custom notification, time zone and archive settings for each user
 - The time zone is adjusted by sending GPS tag to the bot
-
-<img src="../master/images/Screenshot_2020-08-17-00-11-31-283_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-11-39-572_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-14-00-133_org.telegram.messenger.jpg" width="200px"/> <img src="../master/images/Screenshot_2020-08-17-00-15-10-109_org.telegram.messenger.jpg" width="200px"/>
 
 ## Buld and run
 
