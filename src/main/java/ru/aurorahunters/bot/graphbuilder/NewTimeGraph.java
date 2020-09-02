@@ -62,19 +62,8 @@ public class NewTimeGraph {
                 e.printName + " - last 3 hours", "Time (UTC" + timezone + ") | " + "Waiting time: "
                         + GetDataFromDB.getWaitingTime(), e.printName, dataset, true, true, false);
         XYPlot plot = chart.getXYPlot();
-        chart.setBackgroundPaint(Color.BLACK);
-        chart.getTitle().setPaint(Color.white);
-        chart.getLegend().setBackgroundPaint(Color.BLACK);
-        chart.getLegend().setItemPaint(Color.white);
-        plot.setBackgroundPaint(Color.BLACK);
-        plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
-        plot.getDomainAxis().setTickLabelPaint(Color.white);
-        plot.getRangeAxis().setTickLabelPaint(Color.white);
-        plot.getDomainAxis().setLabelPaint(Color.white);
-        plot.getRangeAxis().setLabelPaint(Color.white);
-        plot.setDomainGridlinePaint(Color.gray);
-        plot.setRangeGridlinePaint(Color.gray);
-        setGraphPlot(plot, e);
+        setChartStyle(plot, chart);
+        setRangeAndColor(plot, e);
         return chart;
     }
 
@@ -83,7 +72,7 @@ public class NewTimeGraph {
      * @param plot of XYPlot object.
      * @param e GraphTypeEnum with required for each graph fields.
      */
-    private static void setGraphPlot(XYPlot plot, GraphTypeEnum e) {
+    private static void setRangeAndColor(XYPlot plot, GraphTypeEnum e) {
         if (e == GraphTypeEnum.DENSITY) {
             plot.addRangeMarker(new IntervalMarker(-10,4, getColor(Config.getGraphColorLow())));
             plot.addRangeMarker(new IntervalMarker(4,9, getColor(Config.getGraphColorNormal())));
@@ -105,6 +94,22 @@ public class NewTimeGraph {
             plot.addRangeMarker(new IntervalMarker(-8.4, -4.8, getColor(Config.getGraphColorHigh())));
             plot.addRangeMarker(new IntervalMarker(-50, -8.4, getColor(Config.getGraphColorVeryhigh())));
         }
+    }
+
+    /** Configure styles, fonts and colors which is the same for all project charts. */
+    private static void setChartStyle(XYPlot plot, JFreeChart chart) {
+        chart.setBackgroundPaint(Color.BLACK);
+        chart.getTitle().setPaint(Color.white);
+        chart.getLegend().setBackgroundPaint(Color.BLACK);
+        chart.getLegend().setItemPaint(Color.white);
+        plot.setBackgroundPaint(Color.BLACK);
+        plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.white);
+        plot.getDomainAxis().setTickLabelPaint(Color.white);
+        plot.getRangeAxis().setTickLabelPaint(Color.white);
+        plot.getDomainAxis().setLabelPaint(Color.white);
+        plot.getRangeAxis().setLabelPaint(Color.white);
+        plot.setDomainGridlinePaint(Color.gray);
+        plot.setRangeGridlinePaint(Color.gray);
     }
 
     /**

@@ -151,7 +151,7 @@ public class MessageHandler {
      */
     private String setTimezone(String input) {
         if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
-            String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][00]))$";
+            String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][0]))$";
             String[] temp;
             temp = input.split(" ");
             try {
