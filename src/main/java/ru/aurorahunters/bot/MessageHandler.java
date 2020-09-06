@@ -3,7 +3,6 @@ package ru.aurorahunters.bot;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
-import ru.aurorahunters.bot.graphbuilder.ArchiveTimeGraph;
 import ru.aurorahunters.bot.graphbuilder.NewTimeGraph;
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,21 +102,21 @@ public class MessageHandler {
                 }
                 if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" +
                         Config.getBotUsername())) {
-                    sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
+                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
                 }
                 if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" +
                         Config.getBotUsername())) {
-                    sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
+                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
                 }
                 if (input.equals("/history_graph_density") || input.equals("/history_graph_density" +
                         Config.getBotUsername())) {
-                    sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
+                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
                 }
                 if (input.equals("/history_graph_all") || input.equals("/history_graph_all" +
                         Config.getBotUsername())) {
-                    sendImage(ArchiveTimeGraph.getBzGraph(archiveDate));
-                    sendImage(ArchiveTimeGraph.getSpeedGraph(archiveDate));
-                    sendImage(ArchiveTimeGraph.getDensityGraph(archiveDate));
+                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
+                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
+                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
                 }
             }
             else if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {

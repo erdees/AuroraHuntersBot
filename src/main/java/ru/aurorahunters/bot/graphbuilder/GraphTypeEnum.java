@@ -3,7 +3,10 @@ package ru.aurorahunters.bot.graphbuilder;
 public enum GraphTypeEnum {
     DENSITY("density", "Proton Density [p/cc]"),
     SPEED("speed", "Bulk Speed [km/s]"),
-    BZ_GSM("bz_gsm", "Bz [nT]");
+    BZ_GSM("bz_gsm", "Bz [nT]"),
+    DENSITY_H("density", "Proton Density [p/cc]"),
+    SPEED_H("speed", "Bulk Speed [km/s]"),
+    BZ_GSM_H("bz_gsm", "Bz [nT]");
 
     String dbKey;
     String printName;
