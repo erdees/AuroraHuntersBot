@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.utils;
 
 import net.iakovlev.timeshape.TimeZoneEngine;
 import org.telegram.telegrambots.meta.api.objects.Location;

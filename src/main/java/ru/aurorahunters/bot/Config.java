@@ -1,6 +1,8 @@
 package ru.aurorahunters.bot;
 
 import ru.aurorahunters.bot.controller.JsonToDB;
+import ru.aurorahunters.bot.notification.Notification;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;

@@ -107,7 +107,7 @@ public class JsonToDB implements Runnable {
                     String bz_gsm = p1temp[3];
                     if (time_tagP1.equals(time_tagP2)) {
                         if (!density.equals("null") && !speed.equals("null") && !bz_gsm.equals("null")) {
-                            map.put(time_tagP2, new ArrayList<String>(Arrays.asList(density, speed, bz_gsm)));
+                            map.put(time_tagP2, new ArrayList<>(Arrays.asList(density, speed, bz_gsm)));
                         }
                     }
                 }

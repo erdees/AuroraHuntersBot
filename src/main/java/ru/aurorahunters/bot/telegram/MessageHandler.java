@@ -1,7 +1,8 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.telegram;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
 import ru.aurorahunters.bot.graphbuilder.NewTimeGraph;
 import java.io.File;
@@ -119,7 +120,7 @@ public class MessageHandler {
                     sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
                 }
             }
-            else if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
+            if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
             }
             return "";
@@ -149,10 +150,9 @@ public class MessageHandler {
      * @return command execution result.
      */
     private String setTimezone(String input) {
-        if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
+        if (input.contains("/time_settings") || input.contains("/time_settings" + Config.getBotUsername())) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][0]))$";
-            String[] temp;
-            temp = input.split(" ");
+            String[] temp = input.split(" ");
             try {
                 String argument = temp[1];
                 if (argument.matches(regex)) {
@@ -219,8 +219,7 @@ public class MessageHandler {
     private String setHistoryDate(String input) {
         if (input.contains("/history") || input.equals("/history" + Config.getBotUsername())) {
             String regex = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
-            String[] temp;
-            temp = input.split(" ");
+            String[] temp = input.split(" ");
             try {
                 String argument = temp[1];
                 if (argument.matches(regex)) {

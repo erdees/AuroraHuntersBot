@@ -1,8 +1,10 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.notification;
 
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.aurorahunters.bot.Config;
+import ru.aurorahunters.bot.telegram.AuroraBot;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

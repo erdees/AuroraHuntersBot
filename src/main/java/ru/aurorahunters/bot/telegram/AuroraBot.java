@@ -1,15 +1,16 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.telegram;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.aurorahunters.bot.Config;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-class AuroraBot extends TelegramLongPollingBot {
+public class AuroraBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {

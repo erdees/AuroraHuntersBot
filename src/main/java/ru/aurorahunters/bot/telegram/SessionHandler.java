@@ -1,7 +1,9 @@
-package ru.aurorahunters.bot;
+package ru.aurorahunters.bot.telegram;
 
 import org.telegram.telegrambots.meta.api.objects.Location;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.aurorahunters.bot.Config;
+import ru.aurorahunters.bot.utils.TimeClass;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

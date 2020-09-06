@@ -7,7 +7,7 @@ import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.*;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.TimeClass;
+import ru.aurorahunters.bot.utils.TimeClass;
 import ru.aurorahunters.bot.controller.GetDataFromDB;
 import java.awt.*;
 import java.io.File;
@@ -228,7 +228,7 @@ public class NewTimeGraph {
                 if (Integer.parseInt(minVar) == 59) {
                     Date maxValueDate = new Date();
                     Double maxValue;
-                    if (e == GraphTypeEnum.BZ_GSM) {
+                    if (e == GraphTypeEnum.BZ_GSM_H) {
                         maxValue = valueList.entrySet().stream().min(Map.Entry.comparingByValue()).get().getValue();
                     } else {
                         maxValue = valueList.entrySet().stream().max(Map.Entry.comparingByValue()).get().getValue();
