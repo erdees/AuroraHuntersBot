@@ -15,9 +15,9 @@ public class Notification implements Runnable  {
     static ArrayList<Double> densityValues = new ArrayList<>();
     static ArrayList<Double> speedValues = new ArrayList<>();
     static ArrayList<Double> bz_gsmValues = new ArrayList<>();
-    private static final double topDensity = 15.1;
-    private static final double topSpeed = 501.0;
-    private static final double topBz = -5.1;
+    private static final double topDensity = Config.getTopDensity();
+    private static final double topSpeed = Config.getTopSpeed();
+    private static final double topBz = Config.getTopBz();
 
     /**
      * Run method which is necessary to run it as a daemon using ScheduledExecutorService.

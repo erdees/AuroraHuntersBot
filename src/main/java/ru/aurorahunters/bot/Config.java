@@ -36,6 +36,9 @@ public class Config {
     private static String GRAPH_COLOR_MODERATE;
     private static String GRAPH_COLOR_HIGH;
     private static String GRAPH_COLOR_VERYHIGH;
+    private static double TOP_DENSITY;
+    private static double TOP_SPEED;
+    private static double TOP_BZ;
 
     /** Try to load and parse config.properties */
     public static void loadConfig() {
@@ -55,7 +58,7 @@ public class Config {
             BOT_USERNAME = properties.getProperty("bot.username");
             BOT_TOKEN = properties.getProperty("bot.token");
             WEBSITE = properties.getProperty("bot.site");
-            NOTIFY_INTERVAL = Integer.parseInt(properties.getProperty("bot.interval"));
+            NOTIFY_INTERVAL = Integer.parseInt(properties.getProperty("notif.interval"));
             JSON_TO_DB_SYNC_ID = Integer.parseInt(properties.getProperty("bot.recovery"));
             MAG_5MIN = properties.getProperty("json.mag.5min");
             PLASM_5MIN = properties.getProperty("json.plasma.5min");
@@ -65,12 +68,17 @@ public class Config {
             PLASM_24H = properties.getProperty("json.plasma.24h");
             MAG_7DAY = properties.getProperty("json.mag.7day");
             PLASM_7DAY = properties.getProperty("json.plasma.7day");
-
             GRAPH_COLOR_LOW = properties.getProperty("graph.color.low");
             GRAPH_COLOR_NORMAL = properties.getProperty("graph.color.normal");
             GRAPH_COLOR_MODERATE = properties.getProperty("graph.color.moderate");
             GRAPH_COLOR_HIGH = properties.getProperty("graph.color.high");
             GRAPH_COLOR_VERYHIGH = properties.getProperty("graph.color.veryhigh");
+
+            TOP_DENSITY = Double.parseDouble(properties.getProperty("notif.top.density"));
+            TOP_SPEED = Double.parseDouble(properties.getProperty("notif.top.speed"));
+            TOP_BZ = Double.parseDouble(properties.getProperty("notif.top.bz"));
+
+
 
             setDbConnection();
         } catch (Exception e) {
@@ -175,5 +183,17 @@ public class Config {
 
     public static String getGraphColorVeryhigh() {
         return GRAPH_COLOR_VERYHIGH;
+    }
+
+    public static double getTopDensity() {
+        return TOP_DENSITY;
+    }
+
+    public static double getTopSpeed() {
+        return TOP_SPEED;
+    }
+
+    public static double getTopBz() {
+        return TOP_BZ;
     }
 }

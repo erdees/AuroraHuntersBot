@@ -53,7 +53,7 @@ public class MessageHandler {
                 return getInfo();
             }
             if (input.equals("/start") || input.equals("/start" + Config.getBotUsername())) {
-                return "Bot is already started. Type /info to see available commands.";
+                return "Bot has been started. Type /info to see available commands.";
             }
             if (input.equals("/chat") || input.equals("/chat" + Config.getBotUsername())) {
                 return "Please join our community: \nhttps://t.me/aurora_ru";
@@ -64,7 +64,7 @@ public class MessageHandler {
             if (input.equals("/last") || input.equals("/last" + Config.getBotUsername())) {
                 return GetDataFromDB.getLastValues(timezone);
             }
-            if (input.contains("/time_settings") || input.equals("/time_settings" + Config.getBotUsername())) {
+            if (input.contains("/time_settings") || input.contains("/time_settings" + Config.getBotUsername())) {
                 return setTimezone(input);
             }
             if (input.equals("/notif_on") || input.equals("/notif_on" + Config.getBotUsername())) {
@@ -96,37 +96,36 @@ public class MessageHandler {
             if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
                 sendImage(NewTimeGraph.getDensityGraph(timezone));
             }
-            if (isHistoryConfigured && input.matches("\\/\\w+") && !input.equals("/history") ||
-                    !input.equals("/history" + Config.getBotUsername())) {
-                if (input.equals("/history_text") || input.equals("/history_text" + Config.getBotUsername())) {
-                    return getHistoryData();
-                }
-                if (input.equals("/history_graph_bz") || input.equals("/history_graph_bz" +
-                        Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
-                }
-                if (input.equals("/history_graph_speed") || input.equals("/history_graph_speed" +
-                        Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
-                }
-                if (input.equals("/history_graph_density") || input.equals("/history_graph_density" +
-                        Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
-                }
-                if (input.equals("/history_graph_all") || input.equals("/history_graph_all" +
-                        Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
-                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
-                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
-                }
-            }
             if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
+            }
+            if (isHistoryConfigured) {
+                if (input.equals("/archive_text") || input.equals("/archive_text" + Config.getBotUsername())) {
+                    return getHistoryData();
+                }
+                if (input.equals("/archive_graph_bz") || input.equals("/archive_graph_bz" +
+                        Config.getBotUsername())) {
+                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
+                }
+                if (input.equals("/archive_graph_speed") || input.equals("/archive_graph_speed" +
+                        Config.getBotUsername())) {
+                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
+                }
+                if (input.equals("/archive_graph_density") || input.equals("/archive_graph_density" +
+                        Config.getBotUsername())) {
+                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
+                }
+                if (input.equals("/archive_graph_all") || input.equals("/archive_graph_all" +
+                        Config.getBotUsername())) {
+                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
+                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
+                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
+                }
             }
             return "";
         }
         else {
-            return "Bot is is not started. Press /start to initialize it.";
+            return "Bot stopped. Press /start to initialize it.";
         }
     }
 
@@ -150,7 +149,6 @@ public class MessageHandler {
      * @return command execution result.
      */
     private String setTimezone(String input) {
-        if (input.contains("/time_settings") || input.contains("/time_settings" + Config.getBotUsername())) {
             String regex = "^(?:Z|[+-](?:2[0-3]|[01][0-9]):([03][0]))$";
             String[] temp = input.split(" ");
             try {
@@ -176,8 +174,6 @@ public class MessageHandler {
                             "e.g. command for Moscow Standard Time will be /time_settings +03:00";
                 }
             }
-        }
-        return "";
     }
 
     /**
@@ -217,7 +213,6 @@ public class MessageHandler {
      * @return a String with result.
      */
     private String setHistoryDate(String input) {
-        if (input.contains("/history") || input.equals("/history" + Config.getBotUsername())) {
             String regex = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
             String[] temp = input.split(" ");
             try {
@@ -229,11 +224,11 @@ public class MessageHandler {
                     return "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
                             "Please use following commands: \n" +
-                            "/history_text - to get text table; \n" +
-                            "/history_graph_bz - to get bz_gsm graph for " + archiveDate + "\n" +
-                            "/history_graph_speed - to get speed graph for " + archiveDate + "\n" +
-                            "/history_graph_density - to get density graph for " + archiveDate + "\n" +
-                            "/history_graph_all - to get all three graphs for " + archiveDate + "\n";
+                            "/archive_text - to get text table; \n" +
+                            "/archive_graph_bz - to get bz_gsm graph for " + archiveDate + "\n" +
+                            "/archive_graph_speed - to get speed graph for " + archiveDate + "\n" +
+                            "/archive_graph_density - to get density graph for " + archiveDate + "\n" +
+                            "/archive_graph_all - to get all three graphs for " + archiveDate + "\n";
                 } else {
                     return "Please type correct date, e.g. /history yyyy-MM-dd format";
                 }
@@ -249,15 +244,13 @@ public class MessageHandler {
                             "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
                             "Please use following commands: \n" +
-                            "/history_text - to get text table; \n" +
-                            "/history_graph_bz - to get bz_gsm graph for " + archiveDate + "\n" +
-                            "/history_graph_speed - to get speed graph for " + archiveDate + "\n" +
-                            "/history_graph_density - to get density graph for " + archiveDate + "\n" +
-                            "/history_graph_all - to get all three graphs for " + archiveDate + "\n";
+                            "/archive_text - to get text table; \n" +
+                            "/archive_graph_bz - to get bz_gsm graph for " + archiveDate + "\n" +
+                            "/archive_graph_speed - to get speed graph for " + archiveDate + "\n" +
+                            "/archive_graph_density - to get density graph for " + archiveDate + "\n" +
+                            "/archive_graph_all - to get all three graphs for " + archiveDate + "\n";
                 }
             }
-        }
-        return "";
     }
 
     /** Configure archive date in a Database as a user parameter which can be used later. */
