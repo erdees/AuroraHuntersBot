@@ -95,7 +95,8 @@ public class NewTimeGraph {
         if (e == GraphTypeEnum.BZ_GSM || e == GraphTypeEnum.SPEED || e == GraphTypeEnum.DENSITY) {
             chart = ChartFactory.createTimeSeriesChart(
                     e.printName + " - last 3 hours",
-                    "Time (UTC" + timezoneOrDate + ") | " + "Waiting time: " + GetDataFromDB.getWaitingTime(),
+                    "Time (UTC" + timezoneOrDate + ") | " + "Waiting time: " +
+                            GetDataFromDB.getWaitingTime(),
                     e.printName, d, true, true, false);
         } else {
             chart = ChartFactory.createTimeSeriesChart(
@@ -112,25 +113,40 @@ public class NewTimeGraph {
      */
     private static void setRangeAndColor(XYPlot plot, GraphTypeEnum e) {
         if (e == GraphTypeEnum.DENSITY || e == GraphTypeEnum.DENSITY_H) {
-            plot.addRangeMarker(new IntervalMarker(-10,4, getColor(Config.getGraphColorLow())));
-            plot.addRangeMarker(new IntervalMarker(4,9, getColor(Config.getGraphColorNormal())));
-            plot.addRangeMarker(new IntervalMarker(9,13, getColor(Config.getGraphColorModerate())));
-            plot.addRangeMarker(new IntervalMarker(13,18, getColor(Config.getGraphColorHigh())));
-            plot.addRangeMarker(new IntervalMarker(18,150, getColor(Config.getGraphColorVeryhigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeDensQuietStart(),
+                    Config.getGraphRangeDensQuietEnd(), getColor(Config.getGraphColorQuiet())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeDensModerateStart(),
+                    Config.getGraphRangeDensModerateEnd(), getColor(Config.getGraphColorModerate())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeDensIncreasedStart(),
+                    Config.getGraphRangeDensIncreasedEnd(), getColor(Config.getGraphColorIncreased())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeDensHighStart(),
+                    Config.getGraphRangeDensHighEnd(), getColor(Config.getGraphColorHigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeDensExtremeStart(),
+                    Config.getGraphRangeDensExtremeEnd(), getColor(Config.getGraphColorExtreme())));
         }
         if (e == GraphTypeEnum.SPEED || e == GraphTypeEnum.SPEED_H) {
-            plot.addRangeMarker(new IntervalMarker(0, 400, getColor(Config.getGraphColorLow())));
-            plot.addRangeMarker(new IntervalMarker(400, 550, getColor(Config.getGraphColorNormal())));
-            plot.addRangeMarker(new IntervalMarker(550, 600, getColor(Config.getGraphColorModerate())));
-            plot.addRangeMarker(new IntervalMarker(600, 650, getColor(Config.getGraphColorHigh())));
-            plot.addRangeMarker(new IntervalMarker(650, 1000, getColor(Config.getGraphColorVeryhigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeSpeedQuietStart(),
+                    Config.getGraphRangeSpeedQuietEnd(), getColor(Config.getGraphColorQuiet())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeSpeedModerateStart(),
+                    Config.getGraphRangeSpeedModerateEnd(), getColor(Config.getGraphColorModerate())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeSpeedIncreasedStart(),
+                    Config.getGraphRangeSpeedIncreasedEnd(), getColor(Config.getGraphColorIncreased())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeSpeedHighStart(),
+                    Config.getGraphRangeSpeedHighEnd(), getColor(Config.getGraphColorHigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeSpeedExtremeStart(),
+                    Config.getGraphRangeSpeedExtremeEnd(), getColor(Config.getGraphColorExtreme())));
         }
         if (e == GraphTypeEnum.BZ_GSM || e == GraphTypeEnum.BZ_GSM_H) {
-            plot.addRangeMarker(new IntervalMarker(-1.1, 50, getColor(Config.getGraphColorLow())));
-            plot.addRangeMarker(new IntervalMarker(-3.2, -1.1, getColor(Config.getGraphColorNormal())));
-            plot.addRangeMarker(new IntervalMarker(-4.8, -3.2, getColor(Config.getGraphColorModerate())));
-            plot.addRangeMarker(new IntervalMarker(-8.4, -4.8, getColor(Config.getGraphColorHigh())));
-            plot.addRangeMarker(new IntervalMarker(-50, -8.4, getColor(Config.getGraphColorVeryhigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBzQuietStart(),
+                    Config.getGraphRangeBzQuietEnd(), getColor(Config.getGraphColorQuiet())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBzModerateStart(),
+                    Config.getGraphRangeBzModerateEnd(), getColor(Config.getGraphColorModerate())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBzIncreasedStart(),
+                    Config.getGraphRangeBzIncreasedEnd(), getColor(Config.getGraphColorIncreased())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBzHighStart(),
+                    Config.getGraphRangeBzHighEnd(), getColor(Config.getGraphColorHigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBzExtremeStart(),
+                    Config.getGraphRangeBzExtremeEnd(), getColor(Config.getGraphColorExtreme())));
         }
     }
 
@@ -182,7 +198,8 @@ public class NewTimeGraph {
      * @param e GraphTypeEnum with required for each graph fields.
      * @return TreeMap with Date and Double values which is datasource for final chart generation.
      */
-    private static TreeMap<Date, Double> getCurrentValues(String timezone, GraphTypeEnum e) throws SQLException, ParseException {
+    private static TreeMap<Date, Double> getCurrentValues(String timezone, GraphTypeEnum e)
+            throws SQLException, ParseException {
         TreeMap<Date, Double> out = new TreeMap<>();
         String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone + "' at time zone 'utc', "
                 + e.dbKey + " from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC";
@@ -203,7 +220,8 @@ public class NewTimeGraph {
      * @param e GraphTypeEnum with required for each graph fields.
      * @return TreeMap with Date and Double values which is datasource for final chart generation.
      */
-    private static TreeMap<Date, Double> getArchiveValues(String date, GraphTypeEnum e) throws SQLException, ParseException {
+    private static TreeMap<Date, Double> getArchiveValues(String date, GraphTypeEnum e)
+            throws SQLException, ParseException {
         TreeMap<Date, Double> out = new TreeMap<>();
         HashMap<Date, Double> valueList = new HashMap<>();
         SimpleDateFormat formattedDate = new SimpleDateFormat("yyyy-MM-dd");

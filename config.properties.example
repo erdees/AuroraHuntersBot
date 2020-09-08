@@ -16,6 +16,11 @@ bot.token = YOUR-TELEGRAM-APIKEY
 # Project website
 bot.site = yoursite.com
 
+# Database filling from JSON (id) where id=1 is 5 minutes;
+# id=2 is 2 hours; id=3 is 1 day (recommended for each start);
+# id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
+bot.recovery = 3
+
 # Notification interval in minutes
 notif.interval = 15
 
@@ -23,11 +28,6 @@ notif.interval = 15
 notif.top.density = 15.1 
 notif.top.speed = 501.0
 notif.top.bz = -5.1
-
-# Database filling from JSON (id) where id=1 is 5 minutes; 
-# id=2 is 2 hours; id=3 is 1 day (recommended for each start);
-# id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
-bot.recovery = 3 
 
 # NOAA DSCOVR - 5 minutes json
 json.mag.5min = https://services.swpc.noaa.gov/products/solar-wind/mag-5-minute.json
@@ -46,9 +46,44 @@ json.mag.7day = https://services.swpc.noaa.gov/products/solar-wind/mag-7-day.jso
 json.plasma.7day = https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json
 
 # chart color settings for each triggering range (RGB plus alpha channel)
-graph.color.low = 29, 255, 0, 20
-graph.color.normal = 255, 216, 0, 50
-graph.color.moderate = 255, 102, 0, 100
+graph.color.quiet = 29, 255, 0, 20
+graph.color.moderate = 255, 216, 0, 50
+graph.color.increased = 255, 102, 0, 100
 graph.color.high = 255, 0, 0, 100
-graph.color.veryhigh = 255, 0, 222, 80
+graph.color.extreme = 255, 0, 222, 80
 
+# density chart trigger ranges
+graph.range.density.quiet.start = -10
+graph.range.density.quiet.end = 4
+graph.range.density.moderate.start = 4
+graph.range.density.moderate.end = 9
+graph.range.density.increased.start = 9
+graph.range.density.increased.end = 13
+graph.range.density.high.start = 13
+graph.range.density.high.end = 18
+graph.range.density.extreme.start = 18
+graph.range.density.extreme.end = 150
+
+# speed chart trigger ranges  
+graph.range.speed.quiet.start = 0
+graph.range.speed.quiet.end = 400
+graph.range.speed.moderate.start = 400
+graph.range.speed.moderate.end = 550
+graph.range.speed.increased.start = 550
+graph.range.speed.increased.end = 600
+graph.range.speed.high.start = 600
+graph.range.speed.high.end = 650
+graph.range.speed.extreme.start = 650
+graph.range.speed.extreme.end = 10000
+
+# bz_gsm chart trigger ranges  
+graph.range.bz.quiet.start = -1.1
+graph.range.bz.quiet.end = 50
+graph.range.bz.moderate.start = -3.2
+graph.range.bz.moderate.end = -1.1
+graph.range.bz.increased.start = -4.8
+graph.range.bz.increased.end = -3.2
+graph.range.bz.high.start = -8.4
+graph.range.bz.high.end = -4.8
+graph.range.bz.extreme.start = -50
+graph.range.bz.extreme.end = -8.4

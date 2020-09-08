@@ -66,7 +66,7 @@ Edit configuration file with your parameters.
 
 `vim config.properties`
 
-And replace example variables by yours:
+And replace required example variables by yours:
 ```
 db.host = jdbc:postgresql://127.0.0.1:5432/yourdbname
 db.login = yourdbuser
@@ -74,22 +74,8 @@ db.password = yourdbpassword
 bot.username = @botusername
 bot.token = YOUR-TELEGRAM-APIKEY
 bot.site = yoursite.com
-bot.interval = 15
-bot.recovery = 3 
-json.mag.5min = https://services.swpc.noaa.gov/products/solar-wind/mag-5-minute.json
-json.plasma.5min = https://services.swpc.noaa.gov/products/solar-wind/plasma-5-minute.json
-json.mag.2h = https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json
-json.plasma.2h = https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json
-json.mag.24h = https://services.swpc.noaa.gov/products/solar-wind/mag-1-day.json
-json.plasma.24h = https://services.swpc.noaa.gov/products/solar-wind/plasma-1-day.json
-json.mag.7day = https://services.swpc.noaa.gov/products/solar-wind/mag-7-day.json
-json.plasma.7day = https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json
-graph.color.low = 29, 255, 0, 20
-graph.color.normal = 255, 216, 0, 50
-graph.color.moderate = 255, 102, 0, 100
-graph.color.high = 255, 0, 0, 100
-graph.color.veryhigh = 255, 0, 222, 80
 ```
+You can change other parameters listed in the config.properties, if necessary. By default, all parameters has optimised values so you can keep defaults. \
 After save and exit. Once it done, make sure, that PostgreSQL up and running and the database, its user and password created correctly. In case, if database is unavailable or its credentials is wrong, bot will not start and return an error. 
 
 Almost forget! Make sere that you have created required database structure:
@@ -127,3 +113,38 @@ and finally, to start the bot:
 Now the bot up and running, you are beautiful. 
 
 ## Bot Usage
+
+/start to start the bot; \
+/stop to stop the bot; \
+/info to see this message; \
+/last to see last values from DSCOVR satellite; \
+/history to get old DSCOVR values; \
+/time_settings to change your timezone; \
+/notif_on to enable notifications; \
+/notif_off to disable notifications; \
+/links to get useful links 
+
+Additional /last submenu commands: 
+
+latest density graph /graph_bz \
+latest speed graph /graph_speed \
+latest bz graph /graph_density \
+all latest graphs /graph_all 
+
+Additional /history submenu commands if archive date was configured: 
+
+/history 2020-07-01 - to configure archive for 2020-07-01; 
+
+Once it done, you will be able to see the following commands: 
+
+/archive_text - to get text table; \
+/archive_graph_bz - to get bz_gsm graph for required date; \
+/archive_graph_speed - to get speed graph for required date; \
+/archive_graph_density - to get density graph for required date; \
+/archive_graph_all - to get all three graphs for required date.
+
+To configure your timezone, just share your gps location with the bot. If it is not possible, you can use a command: 
+
+/time_settings +03:00 
+
+Where +03:00 - your local timezone. 
