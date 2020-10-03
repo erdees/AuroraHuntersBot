@@ -75,10 +75,10 @@ public class Config {
         FileInputStream config;
         Properties properties = new Properties();
         try {
-            config = new FileInputStream("config.properties");
+            config = new FileInputStream("config/config.properties");
             properties.load(config);
         } catch (IOException e) {
-            System.err.println("Error: config.properties is not exist in program folder.");
+            System.err.println("Error: config.properties is not exist in config folder.");
             System.exit(0);
         }
         try {
