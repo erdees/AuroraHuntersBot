@@ -50,7 +50,7 @@ jobs:
           ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
           ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
           deployment_mode: docker-compose
-          copy_stack_file: true
+          copy_stack_file: false
           deploy_path: /home/bot/bothosting
           stack_file_name: docker-compose.yaml
           keep_files: 5
