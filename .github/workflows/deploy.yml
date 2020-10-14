@@ -48,5 +48,5 @@ jobs:
         with:
           host: ${{ secrets.DOCKER_HOST }}
           privateKey: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
-          username:: ${{ secrets.DOCKER_USER }}
+          username: ${{ secrets.DOCKER_USER }}
           command: cd ~/bosthosting && docker-compose pull && docker-compose down && docker-compose up -d
