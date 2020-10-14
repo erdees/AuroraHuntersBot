@@ -43,16 +43,10 @@ jobs:
 #     Publish image to github package repository:
       - name: Publish image
         run: docker push "${{steps.global_env.outputs.DOCKERHUB_IMAGE_NAME}}"
-      - name: Deploy to Docker swarm
-        uses: wshihadeh/docker-deployment-action@v1
+      - name: Deploy to Docker-compose
+        uses: garygrossgarten/github-action-ssh@release
         with:
-          remote_docker_host: ${{ secrets.DOCKER_HOST }}
-          ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
-          ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
-          deployment_mode: docker-compose
-          copy_stack_file: true
-          deploy_path: /home/bot/bothosting
-          stack_file_name: docker-compose.yaml
-          keep_files: 5
-          pull_images_first: true
-          args: bot
+          host: ${{ secrets.DOCKER_HOST }}
+          privateKey: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+          username:: ${{ secrets.DOCKER_USER }}
+          command: cd ~/bosthosting && docker-compose pull && docker-compose down && docker-compose up -d
