@@ -3,8 +3,6 @@ RUN  sed -i -e's/ main/ main contrib non-free/g' /etc/apt/sources.list \
     && apt-get update \
     && apt-get dist-upgrade -y \
     && apt-get install --no-install-recommends -yq \
-      msttcorefonts \
-      fonts-liberation \
       cabextract \
       wget \
     && rm -rf /var/lib/apt/lists/*
