@@ -26,9 +26,9 @@ public class GetDataFromDB {
         String firstLine = String.format("%s%s%n", "<pre>","Waiting time: " + getWaitingTime() + "\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s\t%s\t%3s%n", "BZ ", "|", "S ", "|", "PD", "|", "UTC"
                 +timeZoneToMessage);
-        String lastLine = "</pre>\nlatest density graph /graph_bz" +
+        String lastLine = "</pre>\nlatest bz graph /graph_bz" +
                 "\nlatest speed graph /graph_speed" +
-                "\nlatest bz graph /graph_density" +
+                "\nlatest density graph /graph_density" +
                 "\nall latest graphs /graph_all";
         StringBuilder sb = new StringBuilder();
         sb.append(firstLine);
@@ -133,5 +133,29 @@ public class GetDataFromDB {
         } else {
             return "Wrong format. Please type correct command.";
         }
+    }
+
+    /** Return number of users from database. */
+    public static int getUserCount() throws SQLException {
+        int totalUsersRegistered = 0;
+        String SQL_USER_COUNT = "select COUNT(*) from sessions";
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_USER_COUNT);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            totalUsersRegistered = resultSet.getInt(1);
+        }
+        return totalUsersRegistered;
+    }
+
+    /** Return number of entries from database for solar wind parameters. */
+    public static int getEntriesCount() throws SQLException {
+        int totalEntries = 0;
+        String SQL_ENTRIES_COUNT = "select COUNT(*) from data";
+        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_ENTRIES_COUNT);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            totalEntries = resultSet.getInt(1);
+        }
+        return totalEntries;
     }
 }

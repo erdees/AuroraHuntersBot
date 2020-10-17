@@ -20,21 +20,19 @@ public class MessageHandler {
     private String timezone = "+00:00"; // default timezone if not configured
     private boolean isHistoryConfigured;
     private String archiveDate;
-    private boolean isNotifConfigured;
 
     public MessageHandler(Long chatID) {
         this.chatID = chatID;
     }
 
     public MessageHandler(Long chatID, boolean isStarted, boolean isTimezoneConfigured, String timezone, boolean
-            isHistoryConfigured, String archiveDate, boolean isNotifConfigured) {
+            isHistoryConfigured, String archiveDate) {
         this.chatID = chatID;
         this.isStarted = isStarted;
         this.isTimezoneConfigured = isTimezoneConfigured;
         this.timezone = timezone;
         this.isHistoryConfigured = isHistoryConfigured;
         this.archiveDate = archiveDate;
-        this.isNotifConfigured = isNotifConfigured;
     }
 
     public String setBotStarted() {
@@ -60,6 +58,9 @@ public class MessageHandler {
             }
             if (input.equals("/map") || input.equals("/map" + Config.getBotUsername())) {
                 return getAuroraMap();
+            }
+            if (input.equals("/stat") || input.equals("/stat" + Config.getBotUsername())) {
+                return getStat();
             }
             if (input.equals("/last") || input.equals("/last" + Config.getBotUsername())) {
                 return GetDataFromDB.getLastValues(timezone);
@@ -348,6 +349,11 @@ public class MessageHandler {
         return "Aurora map in north Europe: \n" +
                 "http://auroralights.ru/%d0%ba%d0%b0%d1%80%d1%82%d0%b0-%d0%b3%d0%b4%d0%b5-%d1%81%d0%bc%d0%be%d1%82%d1%" +
                 "80%d0%b5%d1%82%d1%8c-%d1%81%d0%b5%d0%b2%d0%b5%d1%80%d0%bd%d1%8b%d0%b5-%d1%81%d0%b8%d1%8f%d0%bd%d0%b8%d1%8f/";
+    }
+
+    private String getStat() throws SQLException {
+        return "<pre>Total bot users: " + GetDataFromDB.getUserCount() + "\nTotal DB entries: "
+                + GetDataFromDB.getEntriesCount() + "</pre>";
     }
 
     /**

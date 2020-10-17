@@ -109,8 +109,7 @@ public class SessionHandler {
             String timezone = resultSet.getString(4);
             boolean is_archive = resultSet.getBoolean(5);
             String archive = resultSet.getString(6);
-            boolean is_notif = resultSet.getBoolean(7);
-            bot = new MessageHandler(chat_id,is_started,is_timezone,timezone,is_archive,archive,is_notif);
+            bot = new MessageHandler(chat_id,is_started,is_timezone,timezone,is_archive,archive);
         }
         return bot;
     }

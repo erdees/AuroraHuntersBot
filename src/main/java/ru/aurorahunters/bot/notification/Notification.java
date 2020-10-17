@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Notification implements Runnable  {
     static ArrayList<Double> densityValues = new ArrayList<>();
@@ -28,7 +29,8 @@ public class Notification implements Runnable  {
             try {
                 if (checkNotification()) {
                     sendNotif(getAlarmString());
-                    //Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifyInterval()));
+                    Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifyInterval()));
+                    Thread.currentThread().interrupt();
                 }
             } catch (SQLException | TelegramApiException e) {
                 e.printStackTrace();

@@ -5,7 +5,6 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.telegram.AuroraBot;
 import ru.aurorahunters.bot.utils.TimeClass;
-
 import java.util.Locale;
 
 public class Main {

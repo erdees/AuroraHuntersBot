@@ -7,5 +7,5 @@ target/**
 *.json
 *.txt
 *.DS_Store
-config.properties
+config/config.properties
 src/test/**

@@ -2,7 +2,6 @@ package ru.aurorahunters.bot;
 
 import ru.aurorahunters.bot.controller.JsonToDB;
 import ru.aurorahunters.bot.notification.Notification;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -78,7 +77,7 @@ public class Config {
             config = new FileInputStream("config/config.properties");
             properties.load(config);
         } catch (IOException e) {
-            System.err.println("Error: config.properties is not exist in config folder.");
+            System.err.println("Error: config/config.properties is not exist.");
             System.exit(0);
         }
         try {
@@ -192,7 +191,7 @@ public class Config {
         scheduler.scheduleAtFixedRate(new JsonToDB(1), 0, 40, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new JsonToDB(2), 59, 60, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new JsonToDB(4), 48, 48, TimeUnit.HOURS);
-        notifScheduler.scheduleAtFixedRate(new Notification(), 1, Config.getNotifyInterval(), TimeUnit.MINUTES);
+        notifScheduler.scheduleAtFixedRate(new Notification(), 60, 60, TimeUnit.SECONDS);
     }
 
     public static Connection getDbConnection() {
