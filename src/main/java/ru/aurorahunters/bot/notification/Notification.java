@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Notification implements Runnable  {
     static ArrayList<Double> densityValues = new ArrayList<>();
@@ -19,6 +18,7 @@ public class Notification implements Runnable  {
     private static final double topDensity = Config.getTopDensity();
     private static final double topSpeed = Config.getTopSpeed();
     private static final double topBz = Config.getTopBz();
+    private static int minuteCounter;
 
     /**
      * Run method which is necessary to run it as a daemon using ScheduledExecutorService.
@@ -28,9 +28,11 @@ public class Notification implements Runnable  {
         try {
             try {
                 if (checkNotification()) {
-                    sendNotif(getAlarmString());
-                    Thread.sleep(TimeUnit.MINUTES.toMillis(Config.getNotifyInterval()));
-                    Thread.currentThread().interrupt();
+                    if (minuteCounter()) {
+                        sendNotif(getAlarmString());
+                        minuteCounter = 0;
+                    }
+                    minuteCounter++;
                 }
             } catch (SQLException | TelegramApiException e) {
                 e.printStackTrace();
@@ -150,5 +152,9 @@ public class Notification implements Runnable  {
         densityValues.clear();
         speedValues.clear();
         bz_gsmValues.clear();
+    }
+
+    private boolean minuteCounter() {
+        return minuteCounter == 0 || minuteCounter == Config.getNotifyInterval();
     }
 }
