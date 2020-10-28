@@ -353,7 +353,7 @@ public class MessageHandler {
 
     private String getStat() throws SQLException {
         return "<pre>Total bot users: " + GetDataFromDB.getUserCount() + "\nTotal DB entries: "
-                + GetDataFromDB.getEntriesCount() + "\nBot ver. 1.0.1</pre>";
+                + GetDataFromDB.getEntriesCount() + "\nBot ver. 1.0.02</pre>";
     }
 
     /**

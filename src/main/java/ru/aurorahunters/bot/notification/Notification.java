@@ -34,7 +34,7 @@ public class Notification implements Runnable  {
                     }
                     minuteCounter++;
                 }
-            } catch (SQLException | TelegramApiException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class Notification implements Runnable  {
      * Send a notification message to all bot users who subscribed to notifications.
      * @param message message which should be sent.
      */
-    public void sendNotif(String message) throws TelegramApiException, SQLException {
+    public void sendNotif(String message) throws SQLException, InterruptedException {
         long chatId;
         final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true'";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql);
@@ -55,7 +55,12 @@ public class Notification implements Runnable  {
             chatId  = resultSet.getLong(1);
             AuroraBot notificationEvent = new AuroraBot();
             SendMessage notificationMessage = new SendMessage(chatId,message).setParseMode(ParseMode.HTML);
-            notificationEvent.execute(notificationMessage);
+            try {
+                notificationEvent.execute(notificationMessage);
+            } catch (TelegramApiException e) {
+                System.out.println("Caught exception while send broadcast messages. StackTrace:\n" + e);
+            }
+            Thread.sleep(35);
         }
     }
 
