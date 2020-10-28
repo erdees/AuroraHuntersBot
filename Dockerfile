@@ -6,8 +6,7 @@ RUN  sed -i -e's/ main/ main contrib non-free/g' /etc/apt/sources.list \
       cabextract \
       wget \
       msttcorefonts \
-      fonts-liberation \
-    && rm -rf /var/lib/apt/lists/*
+      fonts-liberation
 RUN wget https://gist.githubusercontent.com/uMag/74f6f1b7b514f835a4b4f7c54a902609/raw/dfc0f2675f17480f0654fedc80bf27528927ecc4/ttf-ms-tahoma-installer.sh -q -O - | bash
 ARG JAR_FILE=target/*-jar-with-dependencies.jar
 COPY ${JAR_FILE} app.jar
