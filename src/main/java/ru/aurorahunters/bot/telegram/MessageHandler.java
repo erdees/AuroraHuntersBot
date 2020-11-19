@@ -3,7 +3,8 @@ package ru.aurorahunters.bot.telegram;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.controller.GetDataFromDB;
+import ru.aurorahunters.bot.controller.GetSunWindDataFromDB;
+import ru.aurorahunters.bot.graphbuilder.MagnetometerGraph;
 import ru.aurorahunters.bot.graphbuilder.NewTimeGraph;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,11 +60,14 @@ public class MessageHandler {
             if (input.equals("/map") || input.equals("/map" + Config.getBotUsername())) {
                 return getAuroraMap();
             }
+            if (input.equals("/magnetometers") || input.equals("/magnetometers" + Config.getBotUsername())) {
+                return getMagnetometers();
+            }
             if (input.equals("/stat") || input.equals("/stat" + Config.getBotUsername())) {
                 return getStat();
             }
             if (input.equals("/last") || input.equals("/last" + Config.getBotUsername())) {
-                return GetDataFromDB.getLastValues(timezone);
+                return GetSunWindDataFromDB.getLastValues(timezone);
             }
             if (input.contains("/time_settings") || input.contains("/time_settings" + Config.getBotUsername())) {
                 return setTimezone(input);
@@ -99,6 +103,18 @@ public class MessageHandler {
             }
             if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
+            }
+            if (input.equals("/magnetometer_kev") || input.equals("/magnetometer_kev" + Config.getBotUsername())) {
+                sendImage(MagnetometerGraph.getKevMagnetGraph(timezone));
+            }
+            if (input.equals("/magnetometer_ouj") || input.equals("/magnetometer_ouj" + Config.getBotUsername())) {
+                sendImage(MagnetometerGraph.getOujMagnetGraph(timezone));
+            }
+            if (input.equals("/magnetometer_han") || input.equals("/magnetometer_han" + Config.getBotUsername())) {
+                sendImage(MagnetometerGraph.getHanMagnetGraph(timezone));
+            }
+            if (input.equals("/magnetometer_nur") || input.equals("/magnetometer_nur" + Config.getBotUsername())) {
+                sendImage(MagnetometerGraph.getNurMagnetGraph(timezone));
             }
             if (isHistoryConfigured) {
                 if (input.equals("/archive_text") || input.equals("/archive_text" + Config.getBotUsername())) {
@@ -136,6 +152,7 @@ public class MessageHandler {
                 "/stop to stop the bot;\n" +
                 "/info to see this message;\n" +
                 "/last to see last values from DSCOVR satellite;\n" +
+                "/magnetometers to get magnetometer charts\n" +
                 "/history to get old DSCOVR values;\n" +
                 "/time_settings to change your timezone;\n" +
                 "/notif_on to enable notifications;\n" +
@@ -277,7 +294,7 @@ public class MessageHandler {
      */
     private String getHistoryData() throws SQLException, ParseException {
         if (isHistoryConfigured) {
-            return GetDataFromDB.getHistoryValues(archiveDate);
+            return GetSunWindDataFromDB.getHistoryValues(archiveDate);
         }
         else return "Archive is not configured. Please enter required date in <b>yyyy-MM-dd</b> format: \n" +
                 "e.g. command for <b>July 01 of 2020</b> will be \n" +
@@ -352,8 +369,15 @@ public class MessageHandler {
     }
 
     private String getStat() throws SQLException {
-        return "<pre>Total bot users: " + GetDataFromDB.getUserCount() + "\nTotal DB entries: "
-                + GetDataFromDB.getEntriesCount() + "\nBot ver. 1.0.02</pre>";
+        return "<pre>Total bot users: " + GetSunWindDataFromDB.getUserCount() + "\nTotal DB entries: "
+                + GetSunWindDataFromDB.getEntriesCount() + "\nBot ver. 1.0.02</pre>";
+    }
+
+    private String getMagnetometers() {
+        return "/magnetometer_kev - KEV chart\n" +
+                "/magnetometer_ouj - OUJ chart\n" +
+                "/magnetometer_han - HAN chart\n" +
+                "/magnetometer_nur - NUR chart\n";
     }
 
     /**

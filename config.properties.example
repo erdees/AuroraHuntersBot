@@ -1,50 +1,66 @@
-#
 # AuroraHunters Telegram Bot configuration file.
 # Here you can configure your bot by filling required parameters.
 # Please complete all fields to start your bot.
 #################################################################
-
+#
 # PostgreSQL credentials
 db.host = jdbc:postgresql://127.0.0.1:5432/yourdbname
 db.login = yourdbuser
 db.password = yourdbpassword
-
 # Telegram Bot api required fields
 bot.username = @botusername
 bot.token = YOUR-TELEGRAM-APIKEY
-
 # Project website
 bot.site = yoursite.com
-
-# Database filling from JSON (id) where id=1 is 5 minutes;
-# id=2 is 2 hours; id=3 is 1 day (recommended for each start);
-# id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
-bot.recovery = 3
-
 # Notification interval in minutes
 notif.interval = 15
-
 # Notification ranges for each of three solar wind values
 notif.top.density = 15.1 
 notif.top.speed = 501.0
 notif.top.bz = -5.1
-
+# Database filling from JSON (id) where id=1 is 5 minutes;
+# id=2 is 2 hours; id=3 is 1 day (recommended for each start);
+# id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
+bot.recovery = 3
+#################################################################
+#
+# Sources counfiguration.
+#
 # NOAA DSCOVR - 5 minutes json
 json.mag.5min = https://services.swpc.noaa.gov/products/solar-wind/mag-5-minute.json
 json.plasma.5min = https://services.swpc.noaa.gov/products/solar-wind/plasma-5-minute.json
-
 # NOAA DSCOVR - 2 hours json
 json.mag.2h = https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json
 json.plasma.2h = https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json
-
 # NOAA DSCOVR - 24 hours json
 json.mag.24h = https://services.swpc.noaa.gov/products/solar-wind/mag-1-day.json
 json.plasma.24h = https://services.swpc.noaa.gov/products/solar-wind/plasma-1-day.json
-
 # NOAA DSCOVR - 7 days json
 json.mag.7day = https://services.swpc.noaa.gov/products/solar-wind/mag-7-day.json
 json.plasma.7day = https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json
-
+# Magneteometers source urls (1 hour source).
+source.magn.kev.1h = https://space.fmi.fi/image/realtime/UT/KEV/KEVdata_01.txt
+source.magn.ouj.1h = https://space.fmi.fi/image/realtime/UT/OUJ/OUJdata_01.txt
+source.magn.han.1h = https://space.fmi.fi/image/realtime/UT/HAN/HANdata_01.txt
+source.magn.nur.1h = https://space.fmi.fi/image/realtime/UT/NUR/NURdata_01.txt
+# Magneteometers source urls (24 hour source).
+source.magn.kev.24h = https://space.fmi.fi/image/realtime/UT/KEV/KEVdata_24.txt
+source.magn.ouj.24h = https://space.fmi.fi/image/realtime/UT/OUJ/OUJdata_24.txt
+source.magn.han.24h = https://space.fmi.fi/image/realtime/UT/HAN/HANdata_24.txt
+source.magn.nur.24h = https://space.fmi.fi/image/realtime/UT/NUR/NURdata_24.txt
+#################################################################
+#
+# Magneometer sources enable/disable. By enable/disable unnecessary sources you can save CPU and RAM.
+#
+source.mahn.kev.enable = true
+source.mahn.ouj.enable = true
+source.mahn.han.enable = true
+source.mahn.nur.enable = true
+#
+#################################################################
+#
+# Solar wind parameters chart configuration
+#
 # chart color settings for each triggering range (RGB plus alpha channel)
 graph.color.quiet = 29, 255, 0, 20
 graph.color.moderate = 255, 216, 0, 50

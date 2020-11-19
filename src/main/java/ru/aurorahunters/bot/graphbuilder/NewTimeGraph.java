@@ -8,7 +8,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.*;
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.utils.TimeClass;
-import ru.aurorahunters.bot.controller.GetDataFromDB;
+import ru.aurorahunters.bot.controller.GetSunWindDataFromDB;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class NewTimeGraph {
             chart = ChartFactory.createTimeSeriesChart(
                     e.printName + " - last 3 hours",
                     "Time (UTC" + timezoneOrDate + ") | " + "Waiting time: " +
-                            GetDataFromDB.getWaitingTime(),
+                            GetSunWindDataFromDB.getWaitingTime(),
                     e.printName, d, true, true, false);
         } else {
             chart = ChartFactory.createTimeSeriesChart(

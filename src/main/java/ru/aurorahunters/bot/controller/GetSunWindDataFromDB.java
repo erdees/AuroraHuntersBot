@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-public class GetDataFromDB {
+public class GetSunWindDataFromDB {
 
     /**
      * Retreive last 10 density, speed and bz values from Database and format them for Telegram message as a String.

@@ -33,7 +33,7 @@ public class TimeClass {
     }
 
     /**
-     * Method which retrieves GMT/UTC+00:00 Date and time according to @formatter
+     * Method which retrieves GMT/UTC+00:00 Date and time according to local time and @formatter
      * @return GMT/UTC+00:00 Date
      */
     public static String GetCurrentGmtTime() throws ParseException {

@@ -1,6 +1,8 @@
 package ru.aurorahunters.bot;
 
 import ru.aurorahunters.bot.controller.JsonToDB;
+import ru.aurorahunters.bot.controller.MagnetValuesToDB;
+import ru.aurorahunters.bot.controller.MagnetometerTypeEnum;
 import ru.aurorahunters.bot.notification.Notification;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +32,18 @@ public class Config {
     private static String PLASM_24H;
     private static String MAG_7DAY;
     private static String PLASM_7DAY;
+    private static String MAGN_KEV_1H;
+    private static String MAGN_OUJ_1H;
+    private static String MAGN_HAN_1H;
+    private static String MAGN_NUR_1H;
+    private static String MAGN_KEV_24H;
+    private static String MAGN_OUJ_24H;
+    private static String MAGN_HAN_24H;
+    private static String MAGN_NUR_24H;
+    private static boolean MAGN_KEV_ENABLE;
+    private static boolean MAGN_OUJ_ENABLE;
+    private static boolean MAGN_HAN_ENABLE;
+    private static boolean MAGN_NUR_ENABLE;
     private static String GRAPH_COLOR_QUIET;
     private static String GRAPH_COLOR_MODERATE;
     private static String GRAPH_COLOR_INCREASED;
@@ -100,6 +114,18 @@ public class Config {
             PLASM_24H = properties.getProperty("json.plasma.24h");
             MAG_7DAY = properties.getProperty("json.mag.7day");
             PLASM_7DAY = properties.getProperty("json.plasma.7day");
+            MAGN_KEV_1H = properties.getProperty("source.magn.kev.1h");
+            MAGN_OUJ_1H = properties.getProperty("source.magn.ouj.1h");
+            MAGN_HAN_1H = properties.getProperty("source.magn.han.1h");
+            MAGN_NUR_1H = properties.getProperty("source.magn.nur.1h");
+            MAGN_KEV_24H = properties.getProperty("source.magn.kev.24h");
+            MAGN_OUJ_24H = properties.getProperty("source.magn.ouj.24h");
+            MAGN_HAN_24H = properties.getProperty("source.magn.han.24h");
+            MAGN_NUR_24H = properties.getProperty("source.magn.nur.24h");
+            MAGN_KEV_ENABLE = Boolean.parseBoolean(properties.getProperty("source.mahn.kev.enable"));
+            MAGN_OUJ_ENABLE = Boolean.parseBoolean(properties.getProperty("source.mahn.ouj.enable"));
+            MAGN_HAN_ENABLE = Boolean.parseBoolean(properties.getProperty("source.mahn.han.enable"));
+            MAGN_NUR_ENABLE = Boolean.parseBoolean(properties.getProperty("source.mahn.nur.enable"));
             GRAPH_COLOR_QUIET = properties.getProperty("graph.color.quiet");
             GRAPH_COLOR_MODERATE = properties.getProperty("graph.color.moderate");
             GRAPH_COLOR_INCREASED = properties.getProperty("graph.color.increased");
@@ -192,7 +218,39 @@ public class Config {
         scheduler.scheduleAtFixedRate(new JsonToDB(2), 59, 60, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new JsonToDB(4), 48, 48, TimeUnit.HOURS);
         notifScheduler.scheduleAtFixedRate(new Notification(), 60, 60, TimeUnit.SECONDS);
+        configureAndRunMagnetScheduler();
     }
+
+    /** Create required Schedulers for magnetometers according to the config.properties file */
+    private static void configureAndRunMagnetScheduler() {
+        ScheduledExecutorService magnetScheduler = Executors.newSingleThreadScheduledExecutor();
+        if (MAGN_KEV_ENABLE) {
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.KEV, false),
+                    10, 240, TimeUnit.SECONDS);
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.KEV, true),
+                    5, 240, TimeUnit.MINUTES);
+        }
+        if (MAGN_OUJ_ENABLE) {
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.OUJ, false),
+                    10, 240, TimeUnit.SECONDS);
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.OUJ, true),
+                    5, 240, TimeUnit.MINUTES);
+        }
+        if (MAGN_HAN_ENABLE) {
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.HAN, false),
+                    10, 240, TimeUnit.SECONDS);
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.HAN, true),
+                    5, 240, TimeUnit.MINUTES);
+        }
+        if (MAGN_NUR_ENABLE) {
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.NUR, false),
+                    10, 240, TimeUnit.SECONDS);
+            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.NUR, true),
+                    5, 240, TimeUnit.MINUTES);
+        }
+    }
+
+    /** Getters and setters */
 
     public static Connection getDbConnection() {
         return CONNECTION;
@@ -248,6 +306,38 @@ public class Config {
 
     public static String getPlasm7day() {
         return PLASM_7DAY;
+    }
+
+    public static String getMagnKev1h() {
+        return MAGN_KEV_1H;
+    }
+
+    public static String getMagnOuj1h() {
+        return MAGN_OUJ_1H;
+    }
+
+    public static String getMagnHan1h() {
+        return MAGN_HAN_1H;
+    }
+
+    public static String getMagnNur1h() {
+        return MAGN_NUR_1H;
+    }
+
+    public static String getMagnKev24h() {
+        return MAGN_KEV_24H;
+    }
+
+    public static String getMagnOuj24h() {
+        return MAGN_OUJ_24H;
+    }
+
+    public static String getMagnHan24h() {
+        return MAGN_HAN_24H;
+    }
+
+    public static String getMagnNur24h() {
+        return MAGN_NUR_24H;
     }
 
     public static String getGraphColorQuiet() {
