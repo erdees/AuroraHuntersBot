@@ -60,9 +60,9 @@ public class GetSunWindDataFromDB {
             speed = resultSet.getDouble(1);
         }
         double calc = 1500000.0 / 60.0 / 60.0 / speed;
-        int result = (int) (Math.floor(calc * 10000) / 100);
-        int hours = result / 60; //since both are ints, you get an int
-        int minutes = result % 60;
+        double result = (Math.floor(calc * 100) / 100) * 60;
+        int hours = (int) result / 60; //since both are ints, you get an int
+        int minutes = (int) result % 60;
         return hours + "h " + minutes + "m";
     }
 
