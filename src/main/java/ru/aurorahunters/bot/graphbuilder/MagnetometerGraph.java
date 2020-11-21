@@ -15,7 +15,6 @@ import org.jfree.data.time.TimeSeriesCollection;
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.controller.MagnetometerTypeEnum;
 import ru.aurorahunters.bot.utils.TimeClass;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -121,14 +120,14 @@ public class MagnetometerGraph  {
         return chart;
     }
 
-    private static XYPlot applySubPlotStyle(XYPlot plot) {
+    /** Method which set appearance (common settings)for all subplots of combined chart */
+    private static void applySubPlotStyle(XYPlot plot) {
         plot.getRangeAxis().setTickLabelPaint(Color.white);
         plot.getRangeAxis().setLabelPaint(Color.white);
         plot.setBackgroundPaint(Color.BLACK);
         plot.setDomainGridlinePaint(Color.gray);
         plot.setRangeGridlinePaint(Color.gray);
         plot.setBackgroundPaint(new Color(9, 255, 0, 20));
-        return plot;
     }
 
     /** Configure styles, fonts and colors which is the same for all project charts. */
@@ -166,7 +165,6 @@ public class MagnetometerGraph  {
      */
     private static TreeMap<Date, ArrayList<Double>> getDailyMagnetometerValues(String timezone, MagnetometerTypeEnum e)
             throws SQLException, ParseException {
-        Config.loadConfig();
         TreeMap<Date, ArrayList<Double>> out = new TreeMap<>();
         String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone + "' at time zone 'utc', " +
                 " mag_x, mag_y, mag_z from " + e.getDbTableName() +
