@@ -9,7 +9,7 @@ public enum MagnetometerTypeEnum {
             Config.getMagnOuj1h(), Config.getMagnOuj24h()),
     HAN("magnetometer_han", "Hankasalmi (HAN)",
             Config.getMagnHan1h(),Config.getMagnHan24h()),
-    NUR("magnetometer_nur", "Nurmijärvi Geophysical Observatory (NUR)",
+    NUR("magnetometer_nur", "Nurmijärvi Geophys. Observatory (NUR)",
             Config.getMagnNur1h(),Config.getMagnNur24h());
 
     String dbTableName;

@@ -15,6 +15,8 @@ import org.jfree.data.time.TimeSeriesCollection;
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.controller.MagnetometerTypeEnum;
 import ru.aurorahunters.bot.utils.TimeClass;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -50,7 +52,7 @@ public class MagnetometerGraph  {
         return getGraphFile(createCombinedMagnetChart(timezone, MagnetometerTypeEnum.NUR,
                 getDailyMagnetometerValues(timezone, MagnetometerTypeEnum.NUR)));
     }
-    
+
     /**
      * Method which generates magnetometer chart from a given TreeMap as an argument.
      * @param timezone timezone from MessageHandler to add actual user's timezone to chart.
@@ -61,59 +63,72 @@ public class MagnetometerGraph  {
     private static JFreeChart createCombinedMagnetChart(String timezone, MagnetometerTypeEnum e, TreeMap<Date,
             ArrayList<Double>> map) throws ParseException {
 
-        // create subplot 1...
-        final TimeSeriesCollection data1 = new TimeSeriesCollection();
-        final XYItemRenderer renderer1 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis1 = new NumberAxis("nT");
-        rangeAxis1.setAutoRangeIncludesZero(false);
-        final XYPlot subplot1 = new XYPlot(data1, null, rangeAxis1, renderer1);
+        // create subplot X...
+        final TimeSeriesCollection data_x = new TimeSeriesCollection();
+        final XYItemRenderer renderer_x = new StandardXYItemRenderer();
+        final NumberAxis rangeAxis_x = new NumberAxis("Range_X");
+        rangeAxis_x.setAutoRangeIncludesZero(false);
+        final XYPlot subplot_x = new XYPlot(data_x, null, rangeAxis_x, renderer_x);
+        applySubPlotStyle(subplot_x);
 
-        // create subplot 2...
-        final TimeSeriesCollection data2 = new TimeSeriesCollection();
-        final XYItemRenderer renderer2 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis2 = new NumberAxis("nT");
-        rangeAxis2.setAutoRangeIncludesZero(false);
-        final XYPlot subplot2 = new XYPlot(data2, null, rangeAxis2, renderer2);
+        // create subplot Y...
+        final TimeSeriesCollection data_y = new TimeSeriesCollection();
+        final XYItemRenderer renderer_y = new StandardXYItemRenderer();
+        final NumberAxis rangeAxis_y = new NumberAxis("Range_Y");
+        rangeAxis_y.setAutoRangeIncludesZero(false);
+        final XYPlot subplot_y = new XYPlot(data_y, null, rangeAxis_y, renderer_y);
+        applySubPlotStyle(subplot_y);
 
-        // create subplot 3...
-        final TimeSeriesCollection data3 = new TimeSeriesCollection();
-        final XYItemRenderer renderer3 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis3 = new NumberAxis("nT");
-        rangeAxis3.setAutoRangeIncludesZero(false);
-        final XYPlot subplot3 = new XYPlot(data3, null, rangeAxis3, renderer3);
+        // create subplot Z...
+        final TimeSeriesCollection data_z = new TimeSeriesCollection();
+        final XYItemRenderer renderer_z = new StandardXYItemRenderer();
+        renderer_z.setSeriesPaint(0, Color.GREEN.brighter());
+        final NumberAxis rangeAxis_z = new NumberAxis("Range_Z");
+        rangeAxis_z.setAutoRangeIncludesZero(false);
+        final XYPlot subplot_z = new XYPlot(data_z, null, rangeAxis_z, renderer_z);
+        applySubPlotStyle(subplot_z);
 
         // parent plot...
         final CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new NumberAxis("Domain"));
 
         // add the subplots...
-        plot.add(subplot1, 1);
-        plot.add(subplot2, 1);
-        plot.add(subplot3, 1);
+        plot.add(subplot_z, 1);
+        plot.add(subplot_x, 1);
+        plot.add(subplot_y, 1);
         ValueAxis domainAxis = new DateAxis();
         plot.setDomainAxis(domainAxis);
 
         JFreeChart chart = new JFreeChart(e.getPrintName() + " Magnetometer - last 24 hours | UTC" + timezone,
                 JFreeChart.DEFAULT_TITLE_FONT, plot, true);
-
         setChartStyle(plot, chart);
 
-        final TimeSeries series1 = new TimeSeries("X");
-        final TimeSeries series2 = new TimeSeries("Y");
-        final TimeSeries series3 = new TimeSeries("Z");
+        final TimeSeries series_x = new TimeSeries("X");
+        final TimeSeries series_y = new TimeSeries("Y");
+        final TimeSeries series_z = new TimeSeries("Z");
 
         for(Map.Entry<Date, ArrayList<Double>> entry : map.entrySet()) {
             Date time_tag = entry.getKey();
             ArrayList<Double> value = entry.getValue();
-            series1.add(new Second(time_tag), value.get(0));
-            series2.add(new Second(time_tag), value.get(1));
-            series3.add(new Second(time_tag), value.get(2));
+            series_x.add(new Second(time_tag), value.get(0));
+            series_y.add(new Second(time_tag), value.get(1));
+            series_z.add(new Second(time_tag), value.get(2));
         }
 
-        data1.addSeries(series1);
-        data2.addSeries(series2);
-        data3.addSeries(series3);
+        data_x.addSeries(series_x);
+        data_y.addSeries(series_y);
+        data_z.addSeries(series_z);
 
         return chart;
+    }
+
+    private static XYPlot applySubPlotStyle(XYPlot plot) {
+        plot.getRangeAxis().setTickLabelPaint(Color.white);
+        plot.getRangeAxis().setLabelPaint(Color.white);
+        plot.setBackgroundPaint(Color.BLACK);
+        plot.setDomainGridlinePaint(Color.gray);
+        plot.setRangeGridlinePaint(Color.gray);
+        plot.setBackgroundPaint(new Color(9, 255, 0, 20));
+        return plot;
     }
 
     /** Configure styles, fonts and colors which is the same for all project charts. */
@@ -121,6 +136,15 @@ public class MagnetometerGraph  {
         chart.getLegend().setBackgroundPaint(chart.getBackgroundPaint());
         plot.getDomainAxis().setLabel("Finnish Meteorogical Institute | " + Config.getWEBSITE()
                 + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
+        chart.setBackgroundPaint(Color.BLACK);
+        chart.getTitle().setPaint(Color.white);
+        chart.getLegend().setBackgroundPaint(Color.BLACK);
+        chart.getLegend().setItemPaint(Color.white);
+        plot.setBackgroundPaint(Color.BLACK);
+        plot.getDomainAxis().setTickLabelPaint(Color.white);
+        plot.getDomainAxis().setLabelPaint(Color.white);
+        plot.setDomainGridlinePaint(Color.gray);
+        plot.setRangeGridlinePaint(Color.gray);
     }
 
     /**
@@ -142,6 +166,7 @@ public class MagnetometerGraph  {
      */
     private static TreeMap<Date, ArrayList<Double>> getDailyMagnetometerValues(String timezone, MagnetometerTypeEnum e)
             throws SQLException, ParseException {
+        Config.loadConfig();
         TreeMap<Date, ArrayList<Double>> out = new TreeMap<>();
         String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone + "' at time zone 'utc', " +
                 " mag_x, mag_y, mag_z from " + e.getDbTableName() +

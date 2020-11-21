@@ -33,6 +33,62 @@ CREATE TABLE public.data (
 ALTER TABLE public.data OWNER TO postgres;
 
 --
+-- Name: magnetometer_han; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.magnetometer_han (
+    time_tag timestamp without time zone NOT NULL,
+    mag_x numeric,
+    mag_y numeric,
+    mag_z numeric
+);
+
+
+ALTER TABLE public.magnetometer_han OWNER TO postgres;
+
+--
+-- Name: magnetometer_kev; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.magnetometer_kev (
+    time_tag timestamp without time zone NOT NULL,
+    mag_x numeric,
+    mag_y numeric,
+    mag_z numeric
+);
+
+
+ALTER TABLE public.magnetometer_kev OWNER TO postgres;
+
+--
+-- Name: magnetometer_nur; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.magnetometer_nur (
+    time_tag timestamp without time zone NOT NULL,
+    mag_x numeric,
+    mag_y numeric,
+    mag_z numeric
+);
+
+
+ALTER TABLE public.magnetometer_nur OWNER TO postgres;
+
+--
+-- Name: magnetometer_ouj; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.magnetometer_ouj (
+    time_tag timestamp without time zone NOT NULL,
+    mag_x numeric,
+    mag_y numeric,
+    mag_z numeric
+);
+
+
+ALTER TABLE public.magnetometer_ouj OWNER TO postgres;
+
+--
 -- Name: sessions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -55,6 +111,38 @@ ALTER TABLE public.sessions OWNER TO postgres;
 
 ALTER TABLE ONLY public.data
     ADD CONSTRAINT data_time_tag_key UNIQUE (time_tag);
+
+
+--
+-- Name: magnetometer_han data_time_tag_key_han; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.magnetometer_han
+    ADD CONSTRAINT data_time_tag_key_han UNIQUE (time_tag);
+
+
+--
+-- Name: magnetometer_kev data_time_tag_key_kev; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.magnetometer_kev
+    ADD CONSTRAINT data_time_tag_key_kev UNIQUE (time_tag);
+
+
+--
+-- Name: magnetometer_nur data_time_tag_key_nur; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.magnetometer_nur
+    ADD CONSTRAINT data_time_tag_key_nur UNIQUE (time_tag);
+
+
+--
+-- Name: magnetometer_ouj data_time_tag_key_ouj; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.magnetometer_ouj
+    ADD CONSTRAINT data_time_tag_key_ouj UNIQUE (time_tag);
 
 
 --
