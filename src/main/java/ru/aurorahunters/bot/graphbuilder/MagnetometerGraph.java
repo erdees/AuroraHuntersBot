@@ -108,9 +108,11 @@ public class MagnetometerGraph  {
         for(Map.Entry<Date, ArrayList<Double>> entry : map.entrySet()) {
             Date time_tag = entry.getKey();
             ArrayList<Double> value = entry.getValue();
-            series_x.add(new Second(time_tag), value.get(0));
-            series_y.add(new Second(time_tag), value.get(1));
-            series_z.add(new Second(time_tag), value.get(2));
+                if (value.get(0) != 99999.9 || value.get(1) != 99999.9 || value.get(2) != 99999.9) {
+                    series_x.add(new Second(time_tag), value.get(0));
+                    series_y.add(new Second(time_tag), value.get(1));
+                    series_z.add(new Second(time_tag), value.get(2));
+                }
         }
 
         data_x.addSeries(series_x);
