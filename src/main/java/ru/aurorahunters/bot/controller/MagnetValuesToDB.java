@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class MagnetValuesToDB implements Runnable {
 
-    private MagnetometerTypeEnum type;
-    private boolean isDailyData;
+    private final MagnetometerTypeEnum type;
+    private final boolean isDailyData;
 
     public MagnetValuesToDB(MagnetometerTypeEnum type, boolean isDailyData) {
         this.type = type;
@@ -33,7 +33,6 @@ public class MagnetValuesToDB implements Runnable {
     /**
      * A method which puts magnetometer HashMap to a Database.
      * @param m HashMap with magnetometer data.
-     * @throws SQLException
      */
     private void writeResultsToDb(Map<Timestamp, ArrayList<Double>> m) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);

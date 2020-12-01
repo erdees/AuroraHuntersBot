@@ -370,7 +370,7 @@ public class MessageHandler {
 
     private String getStat() throws SQLException {
         return "<pre>Total bot users: " + GetSunWindDataFromDB.getUserCount() + "\nTotal DB entries: "
-                + GetSunWindDataFromDB.getEntriesCount() + "\nBot ver. 1.0.16</pre>";
+                + GetSunWindDataFromDB.getEntriesCount() + "\nBot ver. 1.0.17</pre>";
     }
 
     private String getMagnetometers() {

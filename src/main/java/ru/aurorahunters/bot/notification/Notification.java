@@ -72,7 +72,7 @@ public class Notification implements Runnable  {
         DecimalFormat chatOutput = new DecimalFormat("###.#");
         String firstLine = String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s%n", "BZ ", "|", "S ", "|", "PD");
-        String lastLine = "</pre>\nclick to see latest data: /last\n" +
+        String lastLine = "</pre>\nclick to see latest charts: /graph_all\n" +
                 "click /notif_off to disable notifications";
         StringBuilder sb = new StringBuilder();
         sb.append(firstLine);

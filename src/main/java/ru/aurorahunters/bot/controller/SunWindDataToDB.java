@@ -11,13 +11,13 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-public class JsonToDB implements Runnable {
+public class SunWindDataToDB implements Runnable {
     private String p1;
     private String p2;
     private LinkedHashMap<String, ArrayList<String>> map = new LinkedHashMap<>();
     private int id;
 
-    public JsonToDB(int id) {
+    public SunWindDataToDB(int id) {
         this.id = id;
     }
 
