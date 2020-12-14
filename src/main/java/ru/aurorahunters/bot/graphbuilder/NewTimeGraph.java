@@ -150,7 +150,7 @@ public class NewTimeGraph {
         }
     }
 
-    /** Configure styles, fonts and colors which is the same for all project charts. */
+    /** Configure styles, fonts and colors which is the same for all solar wind charts. */
     private static void setChartStyle(XYPlot plot, JFreeChart chart) {
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);

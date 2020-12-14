@@ -11,13 +11,13 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-public class SunWindDataToDB implements Runnable {
+public class SunWindValuesToDB implements Runnable {
     private String p1;
     private String p2;
     private LinkedHashMap<String, ArrayList<String>> map = new LinkedHashMap<>();
     private int id;
 
-    public SunWindDataToDB(int id) {
+    public SunWindValuesToDB(int id) {
         this.id = id;
     }
 

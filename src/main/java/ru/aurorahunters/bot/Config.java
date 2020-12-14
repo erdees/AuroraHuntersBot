@@ -1,6 +1,6 @@
 package ru.aurorahunters.bot;
 
-import ru.aurorahunters.bot.controller.SunWindDataToDB;
+import ru.aurorahunters.bot.controller.SunWindValuesToDB;
 import ru.aurorahunters.bot.controller.MagnetValuesToDB;
 import ru.aurorahunters.bot.controller.MagnetometerTypeEnum;
 import ru.aurorahunters.bot.notification.Notification;
@@ -213,10 +213,10 @@ public class Config {
     public static void initializeScheduler() {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.schedule(new SunWindDataToDB(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(new SunWindDataToDB(1), 0, 40, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(new SunWindDataToDB(2), 59, 60, TimeUnit.MINUTES);
-        scheduler.scheduleAtFixedRate(new SunWindDataToDB(4), 48, 48, TimeUnit.HOURS);
+        scheduler.schedule(new SunWindValuesToDB(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new SunWindValuesToDB(1), 0, 40, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new SunWindValuesToDB(2), 59, 60, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new SunWindValuesToDB(4), 48, 48, TimeUnit.HOURS);
         notifScheduler.scheduleAtFixedRate(new Notification(), 60, 60, TimeUnit.SECONDS);
         configureAndRunMagnetScheduler();
     }
