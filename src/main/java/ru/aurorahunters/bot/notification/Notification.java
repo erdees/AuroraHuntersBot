@@ -46,11 +46,12 @@ public class Notification implements Runnable  {
      * Send a notification message to all bot users who subscribed to notifications.
      * @param message message which should be sent.
      */
-    public void sendNotif(String message) throws SQLException, InterruptedException {
+    private void sendNotif(String message) throws SQLException, InterruptedException {
         long chatId;
         final String sql = "SELECT chat_id FROM sessions WHERE is_notif='true'";
         PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
+
         while (resultSet.next()) {
             chatId  = resultSet.getLong(1);
             AuroraBot notificationEvent = new AuroraBot();
@@ -68,7 +69,7 @@ public class Notification implements Runnable  {
      * Generates a String message in Telegram format with notification.
      * @return a String with result.
      */
-    public String getAlarmString() {
+    private String getAlarmString() {
         DecimalFormat chatOutput = new DecimalFormat("###.#");
         String firstLine = String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s%n", "BZ ", "|", "S ", "|", "PD");
@@ -87,7 +88,7 @@ public class Notification implements Runnable  {
     }
 
     /** Check if one, two, three or none of parameters is true. */
-    public boolean checkNotification() throws SQLException {
+    private boolean checkNotification() throws SQLException {
         getDbValues();
         return isDensityHigh() || isSpeedHigh() || isBzHigh();
     }
@@ -98,6 +99,7 @@ public class Notification implements Runnable  {
      */
     private boolean isDensityHigh() {
         int count = 0;
+
         for (Double d : densityValues) {
             if (d > topDensity) {
                 count++;
@@ -112,6 +114,7 @@ public class Notification implements Runnable  {
      */
     private boolean isSpeedHigh() {
         int count = 0;
+
         for (Double d : speedValues) {
             if (d > topSpeed) {
                 count++;
@@ -126,6 +129,7 @@ public class Notification implements Runnable  {
      */
     private boolean isBzHigh() {
         int count = 0;
+
         for (Double d : bz_gsmValues) {
             if (d <= topBz) {
                 count++;

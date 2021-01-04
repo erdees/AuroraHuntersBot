@@ -45,6 +45,7 @@ public class SessionHandler {
     public static boolean isChatIdExist(Long chatID) throws SQLException {
         final String SQL_SELECT = "select chat_id from sessions where chat_id=?;";
         PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL_SELECT);
+
         ps.setLong(1, chatID);
         ResultSet resultSet = ps.executeQuery();
         return resultSet.next();
@@ -56,9 +57,10 @@ public class SessionHandler {
      */
     public static void setDefaults(Long chatId) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
-        final String sql = "INSERT INTO sessions VALUES (?::NUMERIC, ?::BOOLEAN, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN, " +
+        String sql = "INSERT INTO sessions VALUES (?::NUMERIC, ?::BOOLEAN, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN, " +
                 "?::TEXT, ?::BOOLEAN) ON CONFLICT (chat_id) DO NOTHING;";
         PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
+
         try {
             ps.setLong(1, chatId);
             ps.setBoolean(2, true);
@@ -80,8 +82,9 @@ public class SessionHandler {
      */
     public static void removeId(Long chatId) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
-        final String sql = "DELETE FROM sessions WHERE chat_id = ?;";
+        String sql = "DELETE FROM sessions WHERE chat_id = ?;";
         PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
+
         try {
             ps.setLong(1, chatId);
             ps.executeUpdate();
@@ -100,6 +103,7 @@ public class SessionHandler {
         MessageHandler bot = null;
         final String sql = "SELECT * FROM sessions WHERE chat_id= ?;";
         PreparedStatement ps = Config.getDbConnection().prepareStatement(sql);
+
         ps.setLong(1, chatId);
         ResultSet resultSet = ps.executeQuery();
         while (resultSet.next()) { //if didn't retreive object,

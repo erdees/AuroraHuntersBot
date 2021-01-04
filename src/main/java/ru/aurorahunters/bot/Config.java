@@ -87,6 +87,7 @@ public class Config {
     public static void loadConfig() {
         FileInputStream config;
         Properties properties = new Properties();
+
         try {
             config = new FileInputStream("config/config.properties");
             properties.load(config);
@@ -213,6 +214,7 @@ public class Config {
     public static void initializeScheduler() {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
+
         scheduler.schedule(new SunWindValuesToDB(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new SunWindValuesToDB(1), 0, 40, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new SunWindValuesToDB(2), 59, 60, TimeUnit.MINUTES);
@@ -224,6 +226,7 @@ public class Config {
     /** Create required Schedulers for magnetometers according to the config.properties file */
     private static void configureAndRunMagnetScheduler() {
         ScheduledExecutorService magnetScheduler = Executors.newSingleThreadScheduledExecutor();
+
         if (MAGN_KEV_ENABLE) {
             magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.KEV, false),
                     10, 240, TimeUnit.SECONDS);
@@ -249,8 +252,6 @@ public class Config {
                     5, 240, TimeUnit.MINUTES);
         }
     }
-
-    /** Getters and setters */
 
     public static Connection getDbConnection() {
         return CONNECTION;
