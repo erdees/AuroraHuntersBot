@@ -11,4 +11,5 @@ RUN wget https://gist.githubusercontent.com/uMag/74f6f1b7b514f835a4b4f7c54a90260
 ARG JAR_FILE=target/*-jar-with-dependencies.jar
 COPY ${JAR_FILE} app.jar
 VOLUME /config
+VOLUME /.cache
 ENTRYPOINT ["java","-jar","/app.jar"]
