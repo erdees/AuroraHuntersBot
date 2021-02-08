@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class TimeClass {
+public class GPSUtils {
+
     private static TimeZoneEngine engine;
 
-    /** Initialize TimeZoneEngine library */
     public static void initializeZoneEngine() {
         engine = TimeZoneEngine.initialize();
     }
@@ -23,7 +23,7 @@ public class TimeClass {
      * @param location is a Telegram object which contains latitude and longitude.
      * @return timezone in String format
      */
-    public static String getGpsTimezone(Location location) {
+    public String getGpsTimezone(Location location) {
         double v = location.getLatitude();
         double v1 = location.getLongitude();
         List<ZoneId> list = engine.queryAll(v, v1);
@@ -36,7 +36,7 @@ public class TimeClass {
      * Method which retrieves GMT/UTC+00:00 Date and time according to local time and @formatter
      * @return GMT/UTC+00:00 Date
      */
-    public static String GetCurrentGmtTime() throws ParseException {
+    public String getCurrentTime() throws ParseException {
         String fromDateString = new Date().toString();
         DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         Date fromDate = formatter.parse(fromDateString);

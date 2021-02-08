@@ -1,14 +1,18 @@
 package ru.aurorahunters.bot.graphbuilder;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.*;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.utils.TimeClass;
-import ru.aurorahunters.bot.controller.GetSunWindDataFromDB;
+import ru.aurorahunters.bot.dao.DataDAO;
+import ru.aurorahunters.bot.enums.GraphTypeEnum;
+import ru.aurorahunters.bot.model.ActualSunChart;
+import ru.aurorahunters.bot.model.ArchiveChart;
+import ru.aurorahunters.bot.model.Resolution;
+import ru.aurorahunters.bot.service.solarwind.ValueCalculator;
+import ru.aurorahunters.bot.utils.GPSUtils;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -20,65 +24,129 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class NewTimeGraph {
+public class SunWindChartGen {
+
+    private final Resolution resolution = new Resolution(600, 400);
 
     /** Throughput method to generate a proton density graph  */
-    public static File getDensityGraph(String timezone) throws ParseException, SQLException, IOException {
-        return getGraphFile(getGraph(timezone, GraphTypeEnum.DENSITY,
-                getCurrentValues(timezone, GraphTypeEnum.DENSITY)));
+    public File getDensityGraph(String timezone) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.DENSITY.getDbKey();
+        if (new ChartFileGen().isActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ActualSunChart chart = new ActualSunChart(GraphTypeEnum.DENSITY, timezone, resolution);
+            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            return new ChartFileGen(chart.getResolution()).
+                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+        }
     }
 
     /** Throughput method to generate a solar speed graph  */
-    public static File getSpeedGraph(String timezone) throws ParseException, SQLException, IOException {
-        return getGraphFile(getGraph(timezone, GraphTypeEnum.SPEED,
-                getCurrentValues(timezone, GraphTypeEnum.SPEED)));
+    public File getSpeedGraph(String timezone) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.SPEED.getDbKey();
+        if (new ChartFileGen().isActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ActualSunChart chart = new ActualSunChart(GraphTypeEnum.SPEED, timezone, resolution);
+            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            return new ChartFileGen(chart.getResolution()).
+                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+        }
     }
 
     /** Throughput method to generate a bz graph  */
-    public static File getBzGraph(String timezone) throws ParseException, SQLException, IOException {
-        return getGraphFile(getGraph(timezone, GraphTypeEnum.BZ_GSM,
-                getCurrentValues(timezone, GraphTypeEnum.BZ_GSM)));
+    public File getBzGraph(String timezone) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.BZ_GSM.getDbKey();
+        if (new ChartFileGen().isActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ActualSunChart chart = new ActualSunChart(GraphTypeEnum.BZ_GSM, timezone, resolution);
+            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            return new ChartFileGen(chart.getResolution()).
+                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+        }
     }
 
     /** Throughput method to generate an archive proton density graph  */
-    public static File getDensityArchiveGraph(String date) throws ParseException, SQLException, IOException {
-        return getGraphFile(getGraph(date, GraphTypeEnum.DENSITY_H,
-                getArchiveValues(date, GraphTypeEnum.DENSITY_H)));
+    public File getDensityArchiveGraph(String date) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.DENSITY_H.getDbKey() + "_" + date;
+        if (new ChartFileGen().isArchiveActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ArchiveChart archiveChart = new ArchiveChart(GraphTypeEnum.DENSITY_H, resolution, date);
+            TreeMap<Date, Double> chartData = getArchiveValues(archiveChart);
+            return new ChartFileGen(archiveChart.getResolution()).
+                    getChart(getGraph(archiveChart, chartData), name);
+        }
     }
 
     /** Throughput method to generate an archive solar speed graph  */
-    public static File getSpeedArchiveGraph(String date) throws ParseException, SQLException, IOException {
-        return getGraphFile(getGraph(date, GraphTypeEnum.SPEED_H,
-                getArchiveValues(date, GraphTypeEnum.SPEED_H)));
+    public File getSpeedArchiveGraph(String date) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.SPEED_H.getDbKey() + "_" + date;
+        if (new ChartFileGen().isArchiveActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ArchiveChart archiveChart = new ArchiveChart(GraphTypeEnum.SPEED_H, resolution, date);
+            TreeMap<Date, Double> chartData = getArchiveValues(archiveChart);
+            return new ChartFileGen(archiveChart.getResolution()).
+                    getChart(getGraph(archiveChart, chartData), name);
+        }
     }
 
     /** Throughput method to generate an archive bz graph  */
-    public static File getBzArchiveGraph(String date) throws ParseException, SQLException, IOException {
-        return getGraphFile(getGraph(date, GraphTypeEnum.BZ_GSM_H,
-                getArchiveValues(date, GraphTypeEnum.BZ_GSM_H)));
+    public File getBzArchiveGraph(String date) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.BZ_GSM_H.getDbKey() + "_" + date;
+        if (new ChartFileGen().isArchiveActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ArchiveChart archiveChart = new ArchiveChart(GraphTypeEnum.BZ_GSM_H, resolution, date);
+            TreeMap<Date, Double> chartData = getArchiveValues(archiveChart);
+            return new ChartFileGen(archiveChart.getResolution()).
+                    getChart(getGraph(archiveChart, chartData), name);
+        }
     }
 
     /**
      * Method generates a graph according to received as an argument TreeMap.
-     * @param timezoneOrDate necessary for query field. Parameter already verified in other class.
-     * @param e GraphTypeEnum which necessary to render a text values for each chart.
      * @param m is Map with necessary for chart generation values.
      * @return JFreeChart object e.g. graph which can be placed to a file.
      */
-    private static JFreeChart getGraph(String timezoneOrDate, GraphTypeEnum e,
-                                       TreeMap<Date, Double> m) throws SQLException, ParseException {
+    private JFreeChart getGraph(ActualSunChart graph, SortedMap<Date, Double> m)
+            throws SQLException, ParseException {
         TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE()
-                + " Telegram Bot (" + Config.getBotUsername() + ") | " + TimeClass.GetCurrentGmtTime());
+                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentTime());
         for(Map.Entry<Date, Double> entry : m.entrySet()) {
-            Date time_tag = entry.getKey();
+            Date timeTag = entry.getKey();
             Double value = entry.getValue();
-            timeChart.add(new Minute(time_tag), value);
+            timeChart.add(new Minute(timeTag), value);
         }
         TimeSeriesCollection dataset = new TimeSeriesCollection(timeChart);
-        JFreeChart chart = getChartByType(timezoneOrDate, e, dataset);
+        JFreeChart chart = getChartByType(graph.getTimezone(), graph.getGraphTypeEnum(), dataset);
         XYPlot plot = chart.getXYPlot();
         setChartStyle(plot, chart);
-        setRangeAndColor(plot, e);
+        setRangeAndColor(plot, graph.getGraphTypeEnum());
+        return chart;
+    }
+
+    /**
+     * Method generates a graph according to received as an argument TreeMap.
+     * @param m is Map with necessary for chart generation values.
+     * @return JFreeChart object e.g. graph which can be placed to a file.
+     */
+    private JFreeChart getGraph(ArchiveChart graph, TreeMap<Date, Double> m)
+            throws SQLException, ParseException {
+        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE()
+                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentTime());
+        for(Map.Entry<Date, Double> entry : m.entrySet()) {
+            Date timeTag = entry.getKey();
+            Double value = entry.getValue();
+            timeChart.add(new Minute(timeTag), value);
+        }
+        TimeSeriesCollection dataset = new TimeSeriesCollection(timeChart);
+        JFreeChart chart = getChartByType(graph.getDate(), graph.getGraphTypeEnum(), dataset);
+        XYPlot plot = chart.getXYPlot();
+        setChartStyle(plot, chart);
+        setRangeAndColor(plot, graph.getGraphTypeEnum());
         return chart;
     }
 
@@ -89,19 +157,19 @@ public class NewTimeGraph {
      * @param d created earlier TimeSeriesCollection.
      * @return created JFreeChart object.
      */
-    private static JFreeChart getChartByType(String timezoneOrDate, GraphTypeEnum e, TimeSeriesCollection d)
+    private JFreeChart getChartByType(String timezoneOrDate, GraphTypeEnum e, TimeSeriesCollection d)
             throws SQLException {
         JFreeChart chart;
         if (e == GraphTypeEnum.BZ_GSM || e == GraphTypeEnum.SPEED || e == GraphTypeEnum.DENSITY) {
             chart = ChartFactory.createTimeSeriesChart(
-                    e.printName + " - last 3 hours",
+                    e.getPrintName() + " - last 3 hours",
                     "Time (UTC" + timezoneOrDate + ") | " + "Waiting time: " +
-                            GetSunWindDataFromDB.getWaitingTime(),
-                    e.printName, d, true, true, false);
+                            new ValueCalculator().getWaitingTime(),
+                    e.getPrintName(), d, true, true, false);
         } else {
             chart = ChartFactory.createTimeSeriesChart(
-                    e.printName + " | Archive for " + timezoneOrDate,
-                    "Time (UTC+00:00)" , e.printName, d, true, true, false);
+                    e.getPrintName() + " | Archive for " + timezoneOrDate,
+                    "Time (UTC+00:00)" , e.getPrintName(), d, true, true, false);
         }
         return chart;
     }
@@ -111,7 +179,7 @@ public class NewTimeGraph {
      * @param plot of XYPlot object.
      * @param e GraphTypeEnum with required for each graph fields.
      */
-    private static void setRangeAndColor(XYPlot plot, GraphTypeEnum e) {
+    private void setRangeAndColor(XYPlot plot, GraphTypeEnum e) {
         if (e == GraphTypeEnum.DENSITY || e == GraphTypeEnum.DENSITY_H) {
             plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeDensQuietStart(),
                     Config.getGraphRangeDensQuietEnd(), getColor(Config.getGraphColorQuiet())));
@@ -151,7 +219,7 @@ public class NewTimeGraph {
     }
 
     /** Configure styles, fonts and colors which is the same for all solar wind charts. */
-    private static void setChartStyle(XYPlot plot, JFreeChart chart) {
+    private void setChartStyle(XYPlot plot, JFreeChart chart) {
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
         chart.getLegend().setBackgroundPaint(Color.BLACK);
@@ -171,7 +239,7 @@ public class NewTimeGraph {
      * @param color which goes from the config.properties.
      * @return Color in rgba.
      */
-    private static Color getColor(String color) {
+    private Color getColor(String color) {
         String[] rgba;
         rgba = color.split(",");
         int r = Integer.parseInt(rgba[0].trim());
@@ -182,58 +250,26 @@ public class NewTimeGraph {
     }
 
     /**
-     * Returns a file with generated graph of JFreeChart object.
-     * @param c chart from prepared JFreeChart object.
-     * @return a file.
-     */
-    private static File getGraphFile(JFreeChart c) throws IOException {
-        File file = new File(".png");
-        ChartUtils.saveChartAsPNG(file, c, 600, 400);
-        return file;
-    }
-
-    /**
-     * Method which retrieves from a Database values for chart generation in "online" mode e.g. 180 last values.
-     * @param timezone parameter which determines which for which timezone chart should be generated.
-     * @param e GraphTypeEnum with required for each graph fields.
-     * @return TreeMap with Date and Double values which is datasource for final chart generation.
-     */
-    private static TreeMap<Date, Double> getCurrentValues(String timezone, GraphTypeEnum e)
-            throws SQLException, ParseException {
-        TreeMap<Date, Double> out = new TreeMap<>();
-        String SQL_SELECT = "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone + "' at time zone 'utc', "
-                + e.dbKey + " from data ORDER BY time_tag desc limit 180) SELECT * FROM t ORDER BY timezone ASC";
-        PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_SELECT);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            Timestamp time_tag = resultSet.getTimestamp(1);
-            double value = resultSet.getDouble(2);
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time_tag.toString());
-            out.put(date, value);
-        }
-        return out;
-    }
-
-    /**
      * Method which retrieves from a Database values for chart generation in "archive" mode according to user request.
-     * @param date parameter which determines which for which year, month and day chart should be generated.
-     * @param e GraphTypeEnum with required for each graph fields.
      * @return TreeMap with Date and Double values which is datasource for final chart generation.
      */
-    private static TreeMap<Date, Double> getArchiveValues(String date, GraphTypeEnum e)
+    private TreeMap<Date, Double> getArchiveValues(ArchiveChart archiveChart)
+    //TODO: get rid of this method and refactor it
             throws SQLException, ParseException {
         TreeMap<Date, Double> out = new TreeMap<>();
         HashMap<Date, Double> valueList = new HashMap<>();
         SimpleDateFormat formattedDate = new SimpleDateFormat("yyyy-MM-dd");
-        if (date.matches("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))")) {
-            Date indicatedDay = formattedDate.parse(date);
+        if (archiveChart.getDate().matches("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))")) {
+            Date indicatedDay = formattedDate.parse(archiveChart.getDate());
             Calendar c = Calendar.getInstance();
             c.setTime(indicatedDay);
             c.add(Calendar.DATE, 1);
             Date nextDay = c.getTime();
             String initialDay = formattedDate.format(indicatedDay);
             String finalDay = formattedDate.format(nextDay);
-            String SQL_TEST = "SELECT time_tag, " + e.dbKey + " FROM data WHERE time_tag >= '" + initialDay +
+            String SQL_TEST =
+                    "SELECT time_tag, " + archiveChart.getGraphTypeEnum().getDbKey() + " FROM data WHERE " +
+                            "time_tag >= '" + initialDay +
                     "' AND time_tag < '" + finalDay + "';";
             PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(SQL_TEST);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -246,7 +282,7 @@ public class NewTimeGraph {
                 if (Integer.parseInt(minVar) == 59) {
                     Date maxValueDate = new Date();
                     Double maxValue;
-                    if (e == GraphTypeEnum.BZ_GSM_H) {
+                    if (archiveChart.getGraphTypeEnum() == GraphTypeEnum.BZ_GSM_H) {
                         maxValue = valueList.entrySet().stream().min(Map.Entry.comparingByValue()).get().getValue();
                     } else {
                         maxValue = valueList.entrySet().stream().max(Map.Entry.comparingByValue()).get().getValue();

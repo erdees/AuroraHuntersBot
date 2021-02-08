@@ -1,5 +1,6 @@
-package ru.aurorahunters.bot.controller;
+package ru.aurorahunters.bot.service.magnetometer;
 
+import ru.aurorahunters.bot.enums.MagnetEnum;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,57 +9,43 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GetMagnetData {
+public class MagnetometerFetcher {
 
-    private MagnetometerTypeEnum type;
+    private final MagnetEnum type;
 
     /**
-     * A constructor which receives a Enum data for particular megnetometer. In classes and methods above this one,
-     * which can be called for different magnetometers.
+     * A constructor which receives a Enum data for particular magnetometer.
+     * In classes and methods above this one, which can be called for different magnetometers.
      * @param type MagnetometerTypeEnum
      */
-    public GetMagnetData(MagnetometerTypeEnum type) {
+    public MagnetometerFetcher(MagnetEnum type) {
         this.type = type;
-    }
-
-    /** Throughput method to call latest magnetometer data */
-    public Map<Timestamp, ArrayList<Double>> getLatestMapMagnetData() throws IOException {
-        return parseAndStructureMagnets(getLatestMagnetData(type));
-    }
-
-    /** Throughput method to call 24 hours magnetometer data */
-    public Map<Timestamp, ArrayList<Double>> getDailyMapMagnetData() throws IOException {
-        return parseAndStructureMagnets(getDailyMagnetData(type));
     }
 
     /**
      * Throughput method to request a raw magnetometer data from given URL (1 hour data)
-     * @param typeEnum which will be determined in constructor for reuse purposes. This method can be use by multiple
-     * magnetometers which have the same source format.
+     * This method can be use by multiple magnetometers which have the same source format.
      * @return contents a raw magnetometer data text with spaces and multiple lines.
-     * @throws IOException
      */
-    private String getLatestMagnetData(MagnetometerTypeEnum typeEnum) throws IOException {
-        URL magnetUrl =  new URL(typeEnum.latestDataUrl);
+    public Map<Timestamp, ArrayList<Double>> getLatestData() throws IOException {
+        URL magnetUrl =  new URL(type.getLatestDataUrl());
         BufferedReader magnetIn = new BufferedReader(new InputStreamReader(magnetUrl.openStream()));
-        String p1 = magnetIn.lines().collect(Collectors.joining("\n"));
+        String joinedString = magnetIn.lines().collect(Collectors.joining("\n"));
         magnetIn.close();
-        return p1;
+        return parseAndStructureMagnets(joinedString);
     }
 
     /**
      * Throughput method to request a raw magnetometer data from given URL (24 hours data)
-     * @param typeEnum which will be determined in constructor for reuse purposes. This method can be use by multiple
-     * magnetometers which have the same source format.
+     * This method can be use by multiple magnetometers which have the same source format.
      * @return contents a raw magnetometer data text with spaces and multiple lines.
-     * @throws IOException
      */
-    private String getDailyMagnetData(MagnetometerTypeEnum typeEnum) throws IOException {
-        URL magnetUrl =  new URL(typeEnum.dailyDataUrl);
+    public Map<Timestamp, ArrayList<Double>> getDailyData() throws IOException {
+        URL magnetUrl =  new URL(type.getDailyDataUrl());
         BufferedReader magnetIn = new BufferedReader(new InputStreamReader(magnetUrl.openStream()));
-        String p1 = magnetIn.lines().collect(Collectors.joining("\n"));
+        String joinedString = magnetIn.lines().collect(Collectors.joining("\n"));
         magnetIn.close();
-        return p1;
+        return parseAndStructureMagnets(joinedString);
     }
 
     /**
@@ -77,10 +64,8 @@ public class GetMagnetData {
                 s.nextLine();
             } else {
                 Map.Entry<Timestamp, ArrayList<Double>> entry =
-                        parseSingleMagnetLine(s.nextLine()).entrySet().iterator().next();
-                Timestamp key = entry.getKey();
-                ArrayList<Double> value = entry.getValue();
-                map.put(key,value);
+                        parseSingleLine(s.nextLine()).entrySet().iterator().next();
+                map.put(entry.getKey(), entry.getValue());
             }
             i++;
         }
@@ -91,10 +76,11 @@ public class GetMagnetData {
     /**
      * A method which parses a single line with magnetometer data to a HashMap.
      * @param s contents a raw text with spaces and tabs which will be parsed in a method.
-     * @return a database ready format HashMap, which contents a Timestamp as a key and ArrayList with x, y, and z values
-     * of a magnetometer. This HashMap will be used while a main HashMap with being formed.
+     * @return a database ready format HashMap, which contents a Timestamp as a key and ArrayList
+     * with x, y, and z values of a magnetometer. This HashMap will be used while a main HashMap
+     * with being formed.
      */
-    private Map<Timestamp,ArrayList<Double>> parseSingleMagnetLine(String s) {
+    private Map<Timestamp,ArrayList<Double>> parseSingleLine(String s) {
         TreeMap<Timestamp,ArrayList<Double>> map = new TreeMap<>();
         ArrayList<Double> list = new ArrayList<>();
         String temp = s.replaceAll("\\s+", " ");

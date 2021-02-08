@@ -1,8 +1,8 @@
-package ru.aurorahunters.bot.controller;
+package ru.aurorahunters.bot.enums;
 
 import ru.aurorahunters.bot.Config;
 
-public enum MagnetometerTypeEnum {
+public enum MagnetEnum {
     KEV("magnetometer_kev", "Kevo (KEV)",
             Config.getMagnKev1h(), Config.getMagnKev24h()),
     OUJ("magnetometer_ouj", "Oulujärvi (OUJ)",
@@ -17,7 +17,7 @@ public enum MagnetometerTypeEnum {
     String latestDataUrl;
     String dailyDataUrl;
 
-    MagnetometerTypeEnum(String dbTableName, String printName, String latestDataUrl, String dailyDataUrl) {
+    MagnetEnum(String dbTableName, String printName, String latestDataUrl, String dailyDataUrl) {
         this.dbTableName = dbTableName;
         this.printName = printName;
         this.latestDataUrl = latestDataUrl;

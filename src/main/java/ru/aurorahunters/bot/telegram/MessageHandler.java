@@ -1,21 +1,18 @@
 package ru.aurorahunters.bot.telegram;
 
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.controller.GetSunWindDataFromDB;
-import ru.aurorahunters.bot.graphbuilder.MagnetometerGraph;
-import ru.aurorahunters.bot.graphbuilder.NewTimeGraph;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import ru.aurorahunters.bot.service.solarwind.MessageStringBuilder;
+import ru.aurorahunters.bot.dao.DataDAO;
+import ru.aurorahunters.bot.dao.SessionsDAO;
+import ru.aurorahunters.bot.graphbuilder.MagnetChartGen;
+import ru.aurorahunters.bot.graphbuilder.SunWindChartGen;
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 
 public class MessageHandler {
-    private Long chatID;
+    private final Long chatID;
     private boolean isStarted = false;
     private boolean isTimezoneConfigured;
     private String timezone = "+00:00"; // default timezone if not configured
@@ -67,7 +64,7 @@ public class MessageHandler {
                 return getStat();
             }
             if (input.equals("/last") || input.equals("/last" + Config.getBotUsername())) {
-                return GetSunWindDataFromDB.getLastValues(timezone);
+                return new MessageStringBuilder().getLastValues(timezone);
             }
             if (input.contains("/time_settings") || input.contains("/time_settings" + Config.getBotUsername())) {
                 return setTimezone(input);
@@ -88,33 +85,33 @@ public class MessageHandler {
                 return getLinks();
             }
             if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBotUsername())) {
-                sendImage(NewTimeGraph.getBzGraph(timezone));
-                sendImage(NewTimeGraph.getSpeedGraph(timezone));
-                sendImage(NewTimeGraph.getDensityGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getBzGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityGraph(timezone));
             }
             if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBotUsername())) {
-                sendImage(NewTimeGraph.getBzGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getBzGraph(timezone));
             }
             if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBotUsername())) {
-                sendImage(NewTimeGraph.getSpeedGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedGraph(timezone));
             }
             if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
-                sendImage(NewTimeGraph.getDensityGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityGraph(timezone));
             }
             if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
             }
             if (input.equals("/magnetometer_kev") || input.equals("/magnetometer_kev" + Config.getBotUsername())) {
-                sendImage(MagnetometerGraph.getKevMagnetGraph(timezone));
+                new ImageSender(chatID).sendImage(new MagnetChartGen().getKevChart(timezone));
             }
             if (input.equals("/magnetometer_ouj") || input.equals("/magnetometer_ouj" + Config.getBotUsername())) {
-                sendImage(MagnetometerGraph.getOujMagnetGraph(timezone));
+                new ImageSender(chatID).sendImage(new MagnetChartGen().getOujChart(timezone));
             }
             if (input.equals("/magnetometer_han") || input.equals("/magnetometer_han" + Config.getBotUsername())) {
-                sendImage(MagnetometerGraph.getHanMagnetGraph(timezone));
+                new ImageSender(chatID).sendImage(new MagnetChartGen().getHanChart(timezone));
             }
             if (input.equals("/magnetometer_nur") || input.equals("/magnetometer_nur" + Config.getBotUsername())) {
-                sendImage(MagnetometerGraph.getNurMagnetGraph(timezone));
+                new ImageSender(chatID).sendImage(new MagnetChartGen().getNurChart(timezone));
             }
             if (isHistoryConfigured) {
                 if (input.equals("/archive_text") || input.equals("/archive_text" + Config.getBotUsername())) {
@@ -122,21 +119,21 @@ public class MessageHandler {
                 }
                 if (input.equals("/archive_graph_bz") || input.equals("/archive_graph_bz" +
                         Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
+                    new ImageSender(chatID).sendImage(new SunWindChartGen().getBzArchiveGraph(archiveDate));
                 }
                 if (input.equals("/archive_graph_speed") || input.equals("/archive_graph_speed" +
                         Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
+                    new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedArchiveGraph(archiveDate));
                 }
                 if (input.equals("/archive_graph_density") || input.equals("/archive_graph_density" +
                         Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
+                    new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityArchiveGraph(archiveDate));
                 }
                 if (input.equals("/archive_graph_all") || input.equals("/archive_graph_all" +
                         Config.getBotUsername())) {
-                    sendImage(NewTimeGraph.getBzArchiveGraph(archiveDate));
-                    sendImage(NewTimeGraph.getSpeedArchiveGraph(archiveDate));
-                    sendImage(NewTimeGraph.getDensityArchiveGraph(archiveDate));
+                    new ImageSender(chatID).sendImage(new SunWindChartGen().getBzArchiveGraph(archiveDate));
+                    new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedArchiveGraph(archiveDate));
+                    new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityArchiveGraph(archiveDate));
                 }
             }
             return "";
@@ -174,7 +171,7 @@ public class MessageHandler {
                 if (argument.matches(regex)) {
                     isTimezoneConfigured = true;
                     timezone = argument;
-                    setDbTimezone();
+                    new SessionsDAO().setDbTimezone(timezone, chatID);
                     return "Your timezone now is <b>UTC" + argument + "</b>";
                 } else {
                     return "Please type correct timezone, e.g. /time_settings +03:00";
@@ -203,25 +200,8 @@ public class MessageHandler {
     public String setGpsTimezone(String input) throws SQLException {
         isTimezoneConfigured = true;
         timezone = input;
-        setDbTimezone();
+        new SessionsDAO().setDbTimezone(timezone, chatID);
         return "Your timezone now is <b>UTC" + timezone + "</b>";
-    }
-
-    /** Method which adjust a timezone in a Database. */
-    private void setDbTimezone() throws SQLException {
-        Config.getDbConnection().setAutoCommit(false);
-        final String SQL = "UPDATE sessions SET is_timezone=?, timezone=? where chat_id=?;";
-        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
-        try {
-            ps.setBoolean(1, true);
-            ps.setString(2,timezone);
-            ps.setLong(3, chatID);
-            ps.executeUpdate();
-            Config.getDbConnection().commit();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -238,7 +218,7 @@ public class MessageHandler {
                 if (argument.matches(regex)) {
                     isHistoryConfigured = true;
                     archiveDate = argument;
-                    setDbHistoryDate();
+                    new SessionsDAO().setDbHistoryDate(archiveDate, chatID);
                     return "All archive data will be shown for <b>" + archiveDate + ".</b>\n" +
                             "Highest 24 values will be shown for each hour.\n" +
                             "Please use following commands: \n" +
@@ -271,30 +251,13 @@ public class MessageHandler {
             }
     }
 
-    /** Configure archive date in a Database as a user parameter which can be used later. */
-    private void setDbHistoryDate() throws SQLException {
-        Config.getDbConnection().setAutoCommit(false);
-        final String SQL = "UPDATE sessions SET is_archive=?, archive=? where chat_id=?;";
-        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
-        try {
-            ps.setBoolean(1, true);
-            ps.setString(2,archiveDate);
-            ps.setLong(3, chatID);
-            ps.executeUpdate();
-            Config.getDbConnection().commit();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Retrieves a String from GetDataFromDB.getHistoryValues.
      * @return String with a text message.
      */
     private String getHistoryData() throws SQLException, ParseException {
         if (isHistoryConfigured) {
-            return GetSunWindDataFromDB.getHistoryValues(archiveDate);
+            return new MessageStringBuilder().getHistoryValues(archiveDate);
         }
         else return "Archive is not configured. Please enter required date in <b>yyyy-MM-dd</b> format: \n" +
                 "e.g. command for <b>July 01 of 2020</b> will be \n" +
@@ -308,31 +271,12 @@ public class MessageHandler {
      */
     private String setNotif (boolean set) throws SQLException {
         if (set) {
-            setDbNotif(true);
+            new SessionsDAO().setDbNotif(true, chatID);
             return "Notifications enabled.";
         }
         else  {
-            setDbNotif(false);
+            new SessionsDAO().setDbNotif(false, chatID);
             return "Notifications disabled.";
-        }
-    }
-
-    /**
-     * Method which turns on/off notifications on high solar wind parameters by UPDATE query in a Database.
-     * @param param boolean where true is on and false is off.
-     */
-    private void setDbNotif(boolean param) throws SQLException {
-        Config.getDbConnection().setAutoCommit(false);
-        final String SQL = "UPDATE sessions SET is_notif=? where chat_id=?;";
-        PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL);
-        try {
-            ps.setBoolean(1, param);
-            ps.setLong(2, chatID);
-            ps.executeUpdate();
-            Config.getDbConnection().commit();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -369,8 +313,8 @@ public class MessageHandler {
     }
 
     private String getStat() throws SQLException {
-        return "<pre>Total bot users: " + GetSunWindDataFromDB.getUserCount() + "\nTotal DB entries: "
-                + GetSunWindDataFromDB.getEntriesCount() + "\nBot ver. 1.0.19</pre>";
+        return "<pre>Total bot users: " + new SessionsDAO().getUserCount() + "\nTotal DB entries: "
+                + new DataDAO().getEntriesCount() + "\nBot ver. 1.0.20</pre>";
     }
 
     private String getMagnetometers() {
@@ -378,17 +322,5 @@ public class MessageHandler {
                 "/magnetometer_ouj - OUJ chart\n" +
                 "/magnetometer_han - HAN chart\n" +
                 "/magnetometer_nur - NUR chart\n";
-    }
-
-    /**
-     * Method which sends generated graph to user.
-     * @param image is a generated and retrieved as a .png file TimeGraph image chart.
-     */
-    private void sendImage(File image) throws FileNotFoundException, TelegramApiException {
-        AuroraBot sendGraph = new AuroraBot();
-        SendPhoto graph = new SendPhoto()
-                .setPhoto("AuroraHuntersBot_Graph", new FileInputStream(image))
-                .setChatId(chatID);
-        sendGraph.execute(graph);
     }
 }

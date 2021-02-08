@@ -17,11 +17,11 @@ public class AuroraBot extends TelegramLongPollingBot {
         SendMessage message = null;
         if (update.hasMessage() && update.getMessage().hasText()) {
             try {
-                if (!SessionHandler.sessionHandler(update.getMessage().getText(),
+                if (!new SessionHandler().sessionHandler(update.getMessage().getText(),
                         update.getMessage().getChatId(), update.getMessage().getLocation()).isEmpty()) {
                     message = new SendMessage() // Create a SendMessage object with mandatory fields
                             .setChatId(update.getMessage().getChatId())
-                            .setText(SessionHandler.sessionHandler(update.getMessage().getText(),
+                            .setText(new SessionHandler().sessionHandler(update.getMessage().getText(),
                                     update.getMessage().getChatId(), update.getMessage().getLocation()));
                     message.setParseMode(ParseMode.HTML);
                     try {
@@ -38,7 +38,7 @@ public class AuroraBot extends TelegramLongPollingBot {
             try {
                 message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(update.getMessage().getChatId())
-                        .setText(SessionHandler.sessionHandler("",
+                        .setText(new SessionHandler().sessionHandler("",
                                 update.getMessage().getChatId(), update.getMessage().getLocation()));
                 message.setParseMode(ParseMode.HTML);
             } catch (ParseException | SQLException | IOException | TelegramApiException e) {

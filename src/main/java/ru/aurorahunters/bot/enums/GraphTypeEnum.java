@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot.graphbuilder;
+package ru.aurorahunters.bot.enums;
 
 public enum GraphTypeEnum {
     DENSITY("density", "Proton Density [p/cc]"),
@@ -14,6 +14,14 @@ public enum GraphTypeEnum {
     GraphTypeEnum(String dbKey, String printName) {
         this.dbKey = dbKey;
         this.printName = printName;
+    }
+
+    public String getDbKey() {
+        return dbKey;
+    }
+
+    public String getPrintName() {
+        return printName;
     }
 }
 

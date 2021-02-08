@@ -1,9 +1,9 @@
 package ru.aurorahunters.bot;
 
-import ru.aurorahunters.bot.controller.SunWindValuesToDB;
-import ru.aurorahunters.bot.controller.MagnetValuesToDB;
-import ru.aurorahunters.bot.controller.MagnetometerTypeEnum;
-import ru.aurorahunters.bot.notification.Notification;
+import ru.aurorahunters.bot.service.solarwind.SunWindService;
+import ru.aurorahunters.bot.service.magnetometer.MagnetometerService;
+import ru.aurorahunters.bot.enums.MagnetEnum;
+import ru.aurorahunters.bot.notification.NotificationService;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,6 +13,8 @@ import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static java.lang.System.*;
 
 public class Config {
     private static String DB_URL;
@@ -92,8 +94,8 @@ public class Config {
             config = new FileInputStream("config/config.properties");
             properties.load(config);
         } catch (IOException e) {
-            System.err.println("Error: config/config.properties is not exist.");
-            System.exit(0);
+            err.println("Error: config/config.properties is not exist.");
+            exit(0);
         }
         try {
             DB_URL = properties.getProperty("db.host");
@@ -194,9 +196,9 @@ public class Config {
                     getProperty("graph.range.bz.extreme.end"));
             setDbConnection();
         } catch (Exception e) {
-            System.err.println("Error: seems like config.properties has wrong parameters. Please check " +
+            err.println("Error: seems like config.properties has wrong parameters. Please check " +
                     "config.properties file syntax and try again. \nStackTrace: " + e);
-            System.exit(0);
+            exit(0);
         }
     }
 
@@ -205,8 +207,8 @@ public class Config {
         try {
             CONNECTION = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (SQLException e) {
-            System.err.println("Error: seems like PostgreSQL database is not available or its credentials is not correct.");
-            System.exit(0);
+            err.println("Error: seems like PostgreSQL database is not available or its credentials is not correct.");
+            exit(0);
         }
     }
 
@@ -215,11 +217,11 @@ public class Config {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
 
-        scheduler.schedule(new SunWindValuesToDB(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(new SunWindValuesToDB(1), 0, 40, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(new SunWindValuesToDB(2), 59, 60, TimeUnit.MINUTES);
-        scheduler.scheduleAtFixedRate(new SunWindValuesToDB(4), 48, 48, TimeUnit.HOURS);
-        notifScheduler.scheduleAtFixedRate(new Notification(), 60, 60, TimeUnit.SECONDS);
+        scheduler.schedule(new SunWindService(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new SunWindService(1), 0, 40, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new SunWindService(2), 59, 60, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new SunWindService(4), 48, 48, TimeUnit.HOURS);
+        notifScheduler.scheduleAtFixedRate(new NotificationService(), 60, 60, TimeUnit.SECONDS);
         configureAndRunMagnetScheduler();
     }
 
@@ -228,27 +230,27 @@ public class Config {
         ScheduledExecutorService magnetScheduler = Executors.newSingleThreadScheduledExecutor();
 
         if (MAGN_KEV_ENABLE) {
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.KEV, false),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.KEV, false),
                     10, 240, TimeUnit.SECONDS);
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.KEV, true),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.KEV, true),
                     5, 240, TimeUnit.MINUTES);
         }
         if (MAGN_OUJ_ENABLE) {
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.OUJ, false),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.OUJ, false),
                     10, 240, TimeUnit.SECONDS);
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.OUJ, true),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.OUJ, true),
                     5, 240, TimeUnit.MINUTES);
         }
         if (MAGN_HAN_ENABLE) {
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.HAN, false),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.HAN, false),
                     10, 240, TimeUnit.SECONDS);
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.HAN, true),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.HAN, true),
                     5, 240, TimeUnit.MINUTES);
         }
         if (MAGN_NUR_ENABLE) {
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.NUR, false),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.NUR, false),
                     10, 240, TimeUnit.SECONDS);
-            magnetScheduler.scheduleAtFixedRate(new MagnetValuesToDB(MagnetometerTypeEnum.NUR, true),
+            magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.NUR, true),
                     5, 240, TimeUnit.MINUTES);
         }
     }
