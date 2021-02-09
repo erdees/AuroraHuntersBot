@@ -33,7 +33,7 @@ public class SunWindService implements Runnable {
             assignJsonURL();
             JsonArray magnetArray = new Gson().fromJson(this.magnetJson, JsonArray.class);
             JsonArray plasmaArray = new Gson().fromJson(this.plasmaJson, JsonArray.class);
-            mergeMap(magnetArray, plasmaArray);
+            mergeJson(magnetArray, plasmaArray);
             insertResultsToDb(magnetArray, plasmaArray);
         } catch (Exception e) {
             out.println("Caught exception in ScheduledExecutorService. StackTrace:\n" + e);
@@ -60,7 +60,7 @@ public class SunWindService implements Runnable {
      */
     private void insertResultsToDb(JsonArray magnetArray, JsonArray plasmaArray) {
         try {
-            new DataDAO().insertResults(mergeMap(magnetArray, plasmaArray));
+            new DataDAO().insertResults(mergeJson(magnetArray, plasmaArray));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,7 +116,7 @@ public class SunWindService implements Runnable {
      * @param mag JsonArray object of 'mag' json
      * @param plasm JsonArray object of 'plasma' json
      */
-    private LinkedHashMap<String, ArrayList<String>> mergeMap(JsonArray mag, JsonArray plasm) {
+    private LinkedHashMap<String, ArrayList<String>> mergeJson(JsonArray mag, JsonArray plasm) {
         //TODO refactor this code-smell method
         LinkedHashMap<String, ArrayList<String>> map = new LinkedHashMap<>();
         for (JsonElement plasmLine : plasm) {

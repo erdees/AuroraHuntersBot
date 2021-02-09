@@ -26,7 +26,7 @@ import java.util.*;
 
 public class MagnetChartGen {
 
-    private final Resolution resolution = new Resolution(600, 400);
+    private final Resolution resolution = new Resolution(800, 600);
 
     /** Throughput method to generate the KEV magnetometer chart  */
     public File getKevChart(String timezone) throws ParseException, SQLException, IOException {
