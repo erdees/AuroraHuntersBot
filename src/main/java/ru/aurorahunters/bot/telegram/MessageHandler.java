@@ -314,7 +314,7 @@ public class MessageHandler {
 
     private String getStat() throws SQLException {
         return "<pre>Total bot users: " + new SessionsDAO().getUserCount() + "\nTotal DB entries: "
-                + new DataDAO().getEntriesCount() + "\nBot ver. 1.0.20</pre>";
+                + new DataDAO().getEntriesCount() + "\nBot ver. 1.0.21</pre>";
     }
 
     private String getMagnetometers() {
