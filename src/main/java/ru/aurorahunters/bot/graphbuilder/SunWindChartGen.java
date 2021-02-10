@@ -67,6 +67,19 @@ public class SunWindChartGen {
         }
     }
 
+    /** Throughput method to generate a bt graph  */
+    public File getBtGraph(String timezone) throws ParseException, SQLException, IOException {
+        String name = GraphTypeEnum.BT.getDbKey();
+        if (new ChartFileGen().isActual(name)) {
+            return new ChartFileGen(resolution).getCachedChart(name);
+        } else {
+            ActualSunChart chart = new ActualSunChart(GraphTypeEnum.BT, timezone, resolution);
+            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            return new ChartFileGen(chart.getResolution()).
+                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+        }
+    }
+
     /** Throughput method to generate an archive proton density graph  */
     public File getDensityArchiveGraph(String date) throws ParseException, SQLException, IOException {
         String name = GraphTypeEnum.DENSITY_H.getDbKey() + "_" + date;
@@ -160,7 +173,8 @@ public class SunWindChartGen {
     private JFreeChart getChartByType(String timezoneOrDate, GraphTypeEnum e, TimeSeriesCollection d)
             throws SQLException {
         JFreeChart chart;
-        if (e == GraphTypeEnum.BZ_GSM || e == GraphTypeEnum.SPEED || e == GraphTypeEnum.DENSITY) {
+        if (e == GraphTypeEnum.BZ_GSM || e == GraphTypeEnum.SPEED
+                || e == GraphTypeEnum.DENSITY || e == GraphTypeEnum.BT) {
             chart = ChartFactory.createTimeSeriesChart(
                     e.getPrintName() + " - last 3 hours",
                     "Time (UTC" + timezoneOrDate + ") | " + "Waiting time: " +
@@ -215,6 +229,18 @@ public class SunWindChartGen {
                     Config.getGraphRangeBzHighEnd(), getColor(Config.getGraphColorHigh())));
             plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBzExtremeStart(),
                     Config.getGraphRangeBzExtremeEnd(), getColor(Config.getGraphColorExtreme())));
+        }
+        if (e == GraphTypeEnum.BT) {
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBtQuietStart(),
+                    Config.getGraphRangeBtQuietEnd(), getColor(Config.getGraphColorQuiet())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBtModerateStart(),
+                    Config.getGraphRangeBtModerateEnd(), getColor(Config.getGraphColorModerate())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBtIncreasedStart(),
+                    Config.getGraphRangeBtIncreasedEnd(), getColor(Config.getGraphColorIncreased())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBtHighStart(),
+                    Config.getGraphRangeBtHighEnd(), getColor(Config.getGraphColorHigh())));
+            plot.addRangeMarker(new IntervalMarker(Config.getGraphRangeBtExtremeStart(),
+                    Config.getGraphRangeBtExtremeEnd(), getColor(Config.getGraphColorExtreme())));
         }
     }
 

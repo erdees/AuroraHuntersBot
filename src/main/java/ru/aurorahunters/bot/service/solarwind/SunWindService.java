@@ -132,11 +132,14 @@ public class SunWindService implements Runnable {
                     p1temp = replacedArrayP1.split(",");
                     String timeTagMag = p1temp[0];
                     String bzGsm = p1temp[3];
+                    String bt = p1temp[6];
                     if (timeTagMag.equals(timeTagPlasm)) {
-                        if (density.equals("null") || speed.equals("null") || bzGsm.equals("null")) {
+                        if (density.equals("null") || speed.equals("null")
+                                || bzGsm.equals("null") || bt.equals("null")) {
                             continue;
                         }
-                        map.put(timeTagPlasm, new ArrayList<>(Arrays.asList(density, speed, bzGsm)));
+                        map.put(timeTagPlasm, new ArrayList<>(
+                                Arrays.asList(density, speed, bzGsm, bt)));
                     }
                 }
         }

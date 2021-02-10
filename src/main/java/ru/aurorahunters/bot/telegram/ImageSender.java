@@ -2,7 +2,6 @@ package ru.aurorahunters.bot.telegram;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

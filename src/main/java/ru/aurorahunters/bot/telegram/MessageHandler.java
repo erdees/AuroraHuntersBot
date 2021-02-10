@@ -88,6 +88,7 @@ public class MessageHandler {
                 new ImageSender(chatID).sendImage(new SunWindChartGen().getBzGraph(timezone));
                 new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedGraph(timezone));
                 new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityGraph(timezone));
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getBtGraph(timezone));
             }
             if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBotUsername())) {
                 new ImageSender(chatID).sendImage(new SunWindChartGen().getBzGraph(timezone));
@@ -97,6 +98,9 @@ public class MessageHandler {
             }
             if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
                 new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityGraph(timezone));
+            }
+            if (input.equals("/graph_bt") || input.equals("/graph_bt" + Config.getBotUsername())) {
+                new ImageSender(chatID).sendImage(new SunWindChartGen().getBtGraph(timezone));
             }
             if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
@@ -314,7 +318,7 @@ public class MessageHandler {
 
     private String getStat() throws SQLException {
         return "<pre>Total bot users: " + new SessionsDAO().getUserCount() + "\nTotal DB entries: "
-                + new DataDAO().getEntriesCount() + "\nBot ver. 1.0.21</pre>";
+                + new DataDAO().getEntriesCount() + "\nBot ver. 1.0.22</pre>";
     }
 
     private String getMagnetometers() {

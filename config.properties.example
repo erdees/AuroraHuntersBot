@@ -103,3 +103,15 @@ graph.range.bz.high.start = -8.4
 graph.range.bz.high.end = -4.8
 graph.range.bz.extreme.start = -50
 graph.range.bz.extreme.end = -8.4
+
+# bt chart trigger ranges
+graph.range.bt.quiet.start = -50
+graph.range.bt.quiet.end = 0
+graph.range.bt.moderate.start = 0
+graph.range.bt.moderate.end = 5
+graph.range.bt.increased.start = 5
+graph.range.bt.increased.end = 10
+graph.range.bt.high.start = 10
+graph.range.bt.high.end = 15
+graph.range.bt.extreme.start = 15
+graph.range.bt.extreme.end = 1000

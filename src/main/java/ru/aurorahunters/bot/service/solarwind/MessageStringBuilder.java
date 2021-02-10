@@ -41,6 +41,7 @@ public class MessageStringBuilder {
         String lastLine = "</pre>\nlatest bz graph /graph_bz" +
                 "\nlatest speed graph /graph_speed" +
                 "\nlatest density graph /graph_density" +
+                "\nlatest density graph /graph_bt" +
                 "\nall latest graphs /graph_all";
         DecimalFormat chatOutput = new DecimalFormat("###.#");
         Iterator<Map.Entry<Date, SolarWindData>> iterator =

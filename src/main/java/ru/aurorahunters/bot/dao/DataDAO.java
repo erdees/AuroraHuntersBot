@@ -18,8 +18,12 @@ public class DataDAO {
     public void insertResults(Map<String, ArrayList<String>> map) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
         String sql =
-                "INSERT INTO data VALUES (?::TIMESTAMP, ?::NUMERIC, ?::NUMERIC, ?::NUMERIC) " +
-                        "ON CONFLICT (time_tag) DO NOTHING;";
+                "INSERT INTO data VALUES (?::TIMESTAMP, ?::NUMERIC, ?::NUMERIC, ?::NUMERIC, " +
+                        "?::NUMERIC) ON CONFLICT (time_tag) DO UPDATE SET " +
+                        "density = EXCLUDED.density," +
+                        "speed = EXCLUDED.speed," +
+                        "bz_gsm = EXCLUDED.bz_gsm," +
+                        "bt = EXCLUDED.bt;";
         try (PreparedStatement ps = Config.getDbConnection().prepareStatement(sql)) {
             try {
                 for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
@@ -30,6 +34,7 @@ public class DataDAO {
                     ps.setObject(2, arr[0]);
                     ps.setObject(3, arr[1]);
                     ps.setObject(4, arr[2]);
+                    ps.setObject(5, arr[3]);
                     ps.executeUpdate();
                 }
                 Config.getDbConnection().commit();

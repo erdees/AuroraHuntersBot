@@ -26,7 +26,8 @@ CREATE TABLE public.data (
     time_tag timestamp without time zone NOT NULL,
     density numeric,
     speed numeric,
-    bz_gsm numeric
+    bz_gsm numeric,
+    bt numeric
 );
 
 

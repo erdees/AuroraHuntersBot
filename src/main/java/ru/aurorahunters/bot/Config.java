@@ -84,6 +84,16 @@ public class Config {
     private static double GRAPH_RANGE_BZ_HIGH_END;
     private static double GRAPH_RANGE_BZ_EXTREME_START;
     private static double GRAPH_RANGE_BZ_EXTREME_END;
+    private static double GRAPH_RANGE_BT_QUIET_START;
+    private static double GRAPH_RANGE_BT_QUIET_END;
+    private static double GRAPH_RANGE_BT_MODERATE_START;
+    private static double GRAPH_RANGE_BT_MODERATE_END;
+    private static double GRAPH_RANGE_BT_INCREASED_START;
+    private static double GRAPH_RANGE_BT_INCREASED_END;
+    private static double GRAPH_RANGE_BT_HIGH_START;
+    private static double GRAPH_RANGE_BT_HIGH_END;
+    private static double GRAPH_RANGE_BT_EXTREME_START;
+    private static double GRAPH_RANGE_BT_EXTREME_END;
 
     /** Try to load and parse config.properties */
     public static void loadConfig() {
@@ -194,6 +204,26 @@ public class Config {
                     getProperty("graph.range.bz.extreme.start"));
             GRAPH_RANGE_BZ_EXTREME_END = Double.parseDouble(properties.
                     getProperty("graph.range.bz.extreme.end"));
+            GRAPH_RANGE_BT_QUIET_START = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.quiet.start"));
+            GRAPH_RANGE_BT_QUIET_END = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.quiet.end"));
+            GRAPH_RANGE_BT_MODERATE_START = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.moderate.start"));
+            GRAPH_RANGE_BT_MODERATE_END	= Double.parseDouble(properties.
+                    getProperty("graph.range.bt.moderate.end"));
+            GRAPH_RANGE_BT_INCREASED_START = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.increased.start"));
+            GRAPH_RANGE_BT_INCREASED_END = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.increased.end"));
+            GRAPH_RANGE_BT_HIGH_START = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.high.start"));
+            GRAPH_RANGE_BT_HIGH_END	= Double.parseDouble(properties.
+                    getProperty("graph.range.bt.high.end"));
+            GRAPH_RANGE_BT_EXTREME_START = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.extreme.start"));
+            GRAPH_RANGE_BT_EXTREME_END = Double.parseDouble(properties.
+                    getProperty("graph.range.bt.extreme.end"));
             setDbConnection();
         } catch (Exception e) {
             err.println("Error: seems like config.properties has wrong parameters. Please check " +
@@ -493,5 +523,45 @@ public class Config {
 
     public static double getGraphRangeBzExtremeEnd() {
         return GRAPH_RANGE_BZ_EXTREME_END;
+    }
+
+    public static double getGraphRangeBtQuietStart() {
+        return GRAPH_RANGE_BT_QUIET_START;
+    }
+
+    public static double getGraphRangeBtQuietEnd() {
+        return GRAPH_RANGE_BT_QUIET_END;
+    }
+
+    public static double getGraphRangeBtModerateStart() {
+        return GRAPH_RANGE_BT_MODERATE_START;
+    }
+
+    public static double getGraphRangeBtModerateEnd() {
+        return GRAPH_RANGE_BT_MODERATE_END;
+    }
+
+    public static double getGraphRangeBtIncreasedStart() {
+        return GRAPH_RANGE_BT_INCREASED_START;
+    }
+
+    public static double getGraphRangeBtIncreasedEnd() {
+        return GRAPH_RANGE_BT_INCREASED_END;
+    }
+
+    public static double getGraphRangeBtHighStart() {
+        return GRAPH_RANGE_BT_HIGH_START;
+    }
+
+    public static double getGraphRangeBtHighEnd() {
+        return GRAPH_RANGE_BT_HIGH_END;
+    }
+
+    public static double getGraphRangeBtExtremeStart() {
+        return GRAPH_RANGE_BT_EXTREME_START;
+    }
+
+    public static double getGraphRangeBtExtremeEnd() {
+        return GRAPH_RANGE_BT_EXTREME_END;
     }
 }
