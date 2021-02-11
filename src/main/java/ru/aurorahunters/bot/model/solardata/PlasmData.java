@@ -1,20 +1,18 @@
 package ru.aurorahunters.bot.model.solardata;
 
-import java.sql.Timestamp;
-
 public class PlasmData {
 
-    private final Timestamp timestamp;
+    private final String timestamp;
     private final double density;
     private final double speed;
 
-    public PlasmData(Timestamp timestamp, double density, double speed) {
+    public PlasmData(String timestamp, double density, double speed) {
         this.timestamp = timestamp;
         this.density = density;
         this.speed = speed;
     }
 
-    public Timestamp getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 

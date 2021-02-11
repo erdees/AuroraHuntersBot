@@ -5,9 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.dao.DataDAO;
-import ru.aurorahunters.bot.model.solardata.FullSolarWindData;
-import ru.aurorahunters.bot.model.solardata.MagData;
-import ru.aurorahunters.bot.model.solardata.PlasmData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -119,61 +116,34 @@ public class SunWindService implements Runnable {
      * @param mag JsonArray object of 'mag' json
      * @param plasm JsonArray object of 'plasma' json
      */
-    private LinkedHashMap<Timestamp, FullSolarWindData> mergeJson(JsonArray mag, JsonArray plasm) {
-        LinkedHashMap<Timestamp, FullSolarWindData> map = new LinkedHashMap<>();
-        cleanIndex(mag, plasm);
+    private LinkedHashMap<String, ArrayList<String>> mergeJson(JsonArray mag, JsonArray plasm) {
+        //TODO refactor this code-smell method
+        LinkedHashMap<String, ArrayList<String>> map = new LinkedHashMap<>();
         for (JsonElement plasmLine : plasm) {
-            PlasmData plasmaField = getPlasmData(plasmLine);
-            if (plasmaField == null) continue;
+            String replacedArrayP2 = plasmLine.toString().replaceAll("[+^\"\\[\\]]","");
+            String[] p2temp;
+            p2temp = replacedArrayP2.split(",");
+            String timeTagPlasm = p2temp[0];
+            String density = p2temp[1];
+            String speed = p2temp[2];
             for (JsonElement magLine : mag) {
-                MagData magField = getMagData(magLine);
-                if (magField == null) continue;
-                if (plasmaField.getTimestamp().equals(magField.getTimestamp())) {
-                        map.put(plasmaField.getTimestamp(), new FullSolarWindData(
-                                plasmaField.getDensity(),
-                                plasmaField.getSpeed(),
-                                magField.getBzGsm(),
-                                magField.getBt()));
+                String replacedArrayP1 = magLine.toString().replaceAll("[+^\"\\[\\]]","");
+                String[] p1temp;
+                p1temp = replacedArrayP1.split(",");
+                String timeTagMag = p1temp[0];
+                String bzGsm = p1temp[3];
+                String bt = p1temp[6];
+                if (timeTagMag.equals(timeTagPlasm)) {
+                    if (density.equals("null") || speed.equals("null")
+                            || bzGsm.equals("null") || bt.equals("null")) {
+                        continue;
+                    }
+                    map.put(timeTagPlasm, new ArrayList<>(
+                            Arrays.asList(density, speed, bzGsm, bt)));
                 }
             }
         }
+        map.remove("time_tag"); // Deletes "time_tag" entry from future json as unnecessary
         return map;
-    }
-
-    private PlasmData getPlasmData(JsonElement plasmLine) {
-        PlasmData plasmaField;
-        try {
-            String replacedArrayP2 = plasmLine.toString().replaceAll("[+^\"\\[\\]]","");
-            String[] p2temp = replacedArrayP2.split(",");
-            Timestamp timeTagPlasm = Timestamp.valueOf(p2temp[0]);
-            double density = Double.parseDouble(p2temp[1]);
-            double speed = Double.parseDouble(p2temp[2]);
-            plasmaField= new PlasmData(timeTagPlasm, density, speed);
-        } catch (NumberFormatException e) {
-            out.println("Caught parse error " + e);
-            return null;
-        }
-        return plasmaField;
-    }
-
-    private MagData getMagData(JsonElement magLine) {
-        MagData magField;
-        try {
-            String replacedArrayP1 = magLine.toString().replaceAll("[+^\"\\[\\]]","");
-            String[] p1temp = replacedArrayP1.split(",");
-            Timestamp timeTagMag = Timestamp.valueOf(p1temp[0]);
-            double bzGsm = Double.parseDouble(p1temp[3]);
-            double bt = Double.parseDouble(p1temp[6]);
-            magField = new MagData(timeTagMag, bzGsm, bt);
-        } catch (NumberFormatException e) {
-            out.println("Caught parse error " + e);
-            return null;
-        }
-        return magField;
-    }
-
-    private void cleanIndex(JsonArray mag, JsonArray plasm) {
-        mag.remove(0);
-        plasm.remove(0);
     }
 }
