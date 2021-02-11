@@ -1,7 +1,7 @@
 package ru.aurorahunters.bot.notification;
 
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.model.SolarWindData;
+import ru.aurorahunters.bot.model.solardata.SolarWindData;
 import java.util.List;
 
 public class NotificationChecker {

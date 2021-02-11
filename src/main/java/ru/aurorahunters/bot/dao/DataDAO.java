@@ -3,7 +3,8 @@ package ru.aurorahunters.bot.dao;
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.model.ActualSunChart;
 import ru.aurorahunters.bot.model.HistoricalDate;
-import ru.aurorahunters.bot.model.SolarWindData;
+import ru.aurorahunters.bot.model.solardata.FullSolarWindData;
+import ru.aurorahunters.bot.model.solardata.SolarWindData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import java.util.*;
 public class DataDAO {
 
     /** This method puts merged json map to the Database */
-    public void insertResults(Map<String, ArrayList<String>> map) throws SQLException {
+    public void insertResults(Map<Timestamp, FullSolarWindData> map) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
         String sql =
                 "INSERT INTO data VALUES (?::TIMESTAMP, ?::NUMERIC, ?::NUMERIC, ?::NUMERIC, " +
@@ -26,15 +27,13 @@ public class DataDAO {
                         "bt = EXCLUDED.bt;";
         try (PreparedStatement ps = Config.getDbConnection().prepareStatement(sql)) {
             try {
-                for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    ArrayList<String> value = entry.getValue();
-                    Object[] arr = value.toArray();
-                    ps.setTimestamp(1, Timestamp.valueOf(key));
-                    ps.setObject(2, arr[0]);
-                    ps.setObject(3, arr[1]);
-                    ps.setObject(4, arr[2]);
-                    ps.setObject(5, arr[3]);
+                for (Map.Entry<Timestamp, FullSolarWindData> entry : map.entrySet()) {
+                    FullSolarWindData value = entry.getValue();
+                    ps.setTimestamp(1, entry.getKey());
+                    ps.setDouble(2, value.getDensity());
+                    ps.setDouble(3, value.getSpeed());
+                    ps.setDouble(4, value.getBzGsm());
+                    ps.setDouble(5, value.getBt());
                     ps.executeUpdate();
                 }
                 Config.getDbConnection().commit();

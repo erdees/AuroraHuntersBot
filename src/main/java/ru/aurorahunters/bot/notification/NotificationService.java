@@ -2,7 +2,7 @@ package ru.aurorahunters.bot.notification;
 
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.dao.DataDAO;
-import ru.aurorahunters.bot.model.SolarWindData;
+import ru.aurorahunters.bot.model.solardata.SolarWindData;
 import java.sql.SQLException;
 import java.util.List;
 import static java.lang.System.*;

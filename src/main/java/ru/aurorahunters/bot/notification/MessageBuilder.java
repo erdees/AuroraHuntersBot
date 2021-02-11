@@ -1,6 +1,6 @@
 package ru.aurorahunters.bot.notification;
 
-import ru.aurorahunters.bot.model.SolarWindData;
+import ru.aurorahunters.bot.model.solardata.SolarWindData;
 
 import java.text.DecimalFormat;
 import java.util.List;

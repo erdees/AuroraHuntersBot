@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot.model;
+package ru.aurorahunters.bot.model.solardata;
 
 public class SolarWindData {
 

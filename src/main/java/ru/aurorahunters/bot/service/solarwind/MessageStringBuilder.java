@@ -2,7 +2,7 @@ package ru.aurorahunters.bot.service.solarwind;
 
 import ru.aurorahunters.bot.dao.DataDAO;
 import ru.aurorahunters.bot.model.HistoricalDate;
-import ru.aurorahunters.bot.model.SolarWindData;
+import ru.aurorahunters.bot.model.solardata.SolarWindData;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
