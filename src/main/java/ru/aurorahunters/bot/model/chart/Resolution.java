@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot.model;
+package ru.aurorahunters.bot.model.chart;
 
 public class Resolution {
 

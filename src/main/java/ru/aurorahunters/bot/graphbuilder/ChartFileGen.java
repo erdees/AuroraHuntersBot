@@ -2,7 +2,7 @@ package ru.aurorahunters.bot.graphbuilder;
 
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
-import ru.aurorahunters.bot.model.Resolution;
+import ru.aurorahunters.bot.model.chart.Resolution;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

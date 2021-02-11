@@ -1,7 +1,7 @@
 package ru.aurorahunters.bot.dao;
 
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.model.ActualSunChart;
+import ru.aurorahunters.bot.model.chart.ActualSunChart;
 import ru.aurorahunters.bot.model.HistoricalDate;
 import ru.aurorahunters.bot.model.solardata.SolarWindData;
 import java.sql.PreparedStatement;

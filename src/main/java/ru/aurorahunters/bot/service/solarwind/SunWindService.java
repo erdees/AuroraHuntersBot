@@ -33,8 +33,8 @@ public class SunWindService implements Runnable {
             assignJsonURL();
             JsonArray magnetArray = new Gson().fromJson(this.magnetJson, JsonArray.class);
             JsonArray plasmaArray = new Gson().fromJson(this.plasmaJson, JsonArray.class);
-            mergeJson(magnetArray, plasmaArray);
-            insertResultsToDb(magnetArray, plasmaArray);
+
+            insertResultsToDb(mergeSources(magnetArray, plasmaArray));
         } catch (Exception e) {
             out.println("Caught exception in ScheduledExecutorService. StackTrace:\n" + e);
         }
@@ -55,12 +55,11 @@ public class SunWindService implements Runnable {
     /**
      * Throughput method to make code readable. Call DAO method and translate Map to DB for
      * further insert.
-     * @param magnetArray converted by gson magnetJson
-     * @param plasmaArray converted by gson plasmaJson
+     * @param preparedData prepared Collection for DB insert
      */
-    private void insertResultsToDb(JsonArray magnetArray, JsonArray plasmaArray) {
+    private void insertResultsToDb(LinkedHashMap<String, ArrayList<String>> preparedData) {
         try {
-            new DataDAO().insertResults(mergeJson(magnetArray, plasmaArray));
+            new DataDAO().insertResults(preparedData);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -110,40 +109,38 @@ public class SunWindService implements Runnable {
     }
 
     /**
-     * This method merges two different json arrays to a one single map where the map key is time_tag. Two different
-     * fetched json files has time_tag relation. For example, when 'mag' and 'plasma' json has the same time_tag, their
-     * parameters (bz_gsm, density, speed) should be placed to a map as a ArrayList with the time_tag map key.
+     * This method merges two different json arrays to a one single map where the map key is
+     * time_tag. Two different fetched json files has time_tag relation. For example, when 'mag'
+     * and 'plasma' json has the same time_tag, their parameters (bz_gsm, density, speed, bt)
+     * should be placed to a map as a ArrayList with the time_tag map key.
      * @param mag JsonArray object of 'mag' json
      * @param plasm JsonArray object of 'plasma' json
      */
-    private LinkedHashMap<String, ArrayList<String>> mergeJson(JsonArray mag, JsonArray plasm) {
-        //TODO refactor this code-smell method
+    private LinkedHashMap<String, ArrayList<String>> mergeSources(JsonArray mag, JsonArray plasm) {
+        cleanIndex(mag, plasm);
         LinkedHashMap<String, ArrayList<String>> map = new LinkedHashMap<>();
         for (JsonElement plasmLine : plasm) {
-            String replacedArrayP2 = plasmLine.toString().replaceAll("[+^\"\\[\\]]","");
-            String[] p2temp;
-            p2temp = replacedArrayP2.split(",");
-            String timeTagPlasm = p2temp[0];
-            String density = p2temp[1];
-            String speed = p2temp[2];
+            String timeTagPlasm = plasmLine.getAsJsonArray().get(0).getAsString();
+            String density = plasmLine.getAsJsonArray().get(1).getAsString();
+            String speed = plasmLine.getAsJsonArray().get(2).getAsString();
             for (JsonElement magLine : mag) {
-                String replacedArrayP1 = magLine.toString().replaceAll("[+^\"\\[\\]]","");
-                String[] p1temp;
-                p1temp = replacedArrayP1.split(",");
-                String timeTagMag = p1temp[0];
-                String bzGsm = p1temp[3];
-                String bt = p1temp[6];
+                String timeTagMag = magLine.getAsJsonArray().get(0).getAsString();
+                String bzGsm = magLine.getAsJsonArray().get(3).getAsString();
+                String bt = magLine.getAsJsonArray().get(6).getAsString();
                 if (timeTagMag.equals(timeTagPlasm)) {
                     if (density.equals("null") || speed.equals("null")
                             || bzGsm.equals("null") || bt.equals("null")) {
                         continue;
                     }
-                    map.put(timeTagPlasm, new ArrayList<>(
-                            Arrays.asList(density, speed, bzGsm, bt)));
+                    map.put(timeTagPlasm, new ArrayList<>(Arrays.asList(density, speed, bzGsm, bt)));
                 }
             }
         }
-        map.remove("time_tag"); // Deletes "time_tag" entry from future json as unnecessary
         return map;
+    }
+
+    private void cleanIndex(JsonArray mag, JsonArray plasm) {
+        mag.remove(0);
+        plasm.remove(0);
     }
 }
