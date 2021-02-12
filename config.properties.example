@@ -121,4 +121,4 @@ graph.preloader.enabled = true
 graph.preloader.timezone = +03:00
 
 # chart preloader/cache folder
-graph.preloader.folder = ./cache
+graph.preloader.folder = .cache/
