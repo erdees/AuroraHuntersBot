@@ -30,7 +30,7 @@ public class MagnetChartGen {
 
     /** Throughput method to generate the KEV magnetometer chart  */
     public File getKevChart(String timezone) throws ParseException, SQLException, IOException {
-        String name = MagnetEnum.KEV.getDbTableName();
+        String name = MagnetEnum.KEV.getDbTableName() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
@@ -44,7 +44,7 @@ public class MagnetChartGen {
 
     /** Throughput method to generate the OUJ magnetometer chart  */
     public File getOujChart(String timezone) throws ParseException, SQLException, IOException {
-        String name = MagnetEnum.OUJ.getDbTableName();
+        String name = MagnetEnum.OUJ.getDbTableName() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
@@ -58,7 +58,7 @@ public class MagnetChartGen {
 
     /** Throughput method to generate the HAN magnetometer chart  */
     public File getHanChart(String timezone) throws ParseException, SQLException, IOException {
-        String name = MagnetEnum.HAN.getDbTableName();
+        String name = MagnetEnum.HAN.getDbTableName() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
@@ -72,7 +72,7 @@ public class MagnetChartGen {
 
     /** Throughput method to generate the NUR magnetometer chart  */
     public File getNurChart(String timezone) throws ParseException, SQLException, IOException {
-        String name = MagnetEnum.NUR.getDbTableName();
+        String name = MagnetEnum.NUR.getDbTableName() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {

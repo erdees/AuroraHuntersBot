@@ -115,3 +115,10 @@ graph.range.bt.high.start = 10
 graph.range.bt.high.end = 15
 graph.range.bt.extreme.start = 15
 graph.range.bt.extreme.end = 1000
+
+# chart preloaders configuration
+graph.preloader.enabled = true
+graph.preloader.timezone = +03:00
+
+# chart preloader/cache folder
+graph.preloader.folder = ./cache

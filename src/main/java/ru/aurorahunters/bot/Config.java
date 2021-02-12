@@ -1,5 +1,6 @@
 package ru.aurorahunters.bot;
 
+import ru.aurorahunters.bot.graphbuilder.ChartPreLoader;
 import ru.aurorahunters.bot.service.solarwind.SunWindService;
 import ru.aurorahunters.bot.service.magnetometer.MagnetometerService;
 import ru.aurorahunters.bot.enums.MagnetEnum;
@@ -94,6 +95,9 @@ public class Config {
     private static double GRAPH_RANGE_BT_HIGH_END;
     private static double GRAPH_RANGE_BT_EXTREME_START;
     private static double GRAPH_RANGE_BT_EXTREME_END;
+    private static boolean GRAPH_PRELOADER_ENABLE;
+    private static String GRAPH_PRELOADER_TIMEZONE;
+    private static String GRAPH_PRELOADER_FOLDER;
 
     /** Try to load and parse config.properties */
     public static void loadConfig() {
@@ -224,6 +228,10 @@ public class Config {
                     getProperty("graph.range.bt.extreme.start"));
             GRAPH_RANGE_BT_EXTREME_END = Double.parseDouble(properties.
                     getProperty("graph.range.bt.extreme.end"));
+            GRAPH_PRELOADER_ENABLE = Boolean.parseBoolean(properties.
+                    getProperty("graph.preloader.enabled"));
+            GRAPH_PRELOADER_TIMEZONE = properties.getProperty("graph.preloader.timezone");
+            GRAPH_PRELOADER_FOLDER = properties.getProperty("graph.preloader.folder");
             setDbConnection();
         } catch (Exception e) {
             err.println("Error: seems like config.properties has wrong parameters. Please check " +
@@ -243,20 +251,33 @@ public class Config {
     }
 
     /** Scheduler settings */
-    public static void initializeScheduler() {
+    public static void initializeSchedulers() {
+        configureSunWindServiceScheduler();
+        configureNotificationScheduler();
+        configureMagnetometerScheduler();
+        configureChartPreloaderScheduler();
+    }
+
+    /** Create required Schedulers for Sun Wind fetch Service according to the config.properties
+     * file */
+    private static void configureSunWindServiceScheduler() {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
 
         scheduler.schedule(new SunWindService(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new SunWindService(1), 0, 40, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new SunWindService(2), 59, 60, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new SunWindService(4), 48, 48, TimeUnit.HOURS);
+    }
+
+    /** Create required Schedulers for chart preloader according to the config.properties file */
+    private static void configureNotificationScheduler() {
+        ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
+
         notifScheduler.scheduleAtFixedRate(new NotificationService(), 60, 60, TimeUnit.SECONDS);
-        configureAndRunMagnetScheduler();
     }
 
     /** Create required Schedulers for magnetometers according to the config.properties file */
-    private static void configureAndRunMagnetScheduler() {
+    private static void configureMagnetometerScheduler() {
         ScheduledExecutorService magnetScheduler = Executors.newSingleThreadScheduledExecutor();
 
         if (MAGN_KEV_ENABLE) {
@@ -282,6 +303,15 @@ public class Config {
                     10, 240, TimeUnit.SECONDS);
             magnetScheduler.scheduleAtFixedRate(new MagnetometerService(MagnetEnum.NUR, true),
                     5, 240, TimeUnit.MINUTES);
+        }
+    }
+
+    /** Create required Schedulers for chart preloader according to the config.properties file */
+    private static void configureChartPreloaderScheduler() {
+        ScheduledExecutorService imagePreLoader = Executors.newSingleThreadScheduledExecutor();
+
+        if (GRAPH_PRELOADER_ENABLE) {
+            imagePreLoader.scheduleAtFixedRate(new ChartPreLoader(), 15, 50, TimeUnit.SECONDS);
         }
     }
 
@@ -563,5 +593,17 @@ public class Config {
 
     public static double getGraphRangeBtExtremeEnd() {
         return GRAPH_RANGE_BT_EXTREME_END;
+    }
+
+    public static boolean isGraphPreloaderEnable() {
+        return GRAPH_PRELOADER_ENABLE;
+    }
+
+    public static String getGraphPreloaderTimezone() {
+        return GRAPH_PRELOADER_TIMEZONE;
+    }
+
+    public static String getGraphPreloaderFolder() {
+        return GRAPH_PRELOADER_FOLDER;
     }
 }

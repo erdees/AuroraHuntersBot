@@ -30,53 +30,53 @@ public class SunWindChartGen {
 
     /** Throughput method to generate a proton density graph  */
     public File getDensityGraph(String timezone) throws ParseException, SQLException, IOException {
-        String name = GraphTypeEnum.DENSITY.getDbKey();
+        String name = GraphTypeEnum.DENSITY.getDbKey() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.DENSITY, timezone, resolution);
             SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
-                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+                    getChart(getGraph(chart, chartData), name);
         }
     }
 
     /** Throughput method to generate a solar speed graph  */
     public File getSpeedGraph(String timezone) throws ParseException, SQLException, IOException {
-        String name = GraphTypeEnum.SPEED.getDbKey();
+        String name = GraphTypeEnum.SPEED.getDbKey() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.SPEED, timezone, resolution);
             SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
-                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+                    getChart(getGraph(chart, chartData), name);
         }
     }
 
     /** Throughput method to generate a bz graph  */
     public File getBzGraph(String timezone) throws ParseException, SQLException, IOException {
-        String name = GraphTypeEnum.BZ_GSM.getDbKey();
+        String name = GraphTypeEnum.BZ_GSM.getDbKey() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.BZ_GSM, timezone, resolution);
             SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
-                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+                    getChart(getGraph(chart, chartData), name);
         }
     }
 
     /** Throughput method to generate a bt graph  */
     public File getBtGraph(String timezone) throws ParseException, SQLException, IOException {
-        String name = GraphTypeEnum.BT.getDbKey();
+        String name = GraphTypeEnum.BT.getDbKey() + "_" + timezone;
         if (new ChartFileGen().isActual(name)) {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.BT, timezone, resolution);
             SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
-                    getChart(getGraph(chart, chartData), chart.getGraphTypeEnum().getDbKey());
+                    getChart(getGraph(chart, chartData), name);
         }
     }
 

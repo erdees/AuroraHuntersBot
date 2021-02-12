@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.telegram.AuroraBot;
 import ru.aurorahunters.bot.utils.GPSUtils;
 import java.util.Locale;
-
 import static java.lang.System.*;
 
 public class Main {
@@ -23,6 +22,6 @@ public class Main {
             e.printStackTrace();
         }
         out.println("Bot started.");
-        Config.initializeScheduler();
+        Config.initializeSchedulers();
     }
 }

@@ -2,6 +2,7 @@ package ru.aurorahunters.bot.graphbuilder;
 
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.model.chart.Resolution;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.time.Instant;
 public class ChartFileGen {
 
     private Resolution resolution;
-    private static final String CACHE_PATH = ".cache/";
+    private static final String CACHE_PATH = Config.getGraphPreloaderFolder();
 
     public ChartFileGen(Resolution resolution) {
         this.resolution = resolution;
