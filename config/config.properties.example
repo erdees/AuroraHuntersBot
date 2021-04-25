@@ -4,27 +4,33 @@
 #################################################################
 #
 # PostgreSQL credentials
-db.host = jdbc:postgresql://127.0.0.1:5432/yourdbname
-db.login = yourdbuser
-db.password = yourdbpassword
+db.host = jdbc:postgresql://127.0.0.1:5432/aurora
+db.login = postgres
+db.password = postgres
+
 # Telegram Bot api required fields
 bot.username = @botusername
 bot.token = YOUR-TELEGRAM-APIKEY
+
 # Project website
 bot.site = yoursite.com
+
 # Notification interval in minutes
 notif.interval = 15
+
 # Notification ranges for each of three solar wind values
-notif.top.density = 15.1 
+notif.top.density = 15.1
 notif.top.speed = 501.0
 notif.top.bz = -5.1
+
 # Database filling from JSON (id) where id=1 is 5 minutes;
 # id=2 is 2 hours; id=3 is 1 day (recommended for each start);
 # id=4 is a last 7 days. Recommended when the bot was offline during several days. Bot will fetch data from NOAA servers and fill the database during about 5-7 minutes.
 bot.recovery = 3
+
 #################################################################
 #
-# Sources counfiguration.
+# Sources configuration.
 #
 # NOAA DSCOVR - 5 minutes json
 json.mag.5min = https://services.swpc.noaa.gov/products/solar-wind/mag-5-minute.json
@@ -80,7 +86,7 @@ graph.range.density.high.end = 18
 graph.range.density.extreme.start = 18
 graph.range.density.extreme.end = 150
 
-# speed chart trigger ranges  
+# speed chart trigger ranges
 graph.range.speed.quiet.start = 0
 graph.range.speed.quiet.end = 400
 graph.range.speed.moderate.start = 400
@@ -92,7 +98,7 @@ graph.range.speed.high.end = 650
 graph.range.speed.extreme.start = 650
 graph.range.speed.extreme.end = 10000
 
-# bz_gsm chart trigger ranges  
+# bz_gsm chart trigger ranges
 graph.range.bz.quiet.start = -1.1
 graph.range.bz.quiet.end = 50
 graph.range.bz.moderate.start = -3.2
