@@ -4,6 +4,8 @@
 #################################################################
 #
 # PostgreSQL credentials
+# If you run not in Docker and DB locates on the same host use 127.0.0.1 as hostname
+#db.host = jdbc:postgresql://127.0.0.1:5432/aurora
 db.host = jdbc:postgresql://postgres:5432/aurora
 db.login = postgres
 db.password = postgres
