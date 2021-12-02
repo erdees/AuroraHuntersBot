@@ -18,7 +18,7 @@ public class SunWindService implements Runnable {
 
     private String magnetJson;
     private String plasmaJson;
-    private final int id;
+    private final long id;
 
     public SunWindService(long id) {
         this.id = id;
