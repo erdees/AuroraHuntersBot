@@ -46,7 +46,7 @@ public class SunWindService implements Runnable {
      */
     private void assignJsonURL() {
         try {
-            getJsonsById(long id);
+            getJsonsById(id);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class SunWindService implements Runnable {
      * Choose required json pair according to its id.
      * @param id which is the id of json file pair.
      */
-    private void getJsonsById(int id) throws IOException {
+    private void getJsonsById(long id) throws IOException {
         // TODO get rid of "magic" numbers
         String tempMag = "";
         String tempPlasma = "";
