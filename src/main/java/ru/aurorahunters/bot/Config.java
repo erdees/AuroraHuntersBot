@@ -26,7 +26,7 @@ public class Config {
     private static String BOT_TOKEN;
     private static String WEBSITE;
     private static int NOTIFY_INTERVAL;
-    private static int JSON_TO_DB_SYNC_ID;
+    private static long JSON_TO_DB_SYNC_ID;
     private static String MAG_5MIN;
     private static String PLASM_5MIN;
     private static String MAG_2H;
@@ -122,7 +122,7 @@ public class Config {
             TOP_DENSITY = Double.parseDouble(properties.getProperty("notif.top.density"));
             TOP_SPEED = Double.parseDouble(properties.getProperty("notif.top.speed"));
             TOP_BZ = Double.parseDouble(properties.getProperty("notif.top.bz"));
-            JSON_TO_DB_SYNC_ID = Integer.parseInt(properties.getProperty("bot.recovery"));
+            JSON_TO_DB_SYNC_ID = Long.parseLong(properties.getProperty("bot.recovery"));
             MAG_5MIN = properties.getProperty("json.mag.5min");
             PLASM_5MIN = properties.getProperty("json.plasma.5min");
             MAG_2H = properties.getProperty("json.mag.2h");
@@ -335,7 +335,7 @@ public class Config {
         return NOTIFY_INTERVAL;
     }
 
-    public static int getJsonToDbSyncId() {
+    public static long getJsonToDbSyncId() {
         return JSON_TO_DB_SYNC_ID;
     }
 
