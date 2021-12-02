@@ -46,7 +46,7 @@ public class SunWindService implements Runnable {
      */
     private void assignJsonURL() {
         try {
-            getJsonsById(id);
+            getJsonsById(long id);
         } catch (IOException e) {
             e.printStackTrace();
         }
