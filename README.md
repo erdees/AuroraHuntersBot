@@ -230,6 +230,4 @@ and finally, to start the bot:
 
 `systemctl start Aurora`
 
-Now the bot up and running, you are beautiful. 
-
-
+Now the bot up and running, you are beautiful.
