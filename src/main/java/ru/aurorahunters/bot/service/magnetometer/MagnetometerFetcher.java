@@ -1,6 +1,5 @@
 package ru.aurorahunters.bot.service.magnetometer;
 
-import ru.aurorahunters.bot.enums.MagnetEnum;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

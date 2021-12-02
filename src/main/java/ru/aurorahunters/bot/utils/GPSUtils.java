@@ -36,7 +36,7 @@ public class GPSUtils {
      * Method which retrieves GMT/UTC+00:00 Date and time according to local time and @formatter
      * @return GMT/UTC+00:00 Date
      */
-    public String getCurrentTime() throws ParseException {
+    public String getCurrentGTMTime() throws ParseException {
         String fromDateString = new Date().toString();
         DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         Date fromDate = formatter.parse(fromDateString);

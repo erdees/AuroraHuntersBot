@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot.enums;
+package ru.aurorahunters.bot.graphbuilder;
 
 public enum GraphTypeEnum {
     DENSITY("density", "Proton Density [p/cc]"),

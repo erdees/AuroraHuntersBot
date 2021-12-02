@@ -1,6 +1,5 @@
 package ru.aurorahunters.bot.service.magnetometer;
 
-import ru.aurorahunters.bot.enums.MagnetEnum;
 import ru.aurorahunters.bot.dao.MagnetometerDAO;
 import java.io.IOException;
 import java.sql.*;

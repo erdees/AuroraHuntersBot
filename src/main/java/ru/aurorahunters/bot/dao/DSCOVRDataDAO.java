@@ -4,6 +4,8 @@ import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.model.chart.ActualSunChart;
 import ru.aurorahunters.bot.model.HistoricalDate;
 import ru.aurorahunters.bot.model.solardata.SolarWindData;
+import ru.aurorahunters.bot.service.solarwind.SourceIds;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +14,43 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class DataDAO {
+public class DSCOVRDataDAO {
+
+    private enum SatelliteTableNames {
+        DSCOVR("data"),
+        ACE("ace_data");
+
+        private final String tableName;
+
+        SatelliteTableNames(String id) {
+            this.tableName = id;
+        }
+
+        public String getTableName() {
+            return tableName;
+        }
+    }
+
+    private String tablename = gettableName();
+
+    private String gettableName() {
+        String name = "";
+
+        return name;
+    }
+
+    public DSCOVRDataDAO(int sourceId) {
+
+        if (sourceId == SourceIds.DSCOVR.getId())
+        {
+            tablename = SatelliteTableNames.DSCOVR.getTableName();
+        }
+        if (sourceId == SourceIds.ACE.getId())
+        {
+            tablename = SatelliteTableNames.ACE.getTableName();
+        }
+
+    }
 
     /** This method puts merged json map to the Database */
     public void insertResults(Map<String, ArrayList<String>> map) throws SQLException {
@@ -57,7 +95,7 @@ public class DataDAO {
         String query =
                 "WITH t AS (SELECT time_tag at time zone 'utc/" + chart.getTimezone() +
                         "' at time zone 'utc', " + chart.getGraphTypeEnum().getDbKey() +
-                        " from data ORDER BY time_tag desc limit 180) " +
+                        " from "+ tablename +" ORDER BY time_tag desc limit 180) " +
                         "SELECT * FROM t ORDER BY timezone ASC";
         ResultSet resultSet;
         try (PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(query)) {
@@ -75,7 +113,7 @@ public class DataDAO {
     /** Return number of entries from database for solar wind parameters. */
     public int getEntriesCount() throws SQLException {
         int totalEntries = 0;
-        String entriesCount = "select COUNT(*) from data";
+        String entriesCount = "select COUNT(*) from " + tablename;
         ResultSet resultSet;
         try (PreparedStatement preparedStatement =
                      Config.getDbConnection().prepareStatement(entriesCount)) {
@@ -93,7 +131,7 @@ public class DataDAO {
         List<SolarWindData> latestWindData = new ArrayList<>();
         String query =
                 "WITH t AS (SELECT time_tag at time zone 'utc/+00:00' at time zone 'utc', " +
-                        "density, speed, bz_gsm from data ORDER BY time_tag desc limit 5) " +
+                        "density, speed, bz_gsm from " + tablename + " ORDER BY time_tag desc limit 5) " +
                         "SELECT * FROM t ORDER BY timezone ASC";
         ResultSet resultSet;
         try (PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(query)) {
@@ -118,8 +156,8 @@ public class DataDAO {
         TreeMap<Date, SolarWindData> latestWindData = new TreeMap<>();
         String query =
                 "WITH t AS (SELECT time_tag at time zone 'utc/" + timezone +
-                        "' at time zone 'utc', density, speed, bz_gsm from data ORDER BY time_tag desc limit 10) SELECT * " +
-                        "FROM t ORDER BY timezone ASC";
+                        "' at time zone 'utc', density, speed, bz_gsm from " + tablename + " " +
+                        "ORDER BY time_tag desc limit 10) SELECT * FROM t ORDER BY timezone ASC";
         ResultSet resultSet;
         try (PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(query)) {
             resultSet = preparedStatement.executeQuery();
@@ -144,7 +182,7 @@ public class DataDAO {
             ParseException {
         TreeMap<Date, SolarWindData> latestWindData = new TreeMap<>();
         String query =
-                "SELECT time_tag, density, speed, bz_gsm FROM data WHERE time_tag >= '"
+                "SELECT time_tag, density, speed, bz_gsm FROM " + tablename + " WHERE time_tag >= '"
                         + range.getInitialDate() + "' AND time_tag < '" + range.getEndDate() + "'";
         ResultSet resultSet;
         try (PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(query)) {
@@ -164,7 +202,7 @@ public class DataDAO {
     /** Return number of entries from database for solar wind parameters. */
     public double getLastSpeed() throws SQLException {
         double lastSpeed = 0;
-        String entriesCount = "SELECT speed from data ORDER BY time_tag desc limit 1";
+        String entriesCount = "SELECT speed from " + tablename + " ORDER BY time_tag desc limit 1";
         ResultSet resultSet;
         try (PreparedStatement preparedStatement =
                      Config.getDbConnection().prepareStatement(entriesCount)) {

@@ -1,6 +1,6 @@
 package ru.aurorahunters.bot.model.chart;
 
-import ru.aurorahunters.bot.enums.GraphTypeEnum;
+import ru.aurorahunters.bot.graphbuilder.GraphTypeEnum;
 
 public class ActualSunChart extends SunChart {
 

@@ -1,10 +1,12 @@
-package ru.aurorahunters.bot.service.solarwind;
+package ru.aurorahunters.bot.service.solarwind.dscovr;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.dao.DataDAO;
+import ru.aurorahunters.bot.dao.DSCOVRDataDAO;
+import ru.aurorahunters.bot.service.solarwind.SourceIds;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +21,10 @@ public class SunWindService implements Runnable {
     private String magnetJson;
     private String plasmaJson;
     private final int id;
+    private static final int MIN5 = 1;
+    private static final int HOUR2 = 2;
+    private static final int HOUR24 = 3;
+    private static final int DAY7 = 4;
 
     public SunWindService(int id) {
         this.id = id;
@@ -59,7 +65,7 @@ public class SunWindService implements Runnable {
      */
     private void insertResultsToDb(LinkedHashMap<String, ArrayList<String>> preparedData) {
         try {
-            new DataDAO().insertResults(preparedData);
+            new DSCOVRDataDAO(SourceIds.DSCOVR.getId()).insertResults(preparedData);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -70,22 +76,21 @@ public class SunWindService implements Runnable {
      * @param id which is the id of json file pair.
      */
     private void getJsonsById(int id) throws IOException {
-        // TODO get rid of "magic" numbers
         String tempMag = "";
         String tempPlasma = "";
-        if (id == 1) {
+        if (id == MIN5) {
             tempMag = Config.getMag5min();
             tempPlasma = Config.getPlasm5min();
         }
-        if (id == 2) {
+        if (id == HOUR2) {
             tempMag = Config.getMag2h();
             tempPlasma = Config.getPlasm2h();
         }
-        if (id == 3) {
+        if (id == HOUR24) {
             tempMag = Config.getMag24h();
             tempPlasma = Config.getPlasm24h();
         }
-        if (id == 4) {
+        if (id == DAY7) {
             tempMag = Config.getMag7day();
             tempPlasma = Config.getPlasm7day();
         }

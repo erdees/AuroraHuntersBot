@@ -22,18 +22,31 @@ public class SessionHandler {
     public String sessionHandler(String input, Long chatId, Location gps)
             throws ParseException, SQLException, IOException, TelegramApiException {
         if (!new SessionsDAO().isChatIdExist(chatId)) {
-            if (input.equals("/start") || input.equals("/start" + Config.getBotUsername())) {
-                new SessionsDAO().insertNewUser(chatId);
-                return new SessionsDAO().getCurrentChat(chatId).setBotStarted();
-            } else return new MessageHandler(chatId).respondMessage(input);
-        } else {
+
+            return createNewSession(input, chatId);
+        }
+        else {
             if (input.equals("/stop") || input.equals("/stop" + Config.getBotUsername())) {
                 new SessionsDAO().deleteUserById(chatId);
+
                 return "Bot stopped.";
-            } else if (gps != null) {
+            }
+            else if (gps != null) {
                 return new SessionsDAO().getCurrentChat(chatId).setGpsTimezone(
                         new GPSUtils().getGpsTimezone(gps));
             }
-        } return new SessionsDAO().getCurrentChat(chatId).respondMessage(input);
+        }
+
+        return new SessionsDAO().getCurrentChat(chatId).respondMessage(input);
+    }
+
+    private String createNewSession(String input, Long chatId) throws SQLException, ParseException, IOException, TelegramApiException {
+        if (input.equals("/start") || input.equals("/start" + Config.getBotUsername())) {
+            new SessionsDAO().insertNewUser(chatId);
+
+            return new SessionsDAO().getCurrentChat(chatId).setBotStarted();
+        }
+
+        else return new MessageHandler(chatId).respondMessage(input);
     }
 }

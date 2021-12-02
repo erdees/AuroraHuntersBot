@@ -2,11 +2,13 @@ package ru.aurorahunters.bot.telegram;
 
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.service.solarwind.MessageStringBuilder;
-import ru.aurorahunters.bot.dao.DataDAO;
+import ru.aurorahunters.bot.dao.DSCOVRDataDAO;
 import ru.aurorahunters.bot.dao.SessionsDAO;
 import ru.aurorahunters.bot.graphbuilder.MagnetChartGen;
 import ru.aurorahunters.bot.graphbuilder.SunWindChartGen;
+import ru.aurorahunters.bot.service.solarwind.MessageStringBuilder;
+import ru.aurorahunters.bot.telegram.keyboards.SettingsKeyboard;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -18,19 +20,21 @@ public class MessageHandler {
     private String timezone = "+00:00"; // default timezone if not configured
     private boolean isHistoryConfigured;
     private String archiveDate;
+    private int sourceId;
 
     public MessageHandler(Long chatID) {
         this.chatID = chatID;
     }
 
     public MessageHandler(Long chatID, boolean isStarted, boolean isTimezoneConfigured, String timezone, boolean
-            isHistoryConfigured, String archiveDate) {
+            isHistoryConfigured, String archiveDate, int sourceId) {
         this.chatID = chatID;
         this.isStarted = isStarted;
         this.isTimezoneConfigured = isTimezoneConfigured;
         this.timezone = timezone;
         this.isHistoryConfigured = isHistoryConfigured;
         this.archiveDate = archiveDate;
+        this.sourceId = sourceId;
     }
 
     public String setBotStarted() {
@@ -64,7 +68,7 @@ public class MessageHandler {
                 return getStat();
             }
             if (input.equals("/last") || input.equals("/last" + Config.getBotUsername())) {
-                return new MessageStringBuilder().getLastValues(timezone);
+                return new MessageStringBuilder(sourceId).getLastValues(timezone);
             }
             if (input.contains("/time_settings") || input.contains("/time_settings" + Config.getBotUsername())) {
                 return setTimezone(input);
@@ -85,37 +89,37 @@ public class MessageHandler {
                 return getLinks();
             }
             if (input.equals("/graph_all") || input.equals("/graph_all" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getBzGraph(timezone));
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedGraph(timezone));
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityGraph(timezone));
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getBtGraph(timezone));
+                sendAllGraphs();
             }
             if (input.equals("/graph_bz") || input.equals("/graph_bz" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getBzGraph(timezone));
+                new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getBzGraph(timezone));
             }
             if (input.equals("/graph_speed") || input.equals("/graph_speed" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedGraph(timezone));
+                new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getSpeedGraph(timezone));
             }
             if (input.equals("/graph_density") || input.equals("/graph_density" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityGraph(timezone));
+                new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getDensityGraph(timezone));
             }
             if (input.equals("/graph_bt") || input.equals("/graph_bt" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new SunWindChartGen().getBtGraph(timezone));
+                new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getBtGraph(timezone));
             }
             if (input.contains("/history") || input.contains("/history" + Config.getBotUsername())) {
                 return setHistoryDate(input);
             }
             if (input.equals("/magnetometer_kev") || input.equals("/magnetometer_kev" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new MagnetChartGen().getKevChart(timezone));
+                new MessageSender(chatID).sendImage(new MagnetChartGen().getKevChart(timezone));
             }
             if (input.equals("/magnetometer_ouj") || input.equals("/magnetometer_ouj" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new MagnetChartGen().getOujChart(timezone));
+                new MessageSender(chatID).sendImage(new MagnetChartGen().getOujChart(timezone));
             }
             if (input.equals("/magnetometer_han") || input.equals("/magnetometer_han" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new MagnetChartGen().getHanChart(timezone));
+                new MessageSender(chatID).sendImage(new MagnetChartGen().getHanChart(timezone));
             }
             if (input.equals("/magnetometer_nur") || input.equals("/magnetometer_nur" + Config.getBotUsername())) {
-                new ImageSender(chatID).sendImage(new MagnetChartGen().getNurChart(timezone));
+                new MessageSender(chatID).sendImage(new MagnetChartGen().getNurChart(timezone));
+            }
+            if (input.equals("/settings") || input.equals("/settings" + Config.getBotUsername())) {
+                new SettingsKeyboard().settingsMessage(chatID);
             }
             if (isHistoryConfigured) {
                 if (input.equals("/archive_text") || input.equals("/archive_text" + Config.getBotUsername())) {
@@ -123,21 +127,21 @@ public class MessageHandler {
                 }
                 if (input.equals("/archive_graph_bz") || input.equals("/archive_graph_bz" +
                         Config.getBotUsername())) {
-                    new ImageSender(chatID).sendImage(new SunWindChartGen().getBzArchiveGraph(archiveDate));
+                    new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getBzArchiveGraph(archiveDate));
                 }
                 if (input.equals("/archive_graph_speed") || input.equals("/archive_graph_speed" +
                         Config.getBotUsername())) {
-                    new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedArchiveGraph(archiveDate));
+                    new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getSpeedArchiveGraph(archiveDate));
                 }
                 if (input.equals("/archive_graph_density") || input.equals("/archive_graph_density" +
                         Config.getBotUsername())) {
-                    new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityArchiveGraph(archiveDate));
+                    new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getDensityArchiveGraph(archiveDate));
                 }
                 if (input.equals("/archive_graph_all") || input.equals("/archive_graph_all" +
                         Config.getBotUsername())) {
-                    new ImageSender(chatID).sendImage(new SunWindChartGen().getBzArchiveGraph(archiveDate));
-                    new ImageSender(chatID).sendImage(new SunWindChartGen().getSpeedArchiveGraph(archiveDate));
-                    new ImageSender(chatID).sendImage(new SunWindChartGen().getDensityArchiveGraph(archiveDate));
+                    new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getBzArchiveGraph(archiveDate));
+                    new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getSpeedArchiveGraph(archiveDate));
+                    new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getDensityArchiveGraph(archiveDate));
                 }
             }
             return "";
@@ -145,6 +149,13 @@ public class MessageHandler {
         else {
             return "Bot stopped. Press /start to initialize it.";
         }
+    }
+
+    public void sendAllGraphs() throws TelegramApiException, ParseException, SQLException, IOException {
+        new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getBzGraph(timezone));
+        new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getSpeedGraph(timezone));
+        new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getDensityGraph(timezone));
+        new MessageSender(chatID).sendImage(new SunWindChartGen(sourceId).getBtGraph(timezone));
     }
 
     private String getInfo() {
@@ -261,7 +272,7 @@ public class MessageHandler {
      */
     private String getHistoryData() throws SQLException, ParseException {
         if (isHistoryConfigured) {
-            return new MessageStringBuilder().getHistoryValues(archiveDate);
+            return new MessageStringBuilder(sourceId).getHistoryValues(archiveDate);
         }
         else return "Archive is not configured. Please enter required date in <b>yyyy-MM-dd</b> format: \n" +
                 "e.g. command for <b>July 01 of 2020</b> will be \n" +
@@ -273,7 +284,7 @@ public class MessageHandler {
      * @param set boolean where true is on and false is off.
      * @return an operation result String message
      */
-    private String setNotif (boolean set) throws SQLException {
+    public String setNotif (boolean set) throws SQLException {
         if (set) {
             new SessionsDAO().setDbNotif(true, chatID);
             return "Notifications enabled.";
@@ -318,7 +329,7 @@ public class MessageHandler {
 
     private String getStat() throws SQLException {
         return "<pre>Total bot users: " + new SessionsDAO().getUserCount() + "\nTotal DB entries: "
-                + new DataDAO().getEntriesCount() + "\nBot ver. 1.0.26</pre>";
+                + new DSCOVRDataDAO(sourceId).getEntriesCount() + "\nBot ver. 1.1.0</pre>";
     }
 
     private String getMagnetometers() {

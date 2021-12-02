@@ -1,7 +1,7 @@
 package ru.aurorahunters.bot.dao;
 
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.enums.MagnetEnum;
+import ru.aurorahunters.bot.service.magnetometer.MagnetEnum;
 import ru.aurorahunters.bot.model.chart.MagnetChart;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

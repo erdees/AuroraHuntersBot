@@ -1,9 +1,10 @@
 package ru.aurorahunters.bot;
 
 import ru.aurorahunters.bot.graphbuilder.ChartPreLoader;
-import ru.aurorahunters.bot.service.solarwind.SunWindService;
+import ru.aurorahunters.bot.service.solarwind.ace.ACEService;
+import ru.aurorahunters.bot.service.solarwind.dscovr.SunWindService;
 import ru.aurorahunters.bot.service.magnetometer.MagnetometerService;
-import ru.aurorahunters.bot.enums.MagnetEnum;
+import ru.aurorahunters.bot.service.magnetometer.MagnetEnum;
 import ru.aurorahunters.bot.notification.NotificationService;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class Config {
     private static String PLASM_24H;
     private static String MAG_7DAY;
     private static String PLASM_7DAY;
+    private static String ACE_EPAM;
+    private static String ACE_MAGNET;
     private static String MAGN_KEV_1H;
     private static String MAGN_OUJ_1H;
     private static String MAGN_HAN_1H;
@@ -131,6 +134,8 @@ public class Config {
             PLASM_24H = properties.getProperty("json.plasma.24h");
             MAG_7DAY = properties.getProperty("json.mag.7day");
             PLASM_7DAY = properties.getProperty("json.plasma.7day");
+            ACE_EPAM = properties.getProperty("json.ace.epam");
+            ACE_MAGNET = properties.getProperty("json.ace.magnet");
             MAGN_KEV_1H = properties.getProperty("source.magn.kev.1h");
             MAGN_OUJ_1H = properties.getProperty("source.magn.ouj.1h");
             MAGN_HAN_1H = properties.getProperty("source.magn.han.1h");
@@ -252,15 +257,16 @@ public class Config {
 
     /** Scheduler settings */
     public static void initializeSchedulers() {
-        configureSunWindServiceScheduler();
+        configureDSCOVRScheduler();
+        configureACEScheduler();
         configureNotificationScheduler();
         configureMagnetometerScheduler();
         configureChartPreloaderScheduler();
     }
 
-    /** Create required Schedulers for Sun Wind fetch Service according to the config.properties
-     * file */
-    private static void configureSunWindServiceScheduler() {
+    /** Create required Schedulers for Sun Wind fetch Service (DSCOVR) according to the config
+     * .properties file */
+    private static void configureDSCOVRScheduler() {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
         scheduler.schedule(new SunWindService(Config.getJsonToDbSyncId()), 0, TimeUnit.SECONDS);
@@ -269,11 +275,19 @@ public class Config {
         scheduler.scheduleAtFixedRate(new SunWindService(4), 48, 48, TimeUnit.HOURS);
     }
 
+    /** Create required Schedulers for Sun Wind fetch Service (ACE) according to the config
+     * .properties file */
+    private static void configureACEScheduler() {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        scheduler.scheduleAtFixedRate(new ACEService(), 0, 40, TimeUnit.SECONDS);
+    }
+
     /** Create required Schedulers for chart preloader according to the config.properties file */
     private static void configureNotificationScheduler() {
         ScheduledExecutorService notifScheduler = Executors.newSingleThreadScheduledExecutor();
 
-        notifScheduler.scheduleAtFixedRate(new NotificationService(), 60, 60, TimeUnit.SECONDS);
+        notifScheduler.scheduleAtFixedRate(new NotificationService(), 15, 60, TimeUnit.SECONDS);
     }
 
     /** Create required Schedulers for magnetometers according to the config.properties file */
@@ -369,6 +383,14 @@ public class Config {
 
     public static String getPlasm7day() {
         return PLASM_7DAY;
+    }
+
+    public static String getAceEpam() {
+        return ACE_EPAM;
+    }
+
+    public static String getAceMagnet() {
+        return ACE_MAGNET;
     }
 
     public static String getMagnKev1h() {

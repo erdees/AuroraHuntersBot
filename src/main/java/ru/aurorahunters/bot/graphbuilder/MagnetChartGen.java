@@ -13,7 +13,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import ru.aurorahunters.bot.Config;
 import ru.aurorahunters.bot.dao.MagnetometerDAO;
-import ru.aurorahunters.bot.enums.MagnetEnum;
+import ru.aurorahunters.bot.service.magnetometer.MagnetEnum;
 import ru.aurorahunters.bot.model.chart.MagnetChart;
 import ru.aurorahunters.bot.model.chart.Resolution;
 import ru.aurorahunters.bot.utils.GPSUtils;
@@ -166,7 +166,7 @@ public class MagnetChartGen {
     private void setChartStyle(XYPlot plot, JFreeChart chart) throws ParseException {
         chart.getLegend().setBackgroundPaint(chart.getBackgroundPaint());
         plot.getDomainAxis().setLabel("Finnish Meteorogical Institute | " + Config.getWEBSITE()
-                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentTime());
+                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentGTMTime());
         chart.setBackgroundPaint(Color.BLACK);
         chart.getTitle().setPaint(Color.white);
         chart.getLegend().setBackgroundPaint(Color.BLACK);

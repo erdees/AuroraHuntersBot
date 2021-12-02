@@ -1,6 +1,6 @@
 package ru.aurorahunters.bot.service.solarwind;
 
-import ru.aurorahunters.bot.dao.DataDAO;
+import ru.aurorahunters.bot.dao.DSCOVRDataDAO;
 import ru.aurorahunters.bot.model.HistoricalDate;
 import ru.aurorahunters.bot.model.solardata.SolarWindData;
 import java.sql.*;
@@ -13,17 +13,22 @@ import java.util.Date;
 public class MessageStringBuilder {
 
     private static final int HOUR = 59; //from 00 to 59 minute
+    private final int sourceId;
+
+    public MessageStringBuilder(int sourceId) {
+        this.sourceId = sourceId;
+    }
 
     /**
      * Forms a message with latest 10 solar wind values for Telegram message as a String.
      * @param timezone which goes from MessageHandler.
-     * @return a String with formatted for the Telegram.
+     * @return a formatted String optimized for the Telegram.
      */
     public String getLastValues(String timezone) throws SQLException, ParseException {
         StringBuilder sb = new StringBuilder();
         String timeZoneToMessage = timezone.split(":")[0];
         String firstLine = String.format("%s%s%n", "<pre>", "Waiting time: " +
-                new ValueCalculator().getWaitingTime() + "\n");
+                new WaitingTimeCalculator(sourceId).getWaitingTime() + "\n");
         String secondLine = String.format("%4s\t%s\t%3s\t%s\t%4s\t%s\t%3s%n",
                 "BZ ", "|", "S ", "|", "PD", "|", "UTC" +timeZoneToMessage);
         sb.append(firstLine).append(secondLine);
@@ -45,7 +50,7 @@ public class MessageStringBuilder {
                 "\nall latest graphs /graph_all";
         DecimalFormat chatOutput = new DecimalFormat("###.#");
         Iterator<Map.Entry<Date, SolarWindData>> iterator =
-                new DataDAO().getLatestValues(timezone).entrySet().iterator();
+                new DSCOVRDataDAO(sourceId).getLatestValues(timezone).entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Date, SolarWindData> pair = iterator.next();
             String dateString = new SimpleDateFormat("HH:mm").format(pair.getKey());
@@ -92,7 +97,7 @@ public class MessageStringBuilder {
         ArrayList<Double> speedList = new ArrayList<>();
         ArrayList<Double> bzList = new ArrayList<>();
         for (Map.Entry<Date, SolarWindData> pair :
-                new DataDAO().getHistoryValues(historicalDate).entrySet()) {
+                new DSCOVRDataDAO(sourceId).getHistoryValues(historicalDate).entrySet()) {
             Date sqlDate = pair.getKey();
             double density = pair.getValue().getDensity();
             double speed = pair.getValue().getSpeed();

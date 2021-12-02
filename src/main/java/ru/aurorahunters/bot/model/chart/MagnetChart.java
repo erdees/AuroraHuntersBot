@@ -1,6 +1,6 @@
 package ru.aurorahunters.bot.model.chart;
 
-import ru.aurorahunters.bot.enums.MagnetEnum;
+import ru.aurorahunters.bot.service.magnetometer.MagnetEnum;
 
 public class MagnetChart extends PreparedChart {
 

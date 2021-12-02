@@ -6,12 +6,12 @@ import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.*;
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.dao.DataDAO;
-import ru.aurorahunters.bot.enums.GraphTypeEnum;
+import ru.aurorahunters.bot.dao.DSCOVRDataDAO;
 import ru.aurorahunters.bot.model.chart.ActualSunChart;
 import ru.aurorahunters.bot.model.chart.ArchiveChart;
 import ru.aurorahunters.bot.model.chart.Resolution;
-import ru.aurorahunters.bot.service.solarwind.ValueCalculator;
+import ru.aurorahunters.bot.service.solarwind.SourceIds;
+import ru.aurorahunters.bot.service.solarwind.WaitingTimeCalculator;
 import ru.aurorahunters.bot.utils.GPSUtils;
 import java.awt.*;
 import java.io.File;
@@ -27,6 +27,11 @@ import java.util.*;
 public class SunWindChartGen {
 
     private final Resolution resolution = new Resolution(600, 400);
+    private final int sourceId;
+
+    public SunWindChartGen(int sourceId) {
+        this.sourceId = sourceId;
+    }
 
     /** Throughput method to generate a proton density graph  */
     public File getDensityGraph(String timezone) throws ParseException, SQLException, IOException {
@@ -35,7 +40,7 @@ public class SunWindChartGen {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.DENSITY, timezone, resolution);
-            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            SortedMap<Date, Double> chartData = new DSCOVRDataDAO(sourceId).getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
                     getChart(getGraph(chart, chartData), name);
         }
@@ -48,7 +53,7 @@ public class SunWindChartGen {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.SPEED, timezone, resolution);
-            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            SortedMap<Date, Double> chartData = new DSCOVRDataDAO(sourceId).getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
                     getChart(getGraph(chart, chartData), name);
         }
@@ -61,7 +66,7 @@ public class SunWindChartGen {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.BZ_GSM, timezone, resolution);
-            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            SortedMap<Date, Double> chartData = new DSCOVRDataDAO(sourceId).getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
                     getChart(getGraph(chart, chartData), name);
         }
@@ -74,7 +79,7 @@ public class SunWindChartGen {
             return new ChartFileGen(resolution).getCachedChart(name);
         } else {
             ActualSunChart chart = new ActualSunChart(GraphTypeEnum.BT, timezone, resolution);
-            SortedMap<Date, Double> chartData = new DataDAO().getCurrentChart(chart);
+            SortedMap<Date, Double> chartData = new DSCOVRDataDAO(sourceId).getCurrentChart(chart);
             return new ChartFileGen(chart.getResolution()).
                     getChart(getGraph(chart, chartData), name);
         }
@@ -126,8 +131,8 @@ public class SunWindChartGen {
      */
     private JFreeChart getGraph(ActualSunChart graph, SortedMap<Date, Double> m)
             throws SQLException, ParseException {
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE()
-                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentTime());
+        TimeSeries timeChart = new TimeSeries(getSatelliteName() +" | " + Config.getWEBSITE()
+                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentGTMTime());
         for(Map.Entry<Date, Double> entry : m.entrySet()) {
             Date timeTag = entry.getKey();
             Double value = entry.getValue();
@@ -148,8 +153,8 @@ public class SunWindChartGen {
      */
     private JFreeChart getGraph(ArchiveChart graph, TreeMap<Date, Double> m)
             throws SQLException, ParseException {
-        TimeSeries timeChart = new TimeSeries("NOAA DSCOVR | " + Config.getWEBSITE()
-                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentTime());
+        TimeSeries timeChart = new TimeSeries(getSatelliteName() + " | " + Config.getWEBSITE()
+                + " Telegram Bot (" + Config.getBotUsername() + ") | " + new GPSUtils().getCurrentGTMTime());
         for(Map.Entry<Date, Double> entry : m.entrySet()) {
             Date timeTag = entry.getKey();
             Double value = entry.getValue();
@@ -178,7 +183,7 @@ public class SunWindChartGen {
             chart = ChartFactory.createTimeSeriesChart(
                     e.getPrintName() + " - last 3 hours",
                     "Time (UTC" + timezoneOrDate + ") | " + "Waiting time: " +
-                            new ValueCalculator().getWaitingTime(),
+                            new WaitingTimeCalculator(sourceId).getWaitingTime(),
                     e.getPrintName(), d, true, true, false);
         } else {
             chart = ChartFactory.createTimeSeriesChart(
@@ -326,5 +331,17 @@ public class SunWindChartGen {
             }
         }
         return out;
+    }
+
+    private String getSatelliteName() {
+        String name = "";
+        if (sourceId == SourceIds.DSCOVR.getId()) {
+            name = "NOAA DSCOVR";
+        }
+        if (sourceId == SourceIds.ACE.getId()) {
+            name = "NOAA ACE";
+        }
+
+        return name;
     }
 }

@@ -1,6 +1,8 @@
 package ru.aurorahunters.bot.graphbuilder;
 
 import ru.aurorahunters.bot.Config;
+import ru.aurorahunters.bot.service.solarwind.SourceIds;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -27,9 +29,9 @@ public class ChartPreLoader implements Runnable {
     }
 
     private void preloadSunWindCharts() throws ParseException, SQLException, IOException {
-        new SunWindChartGen().getDensityGraph(DEFAULT_TIMEZONE);
-        new SunWindChartGen().getSpeedGraph(DEFAULT_TIMEZONE);
-        new SunWindChartGen().getBzGraph(DEFAULT_TIMEZONE);
-        new SunWindChartGen().getBtGraph(DEFAULT_TIMEZONE);
+        new SunWindChartGen(SourceIds.DSCOVR.getId()).getDensityGraph(DEFAULT_TIMEZONE);
+        new SunWindChartGen(SourceIds.DSCOVR.getId()).getSpeedGraph(DEFAULT_TIMEZONE);
+        new SunWindChartGen(SourceIds.DSCOVR.getId()).getBzGraph(DEFAULT_TIMEZONE);
+        new SunWindChartGen(SourceIds.DSCOVR.getId()).getBtGraph(DEFAULT_TIMEZONE);
     }
 }

@@ -11,9 +11,7 @@ public class MessageBuilder {
             String.format("%s%s%n", "<pre>","Notification: high solar wind parameters:\n");
     private static final String SECOND_LINE =
             String.format("%4s\t%s\t%3s\t%s\t%4s%n", "BZ ", "|", "S ", "|", "PD");
-    private static final String LAST_LINE =
-            "</pre>\nclick to see latest charts: /graph_all\n" +
-            "click /notif_off to disable notifications";
+    private static final String LAST_LINE = "</pre>";
 
     /**
      * Generates a String message in Telegram format with notification.

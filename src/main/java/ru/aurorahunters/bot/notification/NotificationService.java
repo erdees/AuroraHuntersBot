@@ -1,8 +1,10 @@
 package ru.aurorahunters.bot.notification;
 
 import ru.aurorahunters.bot.Config;
-import ru.aurorahunters.bot.dao.DataDAO;
+import ru.aurorahunters.bot.dao.DSCOVRDataDAO;
 import ru.aurorahunters.bot.model.solardata.SolarWindData;
+import ru.aurorahunters.bot.service.solarwind.SourceIds;
+
 import java.sql.SQLException;
 import java.util.List;
 import static java.lang.System.*;
@@ -24,7 +26,7 @@ public class NotificationService implements Runnable  {
     }
 
     private void sendMessageOrWait() throws InterruptedException, SQLException {
-        List<SolarWindData> lastFiveMin =  new DataDAO().getNotificationValues();
+        List<SolarWindData> lastFiveMin =  new DSCOVRDataDAO(SourceIds.DSCOVR.getId()).getNotificationValues();
         try {
             if (new NotificationChecker().checkNotification(lastFiveMin)) {
                 if (isSendTime()) {

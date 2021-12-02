@@ -67,8 +67,8 @@ public class SessionsDAO {
     public void insertNewUser(Long chatId) throws SQLException {
         Config.getDbConnection().setAutoCommit(false);
         String sql = "INSERT INTO sessions VALUES " +
-                "(?::NUMERIC, ?::BOOLEAN, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN) " +
-                "ON CONFLICT (chat_id) DO NOTHING;";
+                "(?::NUMERIC, ?::BOOLEAN, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN, ?::TEXT, ?::BOOLEAN, " +
+                "?::NUMERIC) ON CONFLICT (chat_id) DO NOTHING;";
         try (PreparedStatement ps = Config.getDbConnection().prepareStatement(sql)) {
             try {
                 ps.setLong(1, chatId);
@@ -78,6 +78,7 @@ public class SessionsDAO {
                 ps.setBoolean(5, false);
                 ps.setString(6, null);
                 ps.setBoolean(7, true);
+                ps.setInt(8, 1);
                 ps.executeUpdate();
                 Config.getDbConnection().commit();
             } catch (SQLException e) {
@@ -106,7 +107,8 @@ public class SessionsDAO {
             String timezone = resultSet.getString(4);
             boolean isArchive = resultSet.getBoolean(5);
             String archive = resultSet.getString(6);
-            bot = new MessageHandler(id,isStarted,isTimezone,timezone,isArchive,archive);
+            int sourceId = resultSet.getInt(8);
+            bot = new MessageHandler(id,isStarted,isTimezone,timezone,isArchive,archive, sourceId);
         }
         return bot;
     }
@@ -168,6 +170,23 @@ public class SessionsDAO {
     }
 
     /**
+     * See if user has a subscription or not.
+     */
+    public boolean getUserNotif(Long chatId) throws SQLException {
+        boolean isSubscribed = false;
+        final String sql = "SELECT is_notif FROM sessions WHERE chat_id=?";
+        ResultSet resultSet;
+        try (PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql)) {
+            preparedStatement.setLong(1, chatId);
+            resultSet = preparedStatement.executeQuery();
+        }
+        while (resultSet.next()) {
+            isSubscribed = resultSet.getBoolean(1);
+        }
+        return isSubscribed;
+    }
+
+    /**
      * Request from a Database chat Ids with users who subscribed to notifications.
      */
     public List<Long> getSubscribersList() throws SQLException {
@@ -182,5 +201,41 @@ public class SessionsDAO {
             subscribersList.add(chatId);
         }
         return subscribersList;
+    }
+
+    /**
+     * fetch satellite source. 1 for DSCOVR, 2 for ACE
+     */
+    public int getSatelliteSource(Long chatId) throws SQLException {
+        int sourceID = 1;
+        final String sql = "SELECT source FROM sessions WHERE chat_id=?";
+        ResultSet resultSet;
+        try (PreparedStatement preparedStatement = Config.getDbConnection().prepareStatement(sql)) {
+            preparedStatement.setLong(1, chatId);
+            resultSet = preparedStatement.executeQuery();
+        }
+        while (resultSet.next()) {
+            sourceID = resultSet.getInt(1);
+        }
+        return sourceID;
+    }
+
+    /**
+     * Method which sets id of solar wind satellite source. id 1 = DSCOVR, id 2 = ACE.
+     * @param id is the id of satellite source.
+     */
+    public void setSatelliteSource(int id, long chatId) throws SQLException {
+        Config.getDbConnection().setAutoCommit(false);
+        final String SQL = "UPDATE sessions SET source=? where chat_id=?;";
+        try (PreparedStatement ps = Config.getDbConnection().prepareStatement(SQL)) {
+            try {
+                ps.setInt(1, id);
+                ps.setLong(2, chatId);
+                ps.executeUpdate();
+                Config.getDbConnection().commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

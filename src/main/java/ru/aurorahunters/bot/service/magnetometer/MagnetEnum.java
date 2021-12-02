@@ -1,4 +1,4 @@
-package ru.aurorahunters.bot.enums;
+package ru.aurorahunters.bot.service.magnetometer;
 
 import ru.aurorahunters.bot.Config;
 
