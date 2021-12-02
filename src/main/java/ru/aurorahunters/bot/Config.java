@@ -122,7 +122,7 @@ public class Config {
             TOP_DENSITY = Double.parseDouble(properties.getProperty("notif.top.density"));
             TOP_SPEED = Double.parseDouble(properties.getProperty("notif.top.speed"));
             TOP_BZ = Double.parseDouble(properties.getProperty("notif.top.bz"));
-            JSON_TO_DB_SYNC_ID = long.parseLong(properties.getProperty("bot.recovery"));
+            JSON_TO_DB_SYNC_ID = Long.parseLong(properties.getProperty("bot.recovery"));
             MAG_5MIN = properties.getProperty("json.mag.5min");
             PLASM_5MIN = properties.getProperty("json.plasma.5min");
             MAG_2H = properties.getProperty("json.mag.2h");
