@@ -20,7 +20,7 @@ public class SunWindService implements Runnable {
     private String plasmaJson;
     private final int id;
 
-    public SunWindService(int id) {
+    public SunWindService(long id) {
         this.id = id;
     }
 
