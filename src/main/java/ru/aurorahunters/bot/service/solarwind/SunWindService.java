@@ -18,9 +18,9 @@ public class SunWindService implements Runnable {
 
     private String magnetJson;
     private String plasmaJson;
-    private final int id;
+    private final long id;
 
-    public SunWindService(int id) {
+    public SunWindService(long id) {
         this.id = id;
     }
 
@@ -46,7 +46,7 @@ public class SunWindService implements Runnable {
      */
     private void assignJsonURL() {
         try {
-            getJsonsById(id);
+            getJsonsById(long id);
         } catch (IOException e) {
             e.printStackTrace();
         }
