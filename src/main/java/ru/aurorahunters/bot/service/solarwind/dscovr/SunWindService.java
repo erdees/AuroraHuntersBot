@@ -20,13 +20,13 @@ public class SunWindService implements Runnable {
 
     private String magnetJson;
     private String plasmaJson;
-    private final int id;
     private static final int MIN5 = 1;
     private static final int HOUR2 = 2;
     private static final int HOUR24 = 3;
     private static final int DAY7 = 4;
+    private final long id;
 
-    public SunWindService(int id) {
+    public SunWindService(long id) {
         this.id = id;
     }
 
@@ -75,7 +75,7 @@ public class SunWindService implements Runnable {
      * Choose required json pair according to its id.
      * @param id which is the id of json file pair.
      */
-    private void getJsonsById(int id) throws IOException {
+    private void getJsonsById(long id) throws IOException {
         String tempMag = "";
         String tempPlasma = "";
         if (id == MIN5) {
