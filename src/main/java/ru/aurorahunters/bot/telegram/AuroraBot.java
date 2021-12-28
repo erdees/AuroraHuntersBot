@@ -19,9 +19,9 @@ public class AuroraBot extends TelegramLongPollingBot {
             try {
                 if (!new SessionHandler().sessionHandler(update.getMessage().getText(),
                         update.getMessage().getChatId(), update.getMessage().getLocation()).isEmpty()) {
-                    message = new SendMessage() // Create a SendMessage object with mandatory fields
-                            .setChatId(update.getMessage().getChatId())
-                            .setText(new SessionHandler().sessionHandler(update.getMessage().getText(),
+                    message = new SendMessage(); // Create a SendMessage object with mandatory fields
+                    message.setChatId(update.getMessage().getChatId().toString());
+                    message.setText(new SessionHandler().sessionHandler(update.getMessage().getText(),
                                     update.getMessage().getChatId(), update.getMessage().getLocation()));
                     message.setParseMode(ParseMode.HTML);
                     try {
@@ -36,9 +36,9 @@ public class AuroraBot extends TelegramLongPollingBot {
         }
         else if (update.getMessage().hasLocation()) {
             try {
-                message = new SendMessage() // Create a SendMessage object with mandatory fields
-                        .setChatId(update.getMessage().getChatId())
-                        .setText(new SessionHandler().sessionHandler("",
+                message = new SendMessage(); // Create a SendMessage object with mandatory fields
+                message.setChatId(update.getMessage().getChatId().toString());
+                message.setText(new SessionHandler().sessionHandler("",
                                 update.getMessage().getChatId(), update.getMessage().getLocation()));
                 message.setParseMode(ParseMode.HTML);
             } catch (ParseException | SQLException | IOException | TelegramApiException e) {

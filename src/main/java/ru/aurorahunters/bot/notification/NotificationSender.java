@@ -15,12 +15,14 @@ public class NotificationSender {
      * @param message message which should be sent.
      */
     public void sendNotif(String message) throws SQLException, InterruptedException {
-        long currentChatId;
+        Long currentChatId;
         for (Long chatId : new SessionsDAO().getSubscribersList()) {
             currentChatId = chatId;
             AuroraBot notificationEvent = new AuroraBot();
-            SendMessage notificationMessage =
-                    new SendMessage(currentChatId, message).setParseMode(ParseMode.HTML);
+            SendMessage notificationMessage = new SendMessage();
+            notificationMessage.setChatId(currentChatId.toString());
+            notificationMessage.setText(message);
+            notificationMessage.setParseMode(ParseMode.HTML);
             try {
                 notificationEvent.execute(notificationMessage);
             } catch (TelegramApiException e) {
